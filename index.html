@@ -337,6 +337,8 @@ small,
 .editor-mode #stage-wrap {
   position: sticky;
   top: 8px;
+  background: var(--paper);
+  padding-bottom: 8px;
 }
 .home-mode #stage {
   height: 292px;
@@ -1403,7 +1405,7 @@ function charSVG(c, stage = false) {
   const hairBack = ["waves", "long", "braids", "curls"].includes(c.hair) ? `<rect x="53" y="66" width="94" height="${c.hair === "curls" ? 78 : 101}" rx="35" fill="${c.hairColor}"/>${c.hair === "braids" ? [-1, 1].map((side) => Array.from({ length: 5 }, (_, i) => `<circle cx="${100 + side * 43 + Math.sin(i) * 3}" cy="${110 + i * 11}" r="9" fill="${c.hairColor}" stroke="#0001"/>`).join("")).join("") : ""}` : "";
   const outfitDetail = c.outfit === "quidditch" ? `<rect x="80" y="160" width="40" height="43" rx="10" fill="#c69e60"/><text x="100" y="192" text-anchor="middle" font-size="28" fill="#fff6de">7</text>` : c.outfit === "dress" ? `<path d="M100 158v72" stroke="${trim}" stroke-width="3"/><path d="M110 166v1m0 14v1m0 14v1m0 14v1" stroke="${trim}" stroke-width="4" stroke-linecap="round"/>` : c.outfit === "muggle" ? `<rect x="82" y="162" width="36" height="38" rx="4" fill="#eddfbd"/><text x="100" y="190" text-anchor="middle" font-size="25" fill="${robe}">✦</text>` : c.outfit === "robes" ? `<path d="M83 142l17 18-12 64M117 142l-17 18 12 64" fill="${house?.color || "#9f4653"}"/>` : "";
   const pattern = c.pattern === "plain" ? "" : Array.from({ length: 9 }, (_, i) => `<text x="${72 + i % 3 * 24}" y="${173 + Math.floor(i / 3) * 22}" fill="${trim}" font-size="13">${c.pattern === "stars" ? "✦" : "☾"}</text>`).join("");
-  return `<svg viewBox="0 0 200 280" aria-hidden="true"><ellipse cx="100" cy="258" rx="58" ry="9" fill="#281d3d20"/>${hairBack}${c.outfit === "cloak" ? `<path d="M71 133L41 236h118l-30-103z" fill="#586777"/>` : ""}<path d="M76 223v27h18v-27m12 0v27h18v-27" stroke="${c.shoes === "trainers" ? "#e7dcc8" : "#3b3544"}" stroke-width="15" stroke-linecap="round"/><path d="M72 137q28-16 56 0l${c.outfit === "gown" ? "28" : "14"} 99H58z" fill="${robe}"/><path d="M67 148L45 190m88-42l22 42" stroke="${robe}" stroke-width="23" stroke-linecap="round"/><circle cx="43" cy="195" r="9" fill="${c.skin}"/><circle cx="157" cy="195" r="9" fill="${c.skin}"/><path d="M90 137l10 19 10-19" fill="${trim}"/>${pattern}${outfitDetail}${c.outfit === "jumper" ? `<text x="100" y="196" text-anchor="middle" font-size="34" font-family="Georgia" fill="${trim}">${esc(c.name[0]?.toUpperCase() || "H")}</text>` : ""}<ellipse cx="100" cy="97" rx="45" ry="46" fill="${c.skin}"/><circle cx="55" cy="100" r="9" fill="${c.skin}"/><circle cx="145" cy="100" r="9" fill="${c.skin}"/><path d="M55 91Q46 31 103 43q50 0 43 50l-20-29-23 13-20-14z" fill="${c.hairColor}"/>${c.hair === "curls" ? Array.from({ length: 9 }, (_, i) => `<circle cx="${57 + i * 11}" cy="${73 - Math.sin(i / 8 * Math.PI) * 20}" r="11" fill="${c.hairColor}"/>`).join("") : ""}${c.hair === "buns" ? `<circle cx="53" cy="61" r="19" fill="${c.hairColor}"/><circle cx="147" cy="61" r="19" fill="${c.hairColor}"/>` : ""}<ellipse cx="82" cy="100" rx="6" ry="8" fill="${c.eyes}"/><ellipse cx="118" cy="100" rx="6" ry="8" fill="${c.eyes}"/><circle cx="84" cy="97" r="2" fill="#fff"/><circle cx="120" cy="97" r="2" fill="#fff"/>${c.face === "rosy" ? '<ellipse cx="70" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/><ellipse cx="130" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/>' : c.face === "freckles" ? '<path d="M69 111h1m5 3h1m-3-8h1m49 5h1m5 3h1m-3-8h1" stroke="#925b3e" stroke-width="3" stroke-linecap="round"/>' : ""}<path d="M92 119q8 8 16 0" stroke="#905a50" stroke-width="2.5" fill="none" stroke-linecap="round"/>${c.glasses !== "none" ? `<${c.glasses === "square" ? 'rect x="66" y="86" width="32" height="28" rx="6"' : 'circle cx="82" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><${c.glasses === "square" ? 'rect x="102" y="86" width="32" height="28" rx="6"' : 'circle cx="118" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><path d="M98 99h4" stroke="#51445a" stroke-width="3"/>` : ""}${c.scarf ? `<path d="M77 138q23 9 46 0M111 144v36" stroke="${house?.color || "#a15d69"}" stroke-width="12"/><path d="M111 153v4m0 10v4" stroke="${house?.trim || trim}" stroke-width="12"/>` : ""}${hat}${c.wand?.chosen ? `<path d="M157 197l22-51" stroke="${c.wand.color}" stroke-width="5" stroke-linecap="round"/><circle cx="179" cy="146" r="4" fill="${trim}"/>` : ""}${c.owl ? `<g transform="translate(128 106) scale(.38)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${c.pet ? `<g transform="translate(130 206) scale(.53)">${petSVG(c.pet).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${c.broom !== "none" ? `<path d="M34 246l-9-99" stroke="#956c48" stroke-width="5"/><path d="M34 216l-15 43h30z" fill="#c7a162"/>` : ""}</svg>`;
+  return `<svg viewBox="0 0 200 280" aria-hidden="true"><ellipse cx="100" cy="258" rx="58" ry="9" fill="#281d3d20"/>${hairBack}${c.outfit === "cloak" ? `<path d="M71 133L41 236h118l-30-103z" fill="#586777"/>` : ""}<path d="M80 223v27m40-27v27" fill="none" stroke="${c.shoes === "trainers" ? "#e7dcc8" : "#3b3544"}" stroke-width="15" stroke-linecap="round"/><path d="M72 137q28-16 56 0l${c.outfit === "gown" ? "28" : "14"} 99H58z" fill="${robe}"/><path d="M67 148L45 190m88-42l22 42" stroke="${robe}" stroke-width="23" stroke-linecap="round"/><circle cx="43" cy="195" r="9" fill="${c.skin}"/><circle cx="157" cy="195" r="9" fill="${c.skin}"/><path d="M90 137l10 19 10-19" fill="${trim}"/>${pattern}${outfitDetail}${c.outfit === "jumper" ? `<text x="100" y="196" text-anchor="middle" font-size="34" font-family="Georgia" fill="${trim}">${esc(c.name[0]?.toUpperCase() || "H")}</text>` : ""}<ellipse cx="100" cy="97" rx="45" ry="46" fill="${c.skin}"/><circle cx="55" cy="100" r="9" fill="${c.skin}"/><circle cx="145" cy="100" r="9" fill="${c.skin}"/><path d="M55 91Q46 31 103 43q50 0 43 50l-20-29-23 13-20-14z" fill="${c.hairColor}"/>${c.hair === "curls" ? Array.from({ length: 9 }, (_, i) => `<circle cx="${57 + i * 11}" cy="${73 - Math.sin(i / 8 * Math.PI) * 20}" r="11" fill="${c.hairColor}"/>`).join("") : ""}${c.hair === "buns" ? `<circle cx="53" cy="61" r="19" fill="${c.hairColor}"/><circle cx="147" cy="61" r="19" fill="${c.hairColor}"/>` : ""}<ellipse cx="82" cy="100" rx="6" ry="8" fill="${c.eyes}"/><ellipse cx="118" cy="100" rx="6" ry="8" fill="${c.eyes}"/><circle cx="84" cy="97" r="2" fill="#fff"/><circle cx="120" cy="97" r="2" fill="#fff"/>${c.face === "rosy" ? '<ellipse cx="70" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/><ellipse cx="130" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/>' : c.face === "freckles" ? '<path d="M69 111h1m5 3h1m-3-8h1m49 5h1m5 3h1m-3-8h1" stroke="#925b3e" stroke-width="3" stroke-linecap="round"/>' : ""}<path d="M92 119q8 8 16 0" stroke="#905a50" stroke-width="2.5" fill="none" stroke-linecap="round"/>${c.glasses !== "none" ? `<${c.glasses === "square" ? 'rect x="66" y="86" width="32" height="28" rx="6"' : 'circle cx="82" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><${c.glasses === "square" ? 'rect x="102" y="86" width="32" height="28" rx="6"' : 'circle cx="118" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><path d="M98 99h4" stroke="#51445a" stroke-width="3"/>` : ""}${c.scarf ? `<path d="M77 138q23 9 46 0M111 144v36" stroke="${house?.color || "#a15d69"}" stroke-width="12"/><path d="M111 153v4m0 10v4" stroke="${house?.trim || trim}" stroke-width="12"/>` : ""}${hat}${c.wand?.chosen ? `<path d="M157 197l22-51" stroke="${c.wand.color}" stroke-width="5" stroke-linecap="round"/><circle cx="179" cy="146" r="4" fill="${trim}"/>` : ""}${c.owl ? `<g transform="translate(128 106) scale(.38)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${c.pet ? `<g transform="translate(130 206) scale(.53)">${petSVG(c.pet).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${c.broom !== "none" ? `<path d="M34 246l-9-99" stroke="#956c48" stroke-width="5"/><path d="M34 216l-15 43h30z" fill="#c7a162"/>` : ""}</svg>`;
 }
 const R = {
   state: "loading",
@@ -1456,7 +1458,24 @@ const R = {
       this.scene.fog = new T.Fog("#172d3e", 9, 22);
       this.cam = new T.PerspectiveCamera(33, 1, 0.1, 40);
       this.controls = new T.OrbitControls(this.cam, r.domElement);
-      Object.assign(this.controls, { enablePan: false, enableDamping: true, dampingFactor: 0.08, rotateSpeed: 0.65, minDistance: 4.3, maxDistance: 10, minPolarAngle: 0.8, maxPolarAngle: 1.7 });
+      Object.assign(this.controls, { enableRotate: false, enablePan: false, enableDamping: true, dampingFactor: 0.08, minDistance: 4.3, maxDistance: 10 });
+      // Turn the figure, not the room: walls must never hide a spinning character.
+      // OrbitControls still supplies wheel and native two-finger dolly/zoom.
+      const fingers = new Map();
+      r.domElement.addEventListener("pointerdown", (e) => {
+        fingers.set(e.pointerId, e.clientX);
+        r.domElement.setPointerCapture(e.pointerId);
+      });
+      r.domElement.addEventListener("pointermove", (e) => {
+        if (!fingers.has(e.pointerId)) return;
+        const previous = fingers.get(e.pointerId);
+        fingers.set(e.pointerId, e.clientX);
+        if (fingers.size === 1 && this.actor && !this.lost) {
+          this.actorYaw = (this.actorYaw || 0) + (e.clientX - previous) * 0.015;
+          this.actor.rotation.y = this.actorYaw;
+        }
+      });
+      for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) r.domElement.addEventListener(type, (e) => fingers.delete(e.pointerId));
       this.controls.addEventListener("start", () => this.interacting = true);
       this.controls.addEventListener("end", () => this.interacting = false);
       this.reset();
@@ -1618,6 +1637,8 @@ const R = {
   },
   reset() {
     if (!this.cam) return;
+    this.actorYaw = 0;
+    if (this.actor) this.actor.rotation.y = 0;
     this.cam.position.set(0.3, 2.55, 7.8);
     this.controls.target.set(0, 1.55, 0);
     this.controls.update();
@@ -1788,6 +1809,7 @@ const R = {
     this.petHeads = this.petHeads.filter((p) => p.env);
     this.wings = this.wings.filter((w) => w.userData.env);
     this.actor = this.group(this.scene, [0, 0.12, 0]);
+    this.actor.rotation.y = this.actorYaw || 0;
     const a = this.actor, h = HOUSES[c.school === "Hogwarts" ? c.house : null], trim = c.trim || h?.trim || "#dab674", robe = c.outfit === "quidditch" ? h?.color || c.robe : c.robe;
     for (const side of [-1, 1]) {
       this.mesh(a, "cylinder", c.outfit === "muggle" ? "#5c6b88" : "#575161", [side * 0.18, 0.35, 0], [0.12, 0.5, 0.12]);
@@ -2200,6 +2222,7 @@ const R = {
     this.mat.clear();
     this.effect = null;
     this.flight = null;
+    if (this.keyLight) this.keyLight.intensity = 3;
   },
   dispose() {
     cancelAnimationFrame(this.frame);
@@ -2353,7 +2376,7 @@ function post() {
 }
 function map() {
   const c = Store.current();
-  $("#intro").innerHTML = title("FOLLOW YOUR CURIOSITY", "A little wayfinding");
+  $("#intro").innerHTML = title("FOLLOW YOUR CURIOSITY", "Where to next?");
   $("#stage-foot").textContent = "There is always somewhere magical to go.";
   return `<div class="map-path">${[["home", "home", "The Great Hall", "Your friends & the House Cup"], ["room", "person", "Your common room", "A cosy place to call home"], ["wands", "wand", "Ollivanders", "The wand chooses you"], ["pets", "owl", "Eeylops & the owlery", "Feathery little friends"], ["spells", "book", "Spell workshop", "Learn, invent, make a little magic"], ["grounds", "castle", "Castle grounds", "A moonlit lake & a broom ride"]].map(([go2, ic, t, sub]) => `<button class="map-stop" data-go="${go2}"><span>${icon(ic)}</span><div><h3>${t}</h3><small>${sub}</small></div>↗</button>`).join("")}</div>`;
 }
@@ -2390,6 +2413,11 @@ function render() {
   const fn = screens[S.screen] || home;
   $("#content").innerHTML = fn();
   $("#content").className = "screen-enter";
+  // Keep the chosen tab readable after replacing a horizontally scrolling panel.
+  $$(".tabbar").forEach((bar) => {
+    const chosen = bar.querySelector('[aria-selected="true"]');
+    if (chosen) bar.scrollLeft += chosen.getBoundingClientRect().left - bar.getBoundingClientRect().left - (bar.clientWidth - chosen.clientWidth) / 2;
+  });
   $("#nav").innerHTML = [["home", "home", "Great Hall"], ["room", "person", "My friend"], ["spells", "book", "Spells"], ["map", "map", "Explore"]].map(([p, i, t]) => `<button data-go="${p}" class="${S.screen === p || p === "room" && ["editor", "sorting", "wands", "pets", "post"].includes(S.screen) ? "active" : ""}" ${S.screen === p ? 'aria-current="page"' : ""}>${icon(i)}${t}</button>`).join("");
   refreshWorld();
   updateSound();
