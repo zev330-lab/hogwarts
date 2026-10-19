@@ -1240,6 +1240,7 @@ input.text {
       #fff3d6);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
+.envelope p { position:relative; z-index:1; }
 .envelope .seal {
   position: relative;
 }
@@ -1307,7 +1308,8 @@ input.text {
   left: auto;
   right: -39px;
   transform-origin: left center;
-  transform: scaleX(-1);
+  transform: none;
+  border-radius: 10% 80% 10% 70%;
   animation-name: wingbeatRight;
 }
 @keyframes wingbeat {
@@ -1317,7 +1319,7 @@ input.text {
 }
 @keyframes wingbeatRight {
   to {
-    transform: scaleX(-1) rotate(32deg);
+    transform: rotate(-32deg);
   }
 }
 .letter {
@@ -2491,13 +2493,14 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const body = this.group(a);
     this.body = body;
     let skirt = ["robes", "cloak", "gown", "dress"].includes(c.outfit);
-    const garment = this.mesh(body, skirt ? "robe" : "sphere", robe, [0, skirt ? 0.89 : 1.04, 0], skirt ? [c.outfit === "gown" ? 0.75 : c.kind === "witch" ? 0.51 : 0.46, 1.15, c.outfit === "gown" ? 0.49 : 0.39] : [0.4, 0.53, 0.3]);
+    const garment = this.mesh(body, skirt ? "robe" : "sphere", robe, [0, c.outfit === "gown" ? .65 : skirt ? .89 : 1.04, 0], c.outfit === "gown" ? [.74,.85,.47] : skirt ? [c.kind === "witch" ? .51 : .46, 1.15,.39] : [.4,.53,.3]);
     garment.name = "outfit-" + c.outfit;
     if (c.outfit === "gown") {
-      this.mesh(body, "sphere", robe, [0, 0.64, -0.04], [0.72, 0.38, 0.48]);
-      this.mesh(body, "torus", trim, [0, 1.19, 0], [0.34, 0.27, 0.34]).rotation.x = Math.PI / 2;
-      for (const side of [-1, 1]) this.mesh(body, "sphere", trim, [side * 0.12, 1.17, 0.31], [0.12, 0.065, 0.045]).rotation.z = side * 0.3;
-      for (let i = 0; i < 7; i++) this.flower(body, [(i - 3) * 0.18, 0.4 + Math.abs(i - 3) * 0.025, 0.43 - Math.abs(i - 3) * 0.065], trim, 0.1);
+      this.mesh(body, "sphere", robe, [0, 1.23, 0], [.33,.3,.27]);
+      this.mesh(body, "torus", trim, [0, 1.04, 0], [.43,.28,.43]).rotation.x = Math.PI / 2;
+      for (const side of [-1, 1]) this.mesh(body, "sphere", trim, [side * .085, 1.04, .3], [.09,.05,.035]).rotation.z = side * .3;
+      this.mesh(body,'gem',trim,[0,1.04,.33],[.04,.045,.03]);
+      for (let i = 0; i < 7; i++) this.flower(body, [(i - 3) * .18, .33 + Math.abs(i - 3) * .025, .465 - Math.abs(i - 3) * .05], trim, .08);
     }
     if (c.outfit === "robes") {
       for (const side of [-1, 1]) {
