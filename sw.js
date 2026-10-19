@@ -1,4 +1,4 @@
-const CACHE = 'hogwarts-v1';
+const CACHE = 'hogwarts-v2';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './vendor/three.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
