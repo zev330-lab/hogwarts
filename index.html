@@ -1240,7 +1240,10 @@ input.text {
       #fff3d6);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
-.envelope p { position:relative; z-index:1; }
+.envelope p {
+  position: relative;
+  z-index: 1;
+}
 .envelope .seal {
   position: relative;
 }
@@ -1534,16 +1537,337 @@ dialog .center {
     font-size: 19px;
   }
 }
+#effect-label,
+.house-shout,
+.wand-moment b {
+  top: auto;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: 1px solid #f3daa56b;
+  background: #17243bf5;
+  color: #fff7df;
+  font: 700 20px/1.15 var(--display);
+  text-shadow: none;
+}
+#effect-label:empty {
+  display: none;
+}
+.house-shout {
+  font-size: 25px;
+}
+.house-shout small {
+  font-size: 9px;
+  margin-bottom: 2px;
+  letter-spacing: 1px;
+}
+.house-visitor {
+  right: 8px;
+  bottom: 76px;
+  width: 64px;
+}
+.house-visitor svg {
+  width: 64px;
+  height: 60px;
+}
+.has-effect .stage-help,
+.has-effect .spellbook-pocket {
+  visibility: hidden;
+}
+.editor-mode #stage,
+.spells-mode #stage,
+.pets-mode #stage {
+  height: clamp(174px, 26dvh, 224px);
+}
+.editor-mode #stage-wrap,
+.spells-mode #stage-wrap,
+.pets-mode #stage-wrap {
+  position: sticky;
+  top: 0;
+  padding: 6px 0 8px;
+  margin-bottom: 10px;
+  background: var(--paper);
+  z-index: 12;
+}
+.editor-mode .stage-foot,
+.spells-mode .stage-foot,
+.pets-mode .stage-foot {
+  display: none;
+}
+.editor-tabs-wrap {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  gap: 4px;
+  padding-top: 6px;
+  align-items: center;
+}
+.editor-tabs-wrap .tabbar {
+  padding: 2px 1px 4px;
+  scroll-padding: 4px;
+}
+.editor-tabs-wrap .tabbar button {
+  min-height: 44px;
+  padding: 7px 9px;
+  font-size: 13px;
+  gap: 4px;
+}
+.tab-scroll {
+  border: 0;
+  border-radius: 10px;
+  background: #ede4d4;
+  color: var(--purple);
+  font-size: 26px;
+  padding: 0;
+  min-height: 44px;
+}
+.spells-mode .mast,
+.quiz-mode .mast {
+  display: none;
+}
+.spells-mode .intro,
+.quiz-mode .intro {
+  padding: 10px 0 12px;
+  margin: 0;
+}
+.spells-mode .intro h1,
+.quiz-mode .intro h1 {
+  font-size: 27px;
+}
+.spells-mode .intro .eyebrow,
+.quiz-mode .intro .eyebrow {
+  display: none;
+}
+.spells-mode .intro .back,
+.quiz-mode .intro .back {
+  min-height: 44px;
+  height: 44px;
+  width: 44px;
+}
+.spells-mode #content {
+  gap: 12px;
+}
+.spells-mode .tabbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 5px;
+  overflow: visible;
+  padding: 0;
+}
+.spells-mode .tabbar button {
+  padding: 8px 5px;
+  font-size: 13px;
+  min-width: 0;
+  justify-content: center;
+  gap: 4px;
+}
+.spells-mode .tabbar .icon {
+  width: 15px;
+}
+.casting-panel {
+  padding: 12px;
+  gap: 8px;
+}
+.casting-panel button,
+.casting-panel select,
+.casting-panel canvas {
+  scroll-margin-block: 8px;
+}
+.casting-panel .spell-picker-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+.casting-panel select {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 600;
+  min-height: 44px;
+  padding: 8px 10px;
+  font-size: 17px;
+}
+.casting-panel .spell-title {
+  display: none;
+}
+.casting-panel .trace-box canvas {
+  height: 100px;
+}
+.casting-panel .trace-box .fine {
+  font-size: 11px;
+  padding: 0 6px 6px;
+  min-height: 24px;
+}
+.casting-panel .btn {
+  min-height: 48px;
+  padding: 10px 6px;
+  font-size: 15px;
+}
+.quiz-mode #stage {
+  height: 192px;
+}
+.quiz-mode #stage-wrap {
+  margin-bottom: 10px;
+}
+.quiz-mode .stage-foot,
+.quiz-mode .stage-help,
+.quiz-mode .spellbook-pocket {
+  display: none;
+}
+.quiz-mode #content {
+  gap: 10px;
+}
+.quiz-mode .panel {
+  padding: 12px;
+  gap: 9px;
+}
+.quiz-mode .quote {
+  font-size: 16px;
+  line-height: 1.2;
+  margin: 0;
+}
+.quiz-mode .question {
+  font-size: 20px;
+  line-height: 1.2;
+  margin: 0;
+}
+.quiz-mode .answers {
+  gap: 6px;
+}
+.quiz-mode .answers .btn {
+  min-height: 48px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+.quiz-mode #content > .btn {
+  min-height: 44px;
+  padding: 8px;
+}
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(var(--swatch-columns), minmax(0, 1fr));
+  justify-items: center;
+  gap: 9px;
+}
+.swatches .choice {
+  width: 48px;
+  height: 48px;
+  min-height: 48px;
+}
+.wood-chip {
+  display: inline-block;
+  flex: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 7px;
+  border: 1px solid #3f291f45;
+  background:
+    repeating-linear-gradient(
+      15deg,
+      transparent 0 4px,
+      #39241c25 5px,
+      transparent 6px 9px),
+    var(--wood);
+}
+@media (max-height: 650px) and (orientation: portrait) {
+  .editor-mode #stage,
+  .spells-mode #stage,
+  .pets-mode #stage {
+    height: 164px;
+  }
+  .editor-mode .stage-help,
+  .spells-mode .stage-help,
+  .pets-mode .stage-help {
+    display: none;
+  }
+  .editor-mode #stage-wrap {
+    position: sticky;
+  }
+}
+@media (max-width: 360px) {
+  .spells-mode .tabbar .icon {
+    display: none;
+  }
+}
+@media (min-width: 560px) and (max-height: 500px) and (orientation: landscape) {
+  #app {
+    max-width: none;
+    padding: 8px 16px 120px;
+    display: grid;
+    grid-template-columns: minmax(240px, 42%) minmax(0, 1fr);
+    column-gap: 20px;
+    align-items: start;
+  }
+  .mast {
+    display: none;
+  }
+  #intro {
+    grid-column: 2;
+    padding: 0 0 12px;
+    margin: 0;
+  }
+  #intro h1 {
+    font-size: 25px;
+  }
+  #intro .eyebrow,
+  #intro > p {
+    display: none;
+  }
+  #stage-wrap,
+  .editor-mode #stage-wrap,
+  .spells-mode #stage-wrap,
+  .pets-mode #stage-wrap {
+    grid-column: 1;
+    grid-row: 1 / span 5;
+    position: sticky;
+    top: 8px;
+    margin: 0;
+    padding: 0;
+  }
+  #stage,
+  .home-mode #stage,
+  .spells-mode #stage,
+  .pets-mode #stage,
+  .quiz-mode #stage {
+    height: calc(100dvh - 100px);
+  }
+  .editor-mode #stage {
+    height: calc(100dvh - 160px);
+  }
+  #stage-foot {
+    display: none;
+  }
+  #content,
+  #toast,
+  #storage-note {
+    grid-column: 2;
+    min-width: 0;
+  }
+  #content {
+    grid-row: 3;
+  }
+  #toast {
+    grid-row: 2;
+  }
+  #stage .stage-label {
+    font-size: 8px;
+    letter-spacing: .6px;
+    padding: 7px;
+  }
+  .stage-help {
+    display: none;
+  }
+  .casting-panel .trace-box canvas {
+    height: 100px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *:before,
   *:after {
     animation-duration: .01ms !important;
     scroll-behavior: auto !important;
-  }
-  .editor-mode #stage-wrap {
-    position: relative;
-    top: auto;
   }
   .house-moment,
   .house-visitor,
@@ -1558,7 +1882,7 @@ dialog .center {
 <div id="app">
 <header class="mast"><button class="brand" data-go="home" aria-label="Havi's Hogwarts, home"><span class="brandmark" id="brand-icon"></span><span class="brand-name">Havi's Hogwarts<small>LET’S MAKE MAGIC</small></span></button><button id="sound" class="round" data-action="sound" aria-label="Sound on" aria-pressed="true"></button><button id="music" class="round" data-action="music" aria-label="Music off" aria-pressed="false"></button></header>
 <div id="storage-note" role="status" hidden></div><section id="intro" class="intro"></section>
-<div id="stage-wrap"><div id="stage" aria-label="Your magical character and world"><div id="fallback"></div><span class="stage-label" id="place-label"></span><button class="stage-reset" data-action="reset-view" aria-label="Reset view"></button><div id="effect-label" role="status"></div><div id="fx2d"></div><div id="moment" aria-live="polite"></div><span class="stage-help" id="stage-help">Drag to turn · pinch to zoom</span><button class="spellbook-pocket" data-action="pocket" aria-label="Cast from your spellbook"></button></div><div id="stage-foot" class="stage-foot"></div></div>
+<div id="stage-wrap"><div id="stage" aria-label="Your magical character and world"><div id="fallback"></div><span class="stage-label" id="place-label"></span><button class="stage-reset" data-action="reset-view" aria-label="Reset view"></button><div id="effect-label" role="status"></div><div id="fx2d"></div><div id="moment" aria-live="polite"></div><span class="stage-help" id="stage-help">Drag to turn · pinch to zoom</span><button class="spellbook-pocket" data-action="pocket" aria-label="Cast from your spellbook"></button></div><div id="stage-foot" class="stage-foot"></div><div id="stage-tools"></div></div>
 <div id="toast" role="status" hidden></div><main id="content"></main>
 </div><nav id="nav" aria-label="Main navigation"></nav><dialog id="dialog" aria-labelledby="dialog-title"></dialog><div id="celebration" class="celebration"></div>
 <script>
@@ -1568,10 +1892,12 @@ const iconPaths = { star: "M12 2l2.7 6.8L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-
 function icon(k) {
   return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${iconPaths[k] || iconPaths.star}"/></svg>`;
 }
+Object.assign(iconPaths, { feather: "M5 21L19 3M5 16C0 8 12 0 20 3c2 9-6 17-15 13M9 15l1-7M12 12l6-1", heart: "M12 21C-8 9 6-3 12 7c6-10 20 2 0 14", unicorn: "M6 21l2-7-3-4 6-5 3-4 1 6 5 6-2 4-6-2-1 6M11 5l-1-4M16 11h.1" });
+const WOODS = { holly: "#e4cea5", yew: "#8d533f", willow: "#bca57b", elder: "#68503d", vine: "#775c47", oak: "#b4824f", cherry: "#a35758" };
 const HOUSES = { Gryffindor: { color: "#9f4653", trim: "#e7b65b", animal: "Lion", quality: "Brave at heart", path: "M17 24q-5-16 8-17 16-3 18 10l-4 9 4 10-13 9-14-10zM23 23l2-3M34 23l2-3M25 31q5 5 10 0M28 26l3 2 3-2" }, Slytherin: { color: "#467263", trim: "#bfd1bd", animal: "Snake", quality: "Dream big", path: "M19 38q23 11 22-2c0-9-21-3-21-15s22-15 22-3M39 14l4 4-5 3M24 17h1M22 40l-5 4" }, Ravenclaw: { color: "#4d6f94", trim: "#d9b88c", animal: "Eagle", quality: "Wonder & wisdom", path: "M30 16l-6-6 1 13-13-7 7 17 9 5-3 8 7-4 7 4-4-8 9-5 7-17-15 7 1-9zM30 18l5 2-5 2" }, Hufflepuff: { color: "#bc9046", trim: "#413b42", animal: "Badger", quality: "Kind & true", path: "M17 24l2-10 7 4 10-1 5-5 4 11-3 15-11 7-13-9zM23 20l5 16M37 20l-4 16M20 28h3M38 28h3M27 38h7" } };
 function crest(h) {
   const d = HOUSES[h] || HOUSES.Gryffindor;
-  return `<svg class="crest" viewBox="0 0 62 72" aria-label="${esc(h)} ${d.animal}"><path d="M3 4Q31-3 59 4v32c0 18-28 32-28 32S3 54 3 36z" fill="${d.color}" stroke="${d.trim}" stroke-width="2"/><path d="M7 8q24-5 48 0v28c0 14-24 27-24 27S7 50 7 36z" fill="none" stroke="${d.trim}" opacity=".5"/><path transform="translate(0 3)" d="${d.path}" fill="none" stroke="${d.trim}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M20 56h22" stroke="${d.trim}"/></svg>`;
+  return `<svg class="crest" viewBox="0 0 62 72" aria-label="${esc(h)} ${d.animal}"><path d="M3 4Q31-3 59 4v32c0 18-28 32-28 32S3 54 3 36z" fill="${d.color}" stroke="${d.trim}" stroke-width="2"/><path d="M7 8q24-5 48 0v28c0 14-24 27-24 27S7 50 7 36z" fill="none" stroke="${d.trim}" opacity=".5"/><g transform="translate(7 11) scale(.48)">${houseAnimal(h in HOUSES ? h : "Gryffindor").replace(/<svg[^>]*>|<\/svg>/g, "")}</g><path d="M20 56h22" stroke="${d.trim}"/></svg>`;
 }
 const SKINS = ["#f7d3b5", "#e9b38f", "#ce916d", "#a76b4b", "#754a39", "#4d332d"];
 const HAIRS = ["#49302b", "#191d2c", "#a96435", "#e7bc63", "#d9d6df", "#a883cf", "#dc8da4", "#63a9aa"];
@@ -1583,7 +1909,7 @@ const EFFECTS = [["bubbles", "◌ Bubbles"], ["butterflies", "ʚɞ Butterflies"]
 const MOTIONS = { up: [[0.2, 0.8], [0.5, 0.2], [0.8, 0.8]], down: [[0.2, 0.2], [0.5, 0.8], [0.8, 0.2]], wave: Array.from({ length: 32 }, (_, i) => [0.12 + i * 0.76 / 31, 0.5 + Math.sin(i / 31 * Math.PI * 2) * 0.28]), zigzag: [[0.25, 0.15], [0.7, 0.15], [0.35, 0.5], [0.75, 0.5], [0.3, 0.85]], circle: Array.from({ length: 40 }, (_, i) => [0.5 + Math.cos(i / 39 * 2 * Math.PI) * 0.3, 0.5 + Math.sin(i / 39 * 2 * Math.PI) * 0.36]), loop: [[0.15, 0.7], [0.3, 0.3], [0.6, 0.2], [0.8, 0.4], [0.65, 0.7], [0.35, 0.6], [0.4, 0.4], [0.85, 0.8]], star: [[0.5, 0.12], [0.73, 0.85], [0.14, 0.4], [0.86, 0.4], [0.27, 0.85], [0.5, 0.12]] };
 const pick = (a) => a[Math.floor(Math.random() * a.length)], uid = () => globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 function fresh() {
-  return { id: uid(), name: "Havi Moonbeam", kind: "witch", skin: SKINS[1], hair: "waves", hairColor: HAIRS[0], eyes: EYES[0], face: "rosy", glasses: "round", outfit: "robes", robe: COLORS[0], trim: "#e7b65b", pattern: "stars", hat: "crooked", scarf: true, shoes: "boots", broom: "none", holdBroom: false, school: "Hogwarts", house: null, owl: null, owlName: "Luna", pet: null, petName: "Pip", wand: { wood: "holly", core: "phoenix feather", length: 11, flex: "springy", handle: "twisted", color: "#9b6b43", inlay: "gold", chosen: false, tries: 0 }, spells: [], learned: [], patronus: null, accepted: false, created: Date.now() };
+  return { id: uid(), name: "Havi Moonbeam", kind: "witch", beard: "none", skin: SKINS[1], hair: "waves", hairColor: HAIRS[0], eyes: EYES[0], face: "rosy", glasses: "round", outfit: "robes", robe: COLORS[0], trim: "#e7b65b", pattern: "stars", hat: "crooked", scarf: true, shoes: "boots", broom: "none", holdBroom: false, school: "Hogwarts", house: null, owl: null, owlName: "Luna", pet: null, petName: "Pip", wand: { wood: "holly", core: "phoenix feather", length: 11, flex: "springy", handle: "twisted", color: "#9b6b43", inlay: "gold", chosen: false, tries: 0 }, spells: [], learned: [], patronus: null, accepted: false, created: Date.now() };
 }
 const DEMO = { ...fresh(), id: "demo", name: "Your next adventure", owl: "snowy" };
 const Store = {
@@ -1767,6 +2093,7 @@ function showBroom(c, stage = true) {
   return c.broom !== "none" && (c.holdBroom || c.outfit === "quidditch" || stage && S.screen === "grounds");
 }
 function charSVG(c, stage = false) {
+  if (stage && S.screen === "editor" && S.tab === "hair") c = { ...c, hat: "none" };
   const house = HOUSES[c.school === "Hogwarts" ? c.house : null], trim = c.trim || house?.trim || "#e7b65b", robe = (c.outfit === "quidditch" ? house?.color : null) || c.robe || COLORS[0];
   let hat = "";
   if (["pointed", "crooked", "sorting"].includes(c.hat) || (S.sorting || S.sortResult) && stage) {
@@ -1776,11 +2103,13 @@ function charSVG(c, stage = false) {
   else if (c.hat === "top") hat = `<ellipse cx="100" cy="64" rx="48" ry="9" fill="${robe}"/><rect x="71" y="13" width="58" height="51" rx="5" fill="${robe}"/><path d="M72 49h56" stroke="${trim}" stroke-width="10"/>`;
   else if (c.hat === "tiara") hat = `<path d="M61 66l-4-20 22 15 20-26 20 26 22-15-4 20z" fill="#e9c675"/>`;
   else if (c.hat === "flowers") hat = Array.from({ length: 7 }, (_, i) => `<circle cx="${62 + i * 12}" cy="${61 - Math.sin(i / 6 * Math.PI) * 13}" r="8" fill="${i % 2 ? "#e9adc2" : "#fcdf98"}"/>`).join("");
-  const hairBack = ["waves", "long", "braids", "curls"].includes(c.hair) ? `<rect x="53" y="66" width="94" height="${c.hair === "curls" ? 78 : 101}" rx="35" fill="${c.hairColor}"/>${c.hair === "braids" ? [-1, 1].map((side) => Array.from({ length: 5 }, (_, i) => `<circle cx="${100 + side * 43 + Math.sin(i) * 3}" cy="${110 + i * 11}" r="9" fill="${c.hairColor}" stroke="#0001"/>`).join("")).join("") : ""}` : "";
+  const hc = c.hairColor;
+  const hairBack = c.hair === "long" ? `<rect x="49" y="65" width="102" height="122" rx="30" fill="${hc}"/>` : c.hair === "braids" ? [-1, 1].map((side) => Array.from({ length: 6 }, (_, i) => `<ellipse cx="${100 + side * 47 + Math.sin(i * 2) * 3}" cy="${98 + i * 13}" rx="12" ry="11" fill="${hc}"/>`).join("") + `<path d="M${100 + side * 47 - 10} 165h20" stroke="${trim}" stroke-width="6"/><path d="M${100 + side * 47} 164l-12 14h24z" fill="${hc}"/>`).join("") : c.hair === "waves" ? [-1, 1].map((side) => [0, 1, 2].map((i) => `<ellipse cx="${100 + side * (43 + i % 2 * 5)}" cy="${82 + i * 18}" rx="16" ry="21" fill="${hc}"/>`).join("")).join("") : c.hair === "curls" ? `<ellipse cx="100" cy="68" rx="65" ry="54" fill="${hc}"/>` + Array.from({ length: 16 }, (_, i) => `<circle cx="${100 + Math.sin(i / 16 * Math.PI * 2) * 56}" cy="${65 + Math.cos(i / 16 * Math.PI * 2) * 43}" r="17" fill="${hc}"/>`).join("") : "";
+  const hairFront = c.hair === "pixie" ? `<path d="M55 83l-3-28 18 8-4-31 22 22 10-34 13 29 19-20-1 29 19-7-5 32-18-16-25 9-25-10z" fill="${hc}"/>` : c.hair === "buns" ? `<path d="M55 80q-3-48 45-42t45 42l-20-20q-25 16-50 0z" fill="${hc}"/><circle cx="48" cy="44" r="25" fill="${hc}"/><circle cx="152" cy="44" r="25" fill="${hc}"/><circle cx="48" cy="44" r="17" fill="none" stroke="${trim}" stroke-width="3"/><circle cx="152" cy="44" r="17" fill="none" stroke="${trim}" stroke-width="3"/>` : c.hair === "short" ? `<path d="M55 83q-4-46 45-43 48 0 45 43l-13-15-55-2z" fill="${hc}"/><path d="M61 65q39-37 77-9l-47 15z" fill="${hc}"/>` : c.hair === "curls" ? Array.from({ length: 6 }, (_, i) => `<circle cx="${53 + i * 19}" cy="${67 - Math.sin(i / 5 * Math.PI) * 12}" r="16" fill="${hc}"/>`).join("") : `<path d="M55 88Q46 31 103 43q50 0 43 45l-20-24q-21 18-43-1z" fill="${hc}"/>`;
   const outfitDetail = c.outfit === "quidditch" ? `<rect x="80" y="160" width="40" height="43" rx="10" fill="#c69e60"/><text x="100" y="192" text-anchor="middle" font-size="28" fill="#fff6de">7</text>` : c.outfit === "dress" ? `<path d="M100 158v72" stroke="${trim}" stroke-width="3"/><path d="M110 166v1m0 14v1m0 14v1m0 14v1" stroke="${trim}" stroke-width="4" stroke-linecap="round"/>` : c.outfit === "muggle" ? `<rect x="82" y="162" width="36" height="38" rx="4" fill="#eddfbd"/><text x="100" y="190" text-anchor="middle" font-size="25" fill="${robe}">✦</text>` : c.outfit === "robes" ? `<path d="M83 142l17 18-12 64M117 142l-17 18 12 64" fill="${house?.color || "#9f4653"}"/>` : "";
   const pattern = c.pattern === "plain" ? "" : Array.from({ length: 9 }, (_, i) => `<text x="${72 + i % 3 * 24}" y="${173 + Math.floor(i / 3) * 22}" fill="${trim}" font-size="13">${c.pattern === "stars" ? "✦" : "☾"}</text>`).join("");
-  const garment = c.outfit === "gown" ? "M77 137q23-10 46 0l8 35q7 20 27 59-58 24-116 0 20-39 27-59z" : ["jumper", "quidditch", "muggle"].includes(c.outfit) ? "M73 137q27-13 54 0l8 64q-35 9-70 0z" : "M72 137q28-16 56 0l14 99H58z";
-  return `<svg viewBox="0 0 200 280" aria-hidden="true"><ellipse cx="100" cy="258" rx="58" ry="9" fill="#281d3d20"/>${hairBack}${c.outfit === "cloak" ? `<path d="M71 133L41 236h118l-30-103z" fill="#586777"/>` : ""}<path d="M80 223v27m40-27v27" fill="none" stroke="${c.shoes === "trainers" ? "#e7dcc8" : "#3b3544"}" stroke-width="15" stroke-linecap="round"/><path d="${garment}" fill="${robe}"/><path d="M67 148L45 190m88-42l22 42" stroke="${robe}" stroke-width="23" stroke-linecap="round"/><circle cx="43" cy="195" r="9" fill="${c.skin}"/><circle cx="157" cy="195" r="9" fill="${c.skin}"/><path d="M90 137l10 19 10-19" fill="${trim}"/>${pattern}${outfitDetail}${c.outfit === "jumper" ? `<text x="100" y="196" text-anchor="middle" font-size="34" font-family="Georgia" fill="${trim}">${esc(c.name[0]?.toUpperCase() || "H")}</text>` : ""}<ellipse cx="100" cy="97" rx="45" ry="46" fill="${c.skin}"/><circle cx="55" cy="100" r="9" fill="${c.skin}"/><circle cx="145" cy="100" r="9" fill="${c.skin}"/><path d="M55 91Q46 31 103 43q50 0 43 50l-20-29-23 13-20-14z" fill="${c.hairColor}"/>${c.hair === "curls" ? Array.from({ length: 9 }, (_, i) => `<circle cx="${57 + i * 11}" cy="${73 - Math.sin(i / 8 * Math.PI) * 20}" r="11" fill="${c.hairColor}"/>`).join("") : ""}${c.hair === "buns" ? `<circle cx="53" cy="61" r="19" fill="${c.hairColor}"/><circle cx="147" cy="61" r="19" fill="${c.hairColor}"/>` : ""}<ellipse cx="82" cy="100" rx="6" ry="8" fill="${c.eyes}"/><ellipse cx="118" cy="100" rx="6" ry="8" fill="${c.eyes}"/><circle cx="84" cy="97" r="2" fill="#fff"/><circle cx="120" cy="97" r="2" fill="#fff"/>${c.face === "rosy" ? '<ellipse cx="70" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/><ellipse cx="130" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/>' : c.face === "freckles" ? '<path d="M69 111h1m5 3h1m-3-8h1m49 5h1m5 3h1m-3-8h1" stroke="#925b3e" stroke-width="3" stroke-linecap="round"/>' : ""}<path d="M92 119q8 8 16 0" stroke="#905a50" stroke-width="2.5" fill="none" stroke-linecap="round"/>${c.glasses !== "none" ? `<${c.glasses === "square" ? 'rect x="66" y="86" width="32" height="28" rx="6"' : 'circle cx="82" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><${c.glasses === "square" ? 'rect x="102" y="86" width="32" height="28" rx="6"' : 'circle cx="118" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><path d="M98 99h4" stroke="#51445a" stroke-width="3"/>` : ""}${c.scarf ? `<path d="M77 138q23 9 46 0M111 144v36" stroke="${house?.color || "#a15d69"}" stroke-width="12"/><path d="M111 153v4m0 10v4" stroke="${house?.trim || trim}" stroke-width="12"/>` : ""}${hat}${c.wand?.chosen ? `<path d="M157 197l22-51" stroke="${c.wand.color}" stroke-width="5" stroke-linecap="round"/><circle cx="179" cy="146" r="4" fill="${trim}"/>` : ""}${c.owl ? `<g transform="translate(128 106) scale(.38)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${c.pet ? `<g transform="translate(130 206) scale(.53)">${petSVG(c.pet).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${showBroom(c, stage) ? `<path d="M34 246l-9-99" stroke="#956c48" stroke-width="5"/><path d="M34 216l-15 43h30z" fill="#c7a162"/>` : ""}</svg>`;
+  const garment = c.outfit === "gown" ? "M77 137q23-10 46 0l8 35q7 20 27 59-58 24-116 0 20-39 27-59z" : ["jumper", "quidditch", "muggle"].includes(c.outfit) ? "M73 137q27-13 54 0l8 64q-35 9-70 0z" : c.kind === "witch" ? "M77 137q23-13 46 0l6 40 26 66q-55 15-110 0l26-66z" : "M72 137q28-13 56 0l6 94H66z";
+  return `<svg viewBox="0 0 200 280" aria-hidden="true"><ellipse cx="100" cy="258" rx="58" ry="9" fill="#281d3d20"/>${hairBack}${c.outfit === "cloak" ? `<path d="M71 133L41 236h118l-30-103z" fill="#586777"/>` : ""}<path d="M80 223v27m40-27v27" fill="none" stroke="${c.shoes === "trainers" ? "#e7dcc8" : "#3b3544"}" stroke-width="15" stroke-linecap="round"/><path d="${garment}" fill="${robe}"/><path d="M67 148L45 190m88-42l22 42" stroke="${robe}" stroke-width="23" stroke-linecap="round"/><circle cx="43" cy="195" r="9" fill="${c.skin}"/><circle cx="157" cy="195" r="9" fill="${c.skin}"/><path d="M90 137l10 19 10-19" fill="${trim}"/>${pattern}${outfitDetail}${c.outfit === "jumper" ? `<text x="100" y="196" text-anchor="middle" font-size="34" font-family="Georgia" fill="${trim}">${esc(c.name[0]?.toUpperCase() || "H")}</text>` : ""}<ellipse cx="100" cy="97" rx="45" ry="46" fill="${c.skin}"/><circle cx="55" cy="100" r="9" fill="${c.skin}"/><circle cx="145" cy="100" r="9" fill="${c.skin}"/>${hairFront}<ellipse cx="82" cy="100" rx="6" ry="8" fill="${c.eyes}"/><ellipse cx="118" cy="100" rx="6" ry="8" fill="${c.eyes}"/><circle cx="84" cy="97" r="2" fill="#fff"/><circle cx="120" cy="97" r="2" fill="#fff"/>${c.face === "rosy" ? '<ellipse cx="70" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/><ellipse cx="130" cy="115" rx="8" ry="5" fill="#d77e86" opacity=".5"/>' : c.face === "freckles" ? '<path d="M69 111h1m5 3h1m-3-8h1m49 5h1m5 3h1m-3-8h1" stroke="#925b3e" stroke-width="3" stroke-linecap="round"/>' : ""}<path d="M92 119q8 8 16 0" stroke="#905a50" stroke-width="2.5" fill="none" stroke-linecap="round"/>${c.kind === "wizard" && c.beard && c.beard !== "none" ? `<path d="M76 118q24 14 48 0l-8 25-16 ${c.beard === "long" ? 32 : 10}-16-${c.beard === "long" ? 32 : 10}z" fill="${hc}"/>` : ""}${c.glasses !== "none" ? `<${c.glasses === "square" ? 'rect x="66" y="86" width="32" height="28" rx="6"' : 'circle cx="82" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><${c.glasses === "square" ? 'rect x="102" y="86" width="32" height="28" rx="6"' : 'circle cx="118" cy="100" r="16"'} fill="none" stroke="#51445a" stroke-width="3"/><path d="M98 99h4" stroke="#51445a" stroke-width="3"/>` : ""}${c.scarf ? `<path d="M77 138q23 9 46 0M111 144v36" stroke="${house?.color || "#a15d69"}" stroke-width="12"/><path d="M111 153v4m0 10v4" stroke="${house?.trim || trim}" stroke-width="12"/>` : ""}${hat}${c.wand?.chosen ? `<path d="M157 197l22-51" stroke="${c.wand.color}" stroke-width="5" stroke-linecap="round"/><circle cx="179" cy="146" r="4" fill="${trim}"/>` : ""}${c.owl ? `<g transform="translate(32 101) scale(.43)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${c.pet ? `<g transform="translate(130 206) scale(.53)">${petSVG(c.pet).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}${showBroom(c, stage) ? `<path d="M34 246l-9-99" stroke="#956c48" stroke-width="5"/><path d="M34 216l-15 43h30z" fill="#c7a162"/>` : ""}</svg>`;
 }
 const R = {
   state: "loading",
@@ -1791,6 +2120,7 @@ const R = {
   world: null,
   fx: null,
   frame: 0,
+  stageVisible: true,
   lost: false,
   place: "hall",
   geo: /* @__PURE__ */ new Map(),
@@ -1865,10 +2195,17 @@ const R = {
       this.scene.add(this.fx);
       this.resizeObserver = new ResizeObserver(() => this.resize());
       this.resizeObserver.observe($("#stage"));
+      this.stageObserver = new IntersectionObserver((entries) => {
+        const latest = entries[entries.length - 1];
+        this.stageVisible = latest.isIntersecting && latest.intersectionRatio > 0;
+        this.updateLoop();
+      }, { threshold: [0, 0.01] });
+      this.stageObserver.observe($("#stage"));
       r.domElement.addEventListener("webglcontextlost", (e) => {
         e.preventDefault();
         this.lost = true;
         this.state = "lost";
+        this.updateLoop();
         this.releaseScene();
         $("#stage").classList.remove("is3d");
         $("#stage-help").textContent = "Your magic is still here";
@@ -1882,7 +2219,7 @@ const R = {
       this.state = "ready";
       this.sync();
       this.resize();
-      this.loop();
+      this.updateLoop();
     } catch (e) {
       this.state = "fallback";
       this.dispose();
@@ -1936,7 +2273,7 @@ const R = {
         this.geo.set(k, geo);
         return geo;
       }
-      this.geo.set(k, k === "sphere" ? new T.SphereGeometry(1, 24, 16) : k === "box" ? new T.BoxGeometry(1, 1, 1) : k === "cone" ? new T.ConeGeometry(1, 1, 24) : k === "cylinder" ? new T.CylinderGeometry(1, 1, 1, 24) : k === "robe" ? new T.CylinderGeometry(0.56, 1, 1, 24) : k === "torus" ? new T.TorusGeometry(1, 0.08, 8, 36) : k === "gem" ? new T.OctahedronGeometry(1) : new T.SphereGeometry(1, 12, 8));
+      this.geo.set(k, k === "sphere" ? new T.SphereGeometry(1, 24, 16) : k === "box" ? new T.BoxGeometry(1, 1, 1) : k === "cone" ? new T.ConeGeometry(1, 1, 24) : k === "cylinder" ? new T.CylinderGeometry(1, 1, 1, 24) : k === "wizardRobe" ? new T.CylinderGeometry(0.87, 1, 1, 24) : k === "robe" ? new T.CylinderGeometry(0.56, 1, 1, 24) : k === "torus" ? new T.TorusGeometry(1, 0.08, 8, 36) : k === "gem" ? new T.OctahedronGeometry(1) : new T.SphereGeometry(1, 12, 8));
     }
     return this.geo.get(k);
   },
@@ -2012,8 +2349,9 @@ const R = {
     x.lineWidth = 2.5;
     x.lineCap = "round";
     x.lineJoin = "round";
-    x.translate(0, 3);
-    x.stroke(new Path2D(h.path));
+    x.translate(7, 11);
+    x.scale(0.48, 0.48);
+    paintAnimal(x, name);
     const tex = new this.T.CanvasTexture(cv);
     tex.colorSpace = this.T.SRGBColorSpace;
     const mat = new this.T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
@@ -2084,6 +2422,7 @@ const R = {
     this.setCharacter(Store.current() || DEMO);
     $("#stage").classList.add("is3d");
     this.resize();
+    this.updateLoop();
   },
   // These original primitives keep the rooms soft without loading model assets.
   soft(parent, color, pos, scale) {
@@ -2351,8 +2690,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         nest.rotation.x = Math.PI / 2;
         const owl = this.makePet(g, ["barn", "grey", "tawny", "scops"][i]);
         owl.name = "dozing-owl";
-        owl.position.set(x, y + 0.25, z);
-        owl.scale.setScalar(0.62);
+        owl.position.set(x, y + 0.17, z);
+        owl.scale.setScalar(0.84);
         owl.traverse((o) => {
           if (o.isMesh && o.material === this.material("#272839")) o.scale.y = 0.012;
         });
@@ -2500,14 +2839,16 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const body = this.group(a);
     this.body = body;
     let skirt = ["robes", "cloak", "gown", "dress"].includes(c.outfit);
-    const garment = this.mesh(body, skirt ? "robe" : "sphere", robe, [0, c.outfit === "gown" ? .65 : skirt ? .89 : 1.04, 0], c.outfit === "gown" ? [.74,.85,.47] : skirt ? [c.kind === "witch" ? .51 : .46, 1.15,.39] : [.4,.53,.3]);
+    const witchRobe = c.kind === "witch" && ["robes", "dress", "cloak"].includes(c.outfit);
+    const garment = this.mesh(body, skirt ? c.kind === "wizard" && c.outfit !== "gown" ? "wizardRobe" : "robe" : "sphere", robe, [0, c.outfit === "gown" ? 0.65 : witchRobe ? 0.86 : skirt ? 0.91 : 1.04, 0], c.outfit === "gown" ? [0.74, 0.85, 0.47] : witchRobe ? [0.68, 1.28, 0.45] : skirt ? [0.4, 1.12, 0.33] : [0.4, 0.53, 0.3]);
+    if (witchRobe) this.mesh(body, "torus", trim, [0, 0.23, 0], [0.64, 0.64, 0.43]).rotation.x = Math.PI / 2;
     garment.name = "outfit-" + c.outfit;
     if (c.outfit === "gown") {
-      this.mesh(body, "sphere", robe, [0, 1.23, 0], [.33,.3,.27]);
-      this.mesh(body, "torus", trim, [0, 1.04, 0], [.43,.28,.43]).rotation.x = Math.PI / 2;
-      for (const side of [-1, 1]) this.mesh(body, "sphere", trim, [side * .085, 1.04, .3], [.09,.05,.035]).rotation.z = side * .3;
-      this.mesh(body,'gem',trim,[0,1.04,.33],[.04,.045,.03]);
-      for (let i = 0; i < 7; i++) this.flower(body, [(i - 3) * .18, .33 + Math.abs(i - 3) * .025, .465 - Math.abs(i - 3) * .05], trim, .08);
+      this.mesh(body, "sphere", robe, [0, 1.23, 0], [0.33, 0.3, 0.27]);
+      this.mesh(body, "torus", trim, [0, 1.04, 0], [0.43, 0.28, 0.43]).rotation.x = Math.PI / 2;
+      for (const side of [-1, 1]) this.mesh(body, "sphere", trim, [side * 0.085, 1.04, 0.3], [0.09, 0.05, 0.035]).rotation.z = side * 0.3;
+      this.mesh(body, "gem", trim, [0, 1.04, 0.33], [0.04, 0.045, 0.03]);
+      for (let i = 0; i < 7; i++) this.flower(body, [(i - 3) * 0.18, 0.33 + Math.abs(i - 3) * 0.025, 0.465 - Math.abs(i - 3) * 0.05], trim, 0.08);
     }
     if (c.outfit === "robes") {
       for (const side of [-1, 1]) {
@@ -2535,8 +2876,11 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       this.glyph(body, "✧", robe, [0, 1.13, 0.32], 0.22);
     }
     if (c.pattern !== "plain") for (let i = 0; i < 12; i++) {
-      const angle = (i % 4 - 0.5) * 0.55, y = 0.48 + Math.floor(i / 4) * 0.25, x = Math.sin(angle) * (0.48 - (y - 0.4) * 0.18), z = Math.cos(angle) * (0.38 - (y - 0.4) * 0.1);
-      this.glyph(body, c.pattern === "stars" ? "✦" : "☾", trim, [x, y, z + 0.018], 0.1);
+      const angle = (i % 4 - 1.5) * 0.55, y = 0.43 + Math.floor(i / 4) * 0.25;
+      const base = garment.position.y - garment.scale.y / 2, progress = Math.max(0, Math.min(1, (y - base) / garment.scale.y));
+      const radius = 1 - progress * (c.kind === "wizard" && c.outfit !== "gown" ? 0.13 : 0.44);
+      const x = Math.sin(angle) * garment.scale.x * radius, z = Math.cos(angle) * garment.scale.z * radius;
+      this.glyph(body, c.pattern === "stars" ? "✦" : "☾", trim, [x, y, z + 0.024], 0.1);
     }
     for (const side of [-1, 1]) {
       const sleeve = this.mesh(body, "sphere", robe, [side * 0.43, 1.07, 0], [0.19, 0.4, 0.2]);
@@ -2574,29 +2918,56 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     mouth.visible = false;
     const hair = this.group(head);
     this.hair = hair;
-    this.mesh(hair, "sphere", c.hairColor, [0, 0.23, -0.07], [0.58, 0.43, 0.46]);
-    if (["long", "waves", "braids"].includes(c.hair)) for (const side of [-1, 1]) {
-      if (c.hair === "braids") for (let j = 0; j < 6; j++) this.mesh(hair, "sphere", c.hairColor, [side * (0.47 + Math.sin(j * 2) * 0.025), 0.03 - j * 0.14, 0.02], [0.12, 0.12, 0.14]);
-      else for (let j = 0; j < 3; j++) {
-        const curl = this.mesh(hair, "sphere", c.hairColor, [side * (0.45 + Math.sin(j) * 0.035), 0.07 - j * 0.22, -0.04], [0.15, 0.31, 0.3]);
-        curl.rotation.z = side * 0.12;
+    hair.name = "hair-" + c.hair;
+    const hc = c.hairColor;
+    this.mesh(hair, "sphere", hc, [0, 0.26, -0.035], [0.585, 0.34, 0.49]);
+    if (c.hair === "short") {
+      this.mesh(hair, "sphere", hc, [-0.08, 0.37, 0.24], [0.5, 0.16, 0.26]).rotation.z = -0.14;
+      for (const side of [-1, 1]) this.mesh(hair, "sphere", hc, [side * 0.5, 0.12, -0.03], [0.09, 0.22, 0.24]);
+    } else if (c.hair === "pixie") {
+      for (let i = 0; i < 7; i++) {
+        const spike = this.mesh(hair, "cone", hc, [(i - 3) * 0.13, 0.54 + Math.sin(i * 0.7) * 0.13, 0.04 + Math.cos(i) * 0.12], [0.16, 0.48 + i % 3 * 0.09, 0.17]);
+        spike.rotation.z = (3 - i) * 0.15;
+      }
+      this.mesh(hair, "sphere", hc, [-0.26, 0.23, 0.37], [0.26, 0.11, 0.12]).rotation.z = -0.4;
+    } else if (c.hair === "buns") {
+      for (const side of [-1, 1]) {
+        this.mesh(hair, "sphere", hc, [side * 0.64, 0.56, -0.02], [0.34, 0.35, 0.32]);
+        this.mesh(hair, "torus", trim, [side * 0.64, 0.55, 0.26], [0.23, 0.23, 0.23]);
+      }
+      this.mesh(hair, "sphere", hc, [0, 0.33, 0.3], [0.45, 0.12, 0.2]);
+    } else if (c.hair === "curls") {
+      this.mesh(hair, "sphere", hc, [0, 0.33, -0.12], [0.76, 0.62, 0.57]);
+      for (let i = 0; i < 23; i++) {
+        const angle = -Math.PI * 0.67 + i / 22 * Math.PI * 1.34;
+        this.mesh(hair, "sphere", hc, [Math.sin(angle) * 0.65, 0.28 + Math.cos(angle) * 0.5, 0.17 + Math.sin(i * 3) * 0.12], [0.22, 0.23, 0.22]);
+      }
+      for (let i = 0; i < 5; i++) this.mesh(hair, "sphere", hc, [(i - 2) * 0.23, 0.37 + Math.sin(i) * 0.06, 0.4], [0.17, 0.18, 0.15]);
+    } else {
+      for (const side of [-1, 1]) {
+        if (c.hair === "braids") {
+          for (let j = 0; j < 7; j++) this.mesh(hair, "sphere", hc, [side * (0.55 + Math.sin(j * 2) * 0.045), 0.02 - j * 0.155, 0.12], [0.14, 0.14, 0.15]);
+          this.mesh(hair, "torus", trim, [side * 0.55, -0.86, 0.12], [0.13, 0.13, 0.13]).rotation.x = Math.PI / 2;
+          for (const bow of [-1, 1]) this.mesh(hair, "sphere", trim, [side * 0.55 + bow * 0.1, -0.88, 0.24], [0.11, 0.055, 0.04]).rotation.z = bow * 0.35;
+          this.mesh(hair, "cone", hc, [side * 0.55, -1.04, 0.1], [0.13, 0.22, 0.13]);
+        } else if (c.hair === "long") {
+          this.mesh(hair, "sphere", hc, [side * 0.48, -0.38, -0.16], [0.22, 0.78, 0.29]);
+          this.mesh(hair, "sphere", hc, [side * 0.53, -0.89, -0.08], [0.18, 0.25, 0.23]);
+        } else {
+          for (let j = 0; j < 3; j++) this.mesh(hair, "sphere", hc, [side * (0.49 + j % 2 * 0.06), 0.08 - j * 0.19, 0.02], [0.19, 0.2, 0.26]);
+        }
+      }
+      for (let i = 0; i < 4; i++) {
+        const fringe = this.mesh(hair, "sphere", hc, [(i - 1.5) * 0.23, 0.29 - Math.sin(i) * 0.06, 0.34], [0.23, 0.14, 0.16]);
+        fringe.rotation.z = -0.3;
       }
     }
-    if (c.hair === "curls") for (let i = 0; i < 18; i++) {
-      const ang = i / 18 * Math.PI * 2;
-      this.mesh(hair, "sphere", c.hairColor, [Math.sin(ang) * 0.48, 0.18 + Math.cos(ang) * 0.26, 0.16 + Math.cos(i * 4) * 0.2], [0.17, 0.17, 0.16]);
-    }
-    else for (let i = 0; i < 5; i++) {
-      const fringe = this.mesh(hair, "sphere", c.hairColor, [(i - 2) * 0.19, 0.3 - Math.sin(i * 0.8) * 0.09, 0.34], [0.19, 0.18, 0.17]);
-      fringe.rotation.z = 0.4;
-    }
-    if (c.hair === "buns") for (const side of [-1, 1]) {
-      this.mesh(hair, "sphere", c.hairColor, [side * 0.54, 0.31, -0.08], [0.24, 0.25, 0.23]);
-      this.mesh(hair, "torus", trim, [side * 0.54, 0.31, 0.04], [0.18, 0.18, 0.18]);
-    }
-    if (c.hair === "pixie") {
-      hair.scale.y = 0.85;
-      hair.position.y = 0.07;
+    if (c.kind === "wizard" && c.beard && c.beard !== "none") {
+      const beard = this.group(head, [0, -0.3, 0.32]);
+      beard.name = "beard-" + c.beard;
+      for (const side of [-1, 1]) this.mesh(beard, "sphere", hc, [side * 0.15, -0.02, 0.08], [0.16, 0.12, 0.12]);
+      const tuft = this.mesh(beard, "cone", hc, [0, c.beard === "long" ? -0.28 : -0.12, 0.06], [c.beard === "long" ? 0.27 : 0.22, c.beard === "long" ? 0.65 : 0.32, 0.17]);
+      tuft.rotation.z = Math.PI;
     }
     if (c.glasses !== "none") {
       for (const side of [-1, 1]) {
@@ -2616,13 +2987,13 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       for (let i = 0; i < 4; i++) this.mesh(a, "box", h?.trim || trim, [0.18, 0.96 + i * 0.13, 0.38], [0.153, 0.055, 0.015]);
     }
     const hat = this.hat = this.group(a, [0, 2.42, 0]);
-    let hatType = S.sorting || S.sortResult ? "sorting" : c.hat;
+    let hatType = S.sorting || S.sortResult ? "sorting" : S.screen === "editor" && S.tab === "hair" ? "none" : c.hat;
     if (["pointed", "crooked", "sorting"].includes(hatType)) {
       const col = hatType === "sorting" ? "#94745e" : robe;
-      this.mesh(hat, "sphere", col, [0, 0, 0], [0.75, 0.065, 0.6]);
-      this.mesh(hat, "cone", col, [0, 0.43, 0], [0.47, 0.87, 0.43]);
+      this.mesh(hat, "sphere", col, [0, 0, 0], [hatType === "pointed" ? 0.59 : 0.9, 0.065, hatType === "pointed" ? 0.47 : 0.64]);
+      this.mesh(hat, "cone", col, [0, hatType === "pointed" ? 0.54 : 0.36, 0], [hatType === "pointed" ? 0.39 : 0.47, hatType === "pointed" ? 1.1 : 0.73, 0.4]);
       if (hatType === "crooked" || hatType === "sorting") {
-        const tip = this.mesh(hat, "cone", col, [-0.13, 0.86, 0], [0.2, 0.4, 0.18]);
+        const tip = this.mesh(hat, "cone", col, [-0.22, 0.77, 0], [0.2, 0.5, 0.18]);
         tip.rotation.z = 0.75;
       }
       this.mesh(hat, "cylinder", trim, [0, 0.1, 0], [0.43, 0.1, 0.4]);
@@ -2658,7 +3029,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     }
     if (c.owl) {
       const pet = this.makePet(a, c.owl);
-      pet.position.set(-0.66, 1.28, 0.1);
+      pet.name = "shoulder-owl";
+      pet.position.set(-0.6, 1.46, 0.4);
       pet.scale.setScalar(c.owl === "scops" ? 0.4 : 0.53);
     }
     if (c.pet) {
@@ -2683,8 +3055,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       this.mesh(this.wandTip, "sphere", "#efce88", [0, 0, 0], [0.045, 0.045, 0.045], true);
     }
     if (showBroom(c)) {
-      const b = this.broomGroup = this.group(a, [-0.84, 0.55, 0]);
-      b.rotation.z = 0.2;
+      const b = this.broomGroup = this.group(a, [-0.58, 0.55, 0.04]);
+      b.rotation.z = -0.06;
       this.mesh(b, "cylinder", c.broom === "firebolt" ? "#5c3f36" : "#987447", [0, 0.35, 0], [0.032, 1.65, 0.032]);
       for (let i = 0; i < 9; i++) this.mesh(b, "cone", "#c49e62", [Math.sin(i * 7) * 0.1, -0.5, Math.cos(i * 7) * 0.1], [0.06, 0.63, 0.06]).rotation.z = Math.sin(i) * 0.2;
       this.mesh(b, "cylinder", "#d5b76c", [0, -0.21, 0], [0.09, 0.06, 0.09]);
@@ -2729,16 +3101,66 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       return o;
     };
     if (effect2 === "light") {
-      const light = new this.T.PointLight("#ffe8a8", 4, 7);
-      light.position.set(0.8, 1.7, 1);
+      this.keyLight.intensity = 5.5;
+      this.keyLight.color.set("#fff0c8");
+      this.scene.updateMatrixWorld(true);
+      const tip = this.wandTip?.getWorldPosition(new this.T.Vector3()) || new this.T.Vector3(0.9, 1.6, 0.6);
+      const light = new this.T.PointLight("#ffe8a8", 20, 14, 1);
+      light.name = "lumos-scene-light";
+      light.position.copy(tip);
       g.add(light);
-      this.mesh(g, "sphere", "#ffe6a1", [0.9, 1.7, 0.6], [0.12, 0.12, 0.12], true);
+      this.mesh(g, "sphere", "#fff9df", tip.toArray(), [0.12, 0.12, 0.12], true).name = "lumos-wand-tip";
+      const halo = this.glow(g, "#ffe2a0", tip.toArray(), [2, 2, 1]);
+      halo.name = "lumos-halo";
+      add(halo, "light-halo");
+      this.glow(g, "#ffe0a4", [0, 2, -1], [8, 7, 1]);
+      for (let i = 0; i < 8; i++) {
+        const ray = this.glow(g, "#fff0b8", tip.toArray(), [0.075, 1.8, 1]);
+        ray.rotation.z = i * Math.PI / 8;
+      }
     }
     if (effect2 === "float") {
-      const f = this.group(g, [0.9, 1.3, 0.7]);
-      this.mesh(f, "sphere", "#f1e7da", [0, 0, 0], [0.11, 0.4, 0.045]).rotation.z = -0.4;
-      this.line(f, [[-0.1, -0.4, 0], [0, 0, 0.03], [0.15, 0.4, 0]], "#cfb98c", 0.013);
+      const f = this.group(g, [-1.05, 1.3, 0.7]);
+      f.name = "levitating-feather";
+      this.mesh(f, "sphere", "#fff7df", [0, 0, 0], [0.23, 0.61, 0.065]).rotation.z = -0.3;
+      this.line(f, [[-0.16, -0.55, 0.08], [0, 0, 0.09], [0.19, 0.6, 0.06]], "#bb935a", 0.018);
+      for (let i = 0; i < 6; i++) this.line(f, [[-0.16 + i * 0.035, -0.43 + i * 0.16, 0.08], [0.15 + i * 0.012, -0.29 + i * 0.16, 0.08]], "#d5bc88", 0.012);
+      this.glow(f, "#c8efff", [0, 0, -0.06], [1.4, 1.8, 1]);
       add(f, "float");
+    }
+    if (effect2 === "fire") {
+      const fire = this.group(g, [1.02, 0.25, 0.65]);
+      fire.name = "incendio-flames";
+      this.glow(fire, "#ff983e", [0, 0.65, -0.05], [2, 2.8, 1]);
+      for (let i = 0; i < 7; i++) {
+        const flame = this.group(fire, [(i - 3) * 0.11, 0.22 + Math.sin(i) * 0.08, Math.sin(i * 3) * 0.1]);
+        this.mesh(flame, "sphere", i % 2 ? "#ffad45" : "#ee7033", [0, 0.2, 0], [0.18, 0.4, 0.13], true);
+        const tip = this.mesh(flame, "cone", "#ffd77c", [0.035, 0.61, 0], [0.16, 0.66, 0.12], true);
+        tip.rotation.z = -0.12;
+        this.mesh(flame, "sphere", "#fff1b1", [0, 0.12, 0.09], [0.08, 0.3, 0.055], true);
+        flame.userData.i = i;
+        add(flame, "flame");
+      }
+      const light = new this.T.PointLight("#ffa54c", 8, 8, 1);
+      light.position.set(1, 1, 1);
+      g.add(light);
+    }
+    if (effect2 === "water") {
+      const arc = this.line(g, Array.from({ length: 28 }, (_, i) => {
+        const u = i / 27;
+        return [0.65 + u * 1.03, 1.5 + Math.sin(u * Math.PI) * 0.94 - u * 0.97, 0.62];
+      }), "#8de6ff", 0.055);
+      arc.name = "aguamenti-arc";
+      arc.material = this.material("#8de6ff", true);
+      this.glow(g, "#77caed", [1.2, 1.4, 0.2], [1.8, 2.5, 1]);
+      for (let i = 0; i < 16; i++) {
+        const drop = this.mesh(g, "sphere", "#b4f1ff", [1.65, 0.45, 0.6], [0.035, 0.08, 0.035], true);
+        drop.userData.i = i;
+        add(drop, "splash");
+      }
+      const pool = this.mesh(g, "torus", "#8edbf3", [1.55, 0.25, 0.6], [0.45, 0.32, 0.45], true);
+      pool.rotation.x = Math.PI / 2;
+      pool.name = "water-splash-ring";
     }
     if (effect2 === "unlock") {
       const door = this.group(g, [-1, 1.1, 0.4]);
@@ -2757,6 +3179,17 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       }
     }
     if (effect2 === "disarm") {
+      const flash = this.group(g);
+      flash.name = "expelliarmus-bolt";
+      const bolt = this.line(flash, [[0.82, 1.5, 0.7], [1.55, 1.9, 0.6], [1.12, 2.1, 0.6], [1.72, 2.8, 0.5]], "#ff4b5e", 0.095);
+      bolt.material = this.material("#ff4055", true);
+      const core = this.line(flash, [[0.82, 1.5, 0.71], [1.55, 1.9, 0.61], [1.12, 2.1, 0.61], [1.72, 2.8, 0.51]], "#ffd5bd", 0.03);
+      core.material = this.material("#fff1d3", true);
+      this.glow(flash, "#ff5062", [1.3, 2, 0.3], [2.8, 3.5, 1]);
+      add(flash, "red-flash");
+      const light = new this.T.PointLight("#ff4055", 12, 9, 1);
+      light.position.set(1, 2, 1);
+      g.add(light);
       const wand = this.mesh(g, "cylinder", "#d6a166", [0.7, 1.3, 0.6], [0.035, 0.75, 0.035]);
       add(wand, "disarm");
     }
@@ -2838,9 +3271,18 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     void $("#fallback").offsetWidth;
     $("#fallback").classList.add("happy");
   },
+  updateLoop() {
+    const active = this.state === "ready" && !this.lost && !document.hidden && this.stageVisible && this.renderer;
+    if (active && !this.frame) this.frame = requestAnimationFrame((t) => this.loop(t));
+    if (!active && this.frame) {
+      cancelAnimationFrame(this.frame);
+      this.frame = 0;
+    }
+  },
   loop(t = 0) {
+    this.frame = 0;
+    if (this.lost || document.hidden || !this.stageVisible || !this.renderer || this.state !== "ready") return;
     this.frame = requestAnimationFrame((x) => this.loop(x));
-    if (this.lost || document.hidden || !this.renderer) return;
     this.frames++;
     const sec = t / 1e3, reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     this.controls.update();
@@ -2857,8 +3299,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
           this.actor.position.x = 0;
           this.actor.rotation.z = 0;
           if (this.broomGroup) {
-            this.broomGroup.position.set(-0.84, 0.55, 0);
-            this.broomGroup.rotation.z = 0.2;
+            this.broomGroup.position.set(-0.58, 0.55, 0.04);
+            this.broomGroup.rotation.z = -0.06;
           }
         } else {
           this.actor.position.y += Math.sin(p * Math.PI) * 0.55;
@@ -2951,7 +3393,21 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
             }
             if (e === "light") o.scale.setScalar(0.04 + Math.sin(age * 5 + i) * 0.01);
           }
-          if (k === "float") o.position.y = 1.3 + Math.sin(age * 2) * 0.5;
+          if (k === "float") {
+            o.position.y = 1.25 + Math.min(1, age / 1.2) * 1.4 + Math.sin(age * 2) * 0.12;
+            o.rotation.z = Math.sin(age * 1.6) * 0.18;
+          }
+          if (k === "light-halo") o.scale.setScalar(1.8 + Math.sin(age * 4) * 0.16);
+          if (k === "flame") {
+            o.scale.y = 0.8 + Math.sin(age * 9 + i * 2) * 0.2;
+            o.rotation.z = Math.sin(age * 6 + i) * 0.13;
+          }
+          if (k === "red-flash") o.visible = Math.sin(age * 7) > -0.7;
+          if (k === "splash") {
+            const u = (age * 1.4 + i * 0.07) % 1;
+            const a = i * 2.4;
+            o.position.set(1.6 + Math.cos(a) * u * 0.43, 0.38 + Math.sin(u * Math.PI) * 0.5, 0.6 + Math.sin(a) * u * 0.4);
+          }
           if (k === "door") o.rotation.y = -Math.min(1, age) * 1.4;
           if (k === "repair") o.position.x = 0.9 + (o.userData.part - 1) * Math.max(0, 1 - age) * 0.7;
           if (k === "disarm") {
@@ -2996,6 +3452,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
   },
   dispose() {
     cancelAnimationFrame(this.frame);
+    this.frame = 0;
+    this.stageObserver?.disconnect();
     this.resizeObserver?.disconnect();
     this.controls?.dispose();
     this.releaseScene();
@@ -3060,7 +3518,7 @@ function sceneSVG() {
       bg += '<path d="M27 286v-67m-21 0h42" stroke="#b18d63" stroke-width="6"/>';
     }
   }
-  return `<svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="storybook-sky" x2="0%" y2="100%"><stop stop-color="#111c3d"/><stop offset="1" stop-color="#617290"/></linearGradient><radialGradient id="storybook-glow"><stop stop-color="#ffdc86" stop-opacity=".65"/><stop offset="1" stop-color="#ffdc86" stop-opacity="0"/></radialGradient></defs><rect width="400" height="320" fill="url(#storybook-sky)"/>${stars}<path d="M0 216h400v104H0z" fill="#9a8c88"/>${bg}<g transform="translate(100 22)"><g class="storybook-actor">${charSVG(c, true).replace(/<svg[^>]*>|<\/svg>/g, "")}</g></g></svg>`;
+  return `<svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><linearGradient id="storybook-sky" x2="0%" y2="100%"><stop stop-color="#111c3d"/><stop offset="1" stop-color="#617290"/></linearGradient><radialGradient id="storybook-glow"><stop stop-color="#ffdc86" stop-opacity=".65"/><stop offset="1" stop-color="#ffdc86" stop-opacity="0"/></radialGradient></defs><rect width="400" height="320" fill="url(#storybook-sky)"/>${stars}<path d="M0 216h400v104H0z" fill="#9a8c88"/>${bg}<g transform="translate(100 22)"><g class="storybook-actor">${charSVG(c, true).replace(/<svg[^>]*>|<\/svg>/g, "")}</g></g></svg>`;
 }
 function updateStageHelp() {
   $("#stage-help").textContent = R.state === "ready" ? "Drag to turn · pinch to zoom" : "A little storybook magic";
@@ -3084,11 +3542,11 @@ function title(eyebrow, heading, sub = "") {
 function choices(key, values, current, scope = "set") {
   return `<div class="choices">${values.map((v) => {
     const [val, label, ic] = Array.isArray(v) ? v : [v, v, null];
-    return `<button class="choice" data-${scope}="${key}" data-value="${esc(val)}" aria-pressed="${String(current) === String(val)}">${ic ? icon(ic) : key === "wood" ? icon("leaf") : ""}${esc(label)}</button>`;
+    return `<button class="choice" data-${scope}="${key}" data-value="${esc(val)}" aria-pressed="${String(current) === String(val)}">${ic ? icon(ic) : key === "wood" ? `<span class="wood-chip" style="--wood:${WOODS[val]}"></span>` : ""}${esc(label)}</button>`;
   }).join("")}</div>`;
 }
 function swatches(key, colors, current, scope = "set") {
-  return `<div class="choices swatches">${colors.map((c, i) => `<button class="choice" data-${scope}="${key}" data-value="${c}" aria-pressed="${current === c}" aria-label="${key} colour ${i + 1}" title="${key} colour ${i + 1}"><span class="dot" style="--swatch:${c}"></span></button>`).join("")}</div>`;
+  return `<div class="choices swatches" style="--swatch-columns:${colors.length > 6 ? 4 : colors.length === 6 ? 3 : colors.length}">${colors.map((c, i) => `<button class="choice" data-${scope}="${key}" data-value="${c}" aria-pressed="${current === c}" aria-label="${key} colour ${i + 1}" title="${key} colour ${i + 1}"><span class="dot" style="--swatch:${c}"></span></button>`).join("")}</div>`;
 }
 const field = (label, inside) => `<div class="field"><div class="field-label">${label}</div>${inside}</div>`;
 function home() {
@@ -3102,11 +3560,14 @@ function home() {
   return s;
 }
 const EDIT_TABS = [["you", "You", "person"], ["face", "Face", "eye"], ["hair", "Hair", "hair"], ["clothes", "Clothes", "shirt"], ["hats", "Hats", "hat"], ["extras", "Extras", "star"], ["school", "School", "castle"]];
+function editorTabs() {
+  return `<div class="editor-tabs-wrap"><button class="tab-scroll" data-action="scroll-tabs" data-dir="-1" aria-label="Earlier choices">‹</button><div class="tabbar" role="tablist" aria-label="Character choices">${EDIT_TABS.map(([id, label, ic]) => `<button role="tab" data-tab="${id}" aria-selected="${S.tab === id}">${icon(ic)}${label}</button>`).join("")}</div><button class="tab-scroll" data-action="scroll-tabs" data-dir="1" aria-label="More choices">›</button></div>`;
+}
 function editor() {
   const c = Store.current();
   $("#intro").innerHTML = title("WITCHES & WIZARDS", c.accepted ? "Time to dress up!" : "Make your new friend!");
   $("#stage-foot").textContent = "Pick a look. Give them a twirl!";
-  return `<div class="row equal">${btn(icon("shuffle") + " Surprise me!", "random", "soft")}${btn(icon("check") + " All done", "finish", "primary")}</div><div class="tabbar" role="tablist" aria-label="Character choices">${EDIT_TABS.map(([id, label, ic]) => `<button role="tab" data-tab="${id}" aria-selected="${S.tab === id}">${icon(ic)}${label}</button>`).join("")}</div><section id="editor-panel" class="panel" role="tabpanel">${editorPanel()}</section>`;
+  return `<div class="row equal">${btn(icon("shuffle") + " Surprise me!", "random", "soft")}${btn(icon("check") + " All done", "finish", "primary")}</div><section id="editor-panel" class="panel" role="tabpanel">${editorPanel()}</section>`;
 }
 function editorPanel() {
   const c = Store.current();
@@ -3116,7 +3577,7 @@ function editorPanel() {
     case "face":
       return `<h2>Eyes, cheeks & glasses</h2>${field("Eye colour", swatches("eyes", EYES, c.eyes))}${field("A little detail", choices("face", [["rosy", "❀ Rosy cheeks"], ["freckles", "∴ Freckles"], ["plain", "♡ Just me"]], c.face))}${field("Glasses", choices("glasses", [["none", "○ None"], ["round", "◎ Round"], ["square", "▢ Square"], ["gold", "✦ Gold"], ["heart", "♡ Oval"]], c.glasses))}`;
     case "hair":
-      return `<h2>Pick some fun hair!</h2>${field("Hair style", choices("hair", [["waves", "≈ Waves"], ["short", "⌁ Short"], ["long", "〰 Long"], ["braids", "❦ Braids"], ["curls", "꩜ Curls"], ["buns", "◉ Buns"], ["pixie", "✧ Pixie"]], c.hair))}${field("Hair colour", swatches("hairColor", HAIRS, c.hairColor))}`;
+      return `<h2>Pick some fun hair!</h2>${field("Hair style", choices("hair", [["waves", "≈ Waves"], ["short", "⌁ Short"], ["long", "〰 Long"], ["braids", "❦ Braids"], ["curls", "꩜ Curls"], ["buns", "◉ Buns"], ["pixie", "✧ Pixie"]], c.hair))}${field("Hair colour", swatches("hairColor", HAIRS, c.hairColor))}${c.kind === "wizard" ? field("A wizard beard?", choices("beard", [["none", "○ No beard"], ["short", "⌁ Little beard"], ["long", "✧ Long beard"]], c.beard || "none")) : ""}<p class="fine">Your hat is resting while you try hair.</p>`;
     case "clothes":
       return `<h2>What shall we wear?</h2>${field("Outfit", choices("outfit", [["robes", "✦ School robes"], ["quidditch", "⚑ Quidditch kit"], ["gown", "❀ Yule Ball gown"], ["dress", "♧ Dress robes"], ["jumper", "♡ Cosy jumper"], ["muggle", "✧ Muggle clothes"], ["cloak", "☾ Travelling cloak"]], c.outfit))}${field("Main colour", swatches("robe", COLORS, c.robe))}${field("Trim colour", swatches("trim", ["#e7b65b", "#c6d4dc", "#dba3b8", "#b6d0ac", "#f3e4c7", "#776593"], c.trim))}${field("Pattern", choices("pattern", [["plain", "○ Plain"], ["stars", "✦ Stars"], ["moons", "☾ Moons"]], c.pattern))}`;
     case "hats":
@@ -3144,7 +3605,7 @@ function sorting() {
   }
   if (S.sorting) {
     const q = QUIZ[S.quiz];
-    return `<div class="panel lavender"><div class="progress" aria-label="Question ${S.quiz + 1} of 4">${QUIZ.map((_, i) => `<i class="${i <= S.quiz ? "on" : ""}"></i>`).join("")}</div><p class="quote">${["“Aha! Is that courage… or a biscuit in your pocket?”", "“Wonderful! My hat-brain is tingling.”", "“Hmm… no wrong answers in this hat!”", "“Nearly there. Hold on to your eyebrows!”"][S.quiz]}</p><h2 class="question">${q.q}</h2><div class="answers">${q.answers.map(([h, a]) => btn(a, "answer", "", 'data-house="' + h + '"')).join("")}</div></div>${btn("♡ Let me choose!", "choose-house", "wide")}`;
+    return `<div class="panel lavender"><div class="progress" aria-label="Question ${S.quiz + 1} of 4">${QUIZ.map((_, i) => `<i class="${i <= S.quiz ? "on" : ""}"></i>`).join("")}</div><p class="quote">${["“Aha! Is that courage… or a biscuit in your pocket?”", "“Wonderful! My hat-brain is tingling.”", "“Hmm… no wrong answers in this hat!”", "“Nearly there. Hold on to your eyebrows!”"][S.quiz]}</p><h2 class="question">${q.q}</h2><div class="answers">${q.answers.map(([h, a]) => btn(a, "answer", "", 'data-house="' + h + '" data-question="' + S.quiz + '"' + (performance.now() < (S.answerReady || 0) ? " disabled" : ""))).join("")}</div></div>${btn("♡ Let me choose!", "choose-house", "wide")}`;
   }
   return `<div class="panel lavender"><p class="quote">“Another brilliant head.<br>Let’s find you a home!”</p>${btn(icon("hat") + " Put on the Sorting Hat", "start-sort", "primary wide")}${btn("♡ Let me choose!", "choose-house", "wide")}</div>${S.chooseHouse ? housePicker() : ""}<div class="panel"><h3>Another school, another adventure</h3>${choices("school", [["Hogwarts", "✦ Hogwarts"], ["Beauxbatons", "❀ Beauxbatons"], ["Durmstrang", "⚑ Durmstrang"], ["Ilvermorny", "✧ Ilvermorny"], ["Dragon school", "♨ Taught by a dragon"]], c.school)}${c.school !== "Hogwarts" ? btn(icon("check") + " Off to school!", "room", "gold") : ""}</div>`;
 }
@@ -3155,7 +3616,7 @@ function wands() {
   const c = Store.current(), w = c.wand;
   $("#intro").innerHTML = title("THE WAND SHOP", "Ollivanders", "Try a wand. Will it choose you?");
   $("#stage-foot").textContent = w.chosen ? "Your wand picked YOU!" : "So many boxes! Let’s try a wand.";
-  return `<div class="panel lavender"><h3>✧ ${w.chosen ? "Your wand has found you!" : "Build your wand"}</h3><p class="fine">${esc(w.wood)} · ${esc(w.core)} · ${w.length} inches</p>${btn(icon("wand") + (w.chosen ? " Try its magic" : " Try this wand"), "try-wand", w.chosen ? "gold wide" : "primary wide")}<p id="wand-result" class="fine" role="status">${w.chosen ? "It glows whenever you hold it." : w.tries ? "Oops! That one tickled the teacups. Try once more." : "A little swish should tell us…"}</p></div><div class="panel">${field("Wood", choices("wood", ["holly", "yew", "willow", "elder", "vine", "oak", "cherry"], w.wood, "wand"))}${field("Magical core", choices("core", [["phoenix feather", "♨ Phoenix feather"], ["dragon heartstring", "✦ Dragon heartstring"], ["unicorn hair", "✧ Unicorn hair"]], w.core, "wand"))}<div class="field"><label for="wand-length">Length · <span id="length-value">${w.length}</span> inches</label><input id="wand-length" type="range" min="8" max="15" step="0.5" value="${w.length}"></div>${field("Flexibility", choices("flex", [["springy", "≈ Springy"], ["supple", "〰 Supple"], ["firm", "│ Firm"]], w.flex, "wand"))}${field("Handle", choices("handle", [["smooth", "│ Smooth"], ["twisted", "⌁ Twisted"], ["orb", "● Round gem"]], w.handle, "wand"))}${field("Wand colour", swatches("color", ["#9b6b43", "#52404b", "#c8a472", "#e2d7bd", "#8c74a3", "#6c8784"], w.color, "wand"))}${field("Inlay", choices("inlay", [["gold", "✧ Gold"], ["silver", "✦ Silver"], ["rose", "❀ Rose"], ["none", "○ Plain"]], w.inlay, "wand"))}</div>${btn(icon("check") + " Back to my adventure", "room", "wide")}`;
+  return `<div class="panel lavender"><h3>✧ ${w.chosen ? "Your wand has found you!" : "Build your wand"}</h3><p class="fine">${esc(w.wood)} · ${esc(w.core)} · ${w.length} inches</p>${btn(icon("wand") + (w.chosen ? " Try its magic" : " Try this wand"), "try-wand", w.chosen ? "gold wide" : "primary wide")}<p id="wand-result" class="fine" role="status">${w.chosen ? "It glows whenever you hold it." : w.tries ? "Oops! That one tickled the teacups. Try once more." : "A little swish should tell us…"}</p></div><div class="panel">${field("Wood", choices("wood", ["holly", "yew", "willow", "elder", "vine", "oak", "cherry"], w.wood, "wand"))}${field("Magic inside", choices("core", [["phoenix feather", "Phoenix feather", "feather"], ["dragon heartstring", "Dragon heartstring", "heart"], ["unicorn hair", "Unicorn hair", "unicorn"]], w.core, "wand"))}<div class="field"><label for="wand-length">Length · <span id="length-value">${w.length}</span> inches</label><input id="wand-length" type="range" min="8" max="15" step="0.5" value="${w.length}"></div>${field("Bendy?", choices("flex", [["springy", "≈ Springy"], ["supple", "〰 Supple"], ["firm", "│ Firm"]], w.flex, "wand"))}${field("Handle", choices("handle", [["smooth", "│ Smooth"], ["twisted", "⌁ Twisted"], ["orb", "● Round gem"]], w.handle, "wand"))}${field("Wand colour", swatches("color", ["#9b6b43", "#52404b", "#c8a472", "#e2d7bd", "#8c74a3", "#6c8784"], w.color, "wand"))}${field("Sparkle stripe", choices("inlay", [["gold", "✧ Gold"], ["silver", "✦ Silver"], ["rose", "❀ Rose"], ["none", "○ Plain"]], w.inlay, "wand"))}</div>${btn(icon("check") + " Back to my adventure", "room", "wide")}`;
 }
 function pets() {
   const c = Store.current();
@@ -3171,14 +3632,14 @@ function spells() {
   const c = Store.current();
   $("#intro").innerHTML = title("SWISH, FLICK, HOORAY!", "Spell workshop");
   $("#stage-foot").textContent = "Pick a spell and give it a swish!";
-  let s = `<div class="tabbar" role="tablist" aria-label="Spell workshop"><button role="tab" data-spell-tab="learn" aria-selected="${S.spellTab === "learn"}">${icon("book")} Learn spells</button><button role="tab" data-spell-tab="invent" aria-selected="${S.spellTab === "invent"}">${icon("sparkle")} Invent a spell</button><button role="tab" data-spell-tab="saved" aria-selected="${S.spellTab === "saved"}">${icon("star")} My spells (${c.spells.length})</button></div>`;
+  let s = `<div class="tabbar" role="tablist" aria-label="Spell workshop"><button role="tab" data-spell-tab="learn" aria-selected="${S.spellTab === "learn"}">${icon("book")} Learn</button><button role="tab" data-spell-tab="invent" aria-selected="${S.spellTab === "invent"}">${icon("sparkle")} Invent</button><button role="tab" data-spell-tab="saved" aria-selected="${S.spellTab === "saved"}">${icon("star")} My spells (${c.spells.length})</button></div>`;
   if (S.spellTab === "invent") {
     const d = S.invent;
     return s + `<div class="panel"><h2>Make up a new spell!</h2><div class="field"><label for="spell-name">Magic words</label><input id="spell-name" value="${esc(d.name)}" maxlength="36" autocomplete="off"></div><div class="syllables">${["Lumi", "flora", "bubba", "twink", "nivi", "puff", "wing", "la"].map((s2) => `<button data-syllable="${s2}">+ ${s2}</button>`).join("")}${btn("⌫ Clear", "clear-spell-name")}</div>${field("What does it do?", choices("effect", EFFECTS, d.effect, "invent"))}${field("Wand motion", choices("motion", [["wave", "≈ Wave"], ["circle", "○ Circle"], ["zigzag", "ϟ Zigzag"], ["star", "☆ Star"], ["up", "⌃ Up"], ["loop", "➰ Loop"]], d.motion, "invent"))}${field("Magic colour", swatches("color", ["#da9fc1", "#add9c7", "#a3cce9", "#e7c57c", "#bfa9e2", "#f1f0e9"], d.color, "invent"))}${btn(icon("book") + " Save my spell", "save-spell", "primary wide")}</div>`;
   }
   if (S.spellTab === "saved" && !c.spells.length) return s + `<div class="panel"><h2>Your spellbook is empty.</h2><p>Make a spell. Save it. Try it!</p>${btn(icon("plus") + " Invent my first spell", "invent", "primary")}</div>`;
   const selected = spellSelected(), list = S.spellTab === "saved" ? c.spells : SPELLS;
-  s += `<div class="panel"><div class="spell-title"><span>${esc(selected.symbol || "✦")}</span><div><h2>${esc(selected.name)}</h2><p>${esc(selected.hint || "You made this spell!")}</p></div></div><div class="trace-box"><canvas id="trace" aria-label="Trace the glowing wand path" width="640" height="288"></canvas><span class="fine" id="trace-hint">Follow the dots with your finger. Little wobbles welcome.</span></div>${btn(icon("wand") + " Cast " + esc(selected.name), "cast", "primary wide")}</div><div class="section-head"><h2>${S.spellTab === "saved" ? "Your spellbook" : "Pick a spell"}</h2><small>${S.spellTab === "saved" ? c.spells.length : c.learned.length + " / " + SPELLS.length}</small></div><div class="spell-grid">${list.map((sp) => `<button class="spell-card" data-spell="${esc(sp.id)}" aria-pressed="${S.spell === sp.id}"><span class="symbol">${esc(sp.symbol || "✦")}</span><span><b>${esc(sp.name)}</b><small>${c.learned.includes(sp.id) ? "✓ Discovered" : esc(sp.hint || sp.effect)}</small></span></button>`).join("")}</div>`;
+  s += `<div class="panel casting-panel"><label class="spell-picker-label" for="spell-picker">Choose a spell</label><select id="spell-picker">${list.map((sp) => `<option value="${esc(sp.id)}" ${sp.id === S.spell ? "selected" : ""}>${esc(sp.name)}</option>`).join("")}</select><div class="spell-title"><span>${esc(selected.symbol || "✦")}</span><div><h2>${esc(selected.name)}</h2><p>${esc(selected.hint || "You made this spell!")}</p></div></div><div class="trace-box"><canvas id="trace" aria-label="Trace the glowing wand path" width="640" height="288"></canvas><span class="fine" id="trace-hint">Follow the dots with your finger. Little wobbles welcome.</span></div>${btn(icon("wand") + " Cast " + esc(selected.name), "cast", "primary wide")}</div><div class="section-head"><h2>${S.spellTab === "saved" ? "Your spellbook" : "Pick a spell"}</h2><small>${S.spellTab === "saved" ? c.spells.length : c.learned.length + " / " + SPELLS.length}</small></div><div class="spell-grid">${list.map((sp) => `<button class="spell-card" data-spell="${esc(sp.id)}" aria-pressed="${S.spell === sp.id}"><span class="symbol">${esc(sp.symbol || "✦")}</span><span><b>${esc(sp.name)}</b><small>${c.learned.includes(sp.id) ? "✓ Discovered" : esc(sp.hint || sp.effect)}</small></span></button>`).join("")}</div>`;
   return s;
 }
 function post() {
@@ -3199,18 +3660,24 @@ function grounds() {
   $("#stage-foot").textContent = "Can you spot the moon in the lake?";
   return `<div class="panel"><h2>Ready for a broom ride?</h2><p class="fine">Fly by the lake, try a spell or say hello to your owl.</p>${btn(icon("wand") + " Open my spellbook", "pocket", "primary wide")}${btn("☁ A little broom ride", "fly", "wide")}${btn(icon("owl") + " Say hello to my owl", "hoot", "wide")}</div>${btn(icon("home") + " Back to my cosy room", "room", "wide")}`;
 }
-const screens = { home, editor, room, sorting, wands, pets, spells, post, map, grounds };
+function welcome() {
+  $("#intro").innerHTML = title("YOUR FIRST ADVENTURE", "Make a witch or wizard", "Who will you bring to Hogwarts?");
+  $("#stage-foot").textContent = "A new friend is waiting to be made!";
+  return `<div class="panel"><p>Choose their name, hair and magical clothes. Then the adventure begins!</p>${btn(icon("plus") + " Make a witch or wizard", "new", "primary wide")}</div>`;
+}
+const screens = { home, welcome, editor, room, sorting, wands, pets, spells, post, map, grounds };
 function go(page, id) {
   if (id) S.id = id;
   if (!Store.current() && !["home", "map"].includes(page)) {
     if (Store.data.characters.length) S.id = Store.data.characters[0].id;
-    else return newCharacter();
+    else page = "welcome";
   }
   S.screen = page;
   S.sorting = false;
   S.sortResult = null;
   S.chooseHouse = false;
   S.postFlight = false;
+  $("#stage").classList.remove("has-effect");
   clearTimeout(momentTimer);
   $("#moment").replaceChildren();
   $("#toast").hidden = true;
@@ -3225,9 +3692,11 @@ function go(page, id) {
   if (R.actor) R.actor.rotation.set(0, 0, 0);
   render();
   R.reset();
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 function render() {
+  $("#app").classList.toggle("quiz-mode", S.screen === "sorting" && S.sorting);
+  $("#stage-tools").innerHTML = S.screen === "editor" ? editorTabs() : "";
   const fn = screens[S.screen] || home;
   $("#content").innerHTML = fn();
   $("#content").className = "screen-enter";
@@ -3246,7 +3715,7 @@ function partialEditor() {
   if ($("#editor-panel")) $("#editor-panel").innerHTML = editorPanel();
   $$("[data-tab]").forEach((e) => e.setAttribute("aria-selected", e.dataset.tab === S.tab));
 }
-let toastTimer, effectTimer, celebrationTimer, sparkTimer, lastFocus;
+let toastTimer, effectTimer, celebrationTimer, sparkTimer, lastFocus, modalDismiss;
 function toast(text) {
   $("#toast").textContent = text;
   $("#toast").hidden = false;
@@ -3262,15 +3731,27 @@ function updateSound() {
   $("#music").setAttribute("aria-label", s.music ? "Music on" : "Music off");
   $("#music").setAttribute("aria-pressed", !!s.music);
 }
-function modal(heading, body) {
+function modal(heading, body, onDismiss = null) {
+  modalDismiss = onDismiss;
   const d = $("#dialog");
   lastFocus = document.activeElement;
   d.innerHTML = `<button class="round close" data-action="close" aria-label="Close">${icon("close")}</button><div class="dialog-body"><h2 id="dialog-title">${heading}</h2>${body}</div>`;
   if (!d.open) d.showModal();
 }
 function closeModal() {
-  if ($("#dialog").open) $("#dialog").close();
+  const wasOpen = $("#dialog").open, done = modalDismiss;
+  modalDismiss = null;
+  if (wasOpen) $("#dialog").close();
   if (lastFocus?.isConnected) lastFocus.focus({ preventScroll: true });
+  if (wasOpen) done?.();
+}
+function finishLetter() {
+  const c = Store.current();
+  if (c) {
+    c.accepted = true;
+    Store.save();
+    go("room");
+  }
 }
 function celebrate(h) {
   const cols = h && HOUSES[h] ? [HOUSES[h].color, HOUSES[h].trim, "#f8edcd"] : ["#bfa5d5", "#e6c27d", "#a5c7b6", "#e2a5b7"];
@@ -3295,7 +3776,7 @@ function deliveryOwl(c) {
 }
 function acceptance() {
   const c = Store.current();
-  modal("An owl for you!", `${deliveryOwl(c)}<p class="center">A letter for <strong>${esc(c.name)}</strong>!</p><div class="envelope"><p>Hogwarts School<br>of Witchcraft and Wizardry</p><button class="seal" data-action="open-seal" aria-label="Open the wax seal">H</button><p class="fine">Tap the red seal to open it.</p></div>`);
+  modal("An owl for you!", `${deliveryOwl(c)}<p class="center">A letter for <strong>${esc(c.name)}</strong>!</p><div class="envelope"><p>Hogwarts School<br>of Witchcraft and Wizardry</p><button class="seal" data-action="open-seal" aria-label="Open the wax seal">H</button><p class="fine">Tap the red seal to open it.</p></div>`, finishLetter);
   Sound.play("hoot");
 }
 function openSeal() {
@@ -3310,18 +3791,38 @@ function openSeal() {
   Sound.play("seal");
   setTimeout(() => {
     if (!$("#dialog").open || !$(".seal")) return;
-    modal("Your Hogwarts letter!", `<div class="letter unfold"><div class="eyebrow center">HOGWARTS</div><h2 class="school-name">School of Witchcraft<br>and Wizardry</h2><p>Dear ${esc(c.name)},</p><p>We are pleased to inform you that you have been accepted at Hogwarts School of Witchcraft and Wizardry.</p><div><p><strong>You will need:</strong></p><ul><li>1 wand</li><li>1 pointed hat</li><li>1 owl or cat or toad</li></ul></div><p class="signature">See you at Hogwarts!<br>Professor McGonagall</p></div>${btn(icon("star") + " Let’s go to Hogwarts!", "letter-done", "primary wide")}`);
+    modal("Your Hogwarts letter!", `<div class="letter unfold"><div class="eyebrow center">HOGWARTS</div><h2 class="school-name">School of Witchcraft<br>and Wizardry</h2><p>Dear ${esc(c.name)},</p><p>We are pleased to inform you that you have been accepted at Hogwarts School of Witchcraft and Wizardry.</p><div><p><strong>You will need:</strong></p><ul><li>1 wand</li><li>1 pointed hat</li><li>1 owl or cat or toad</li></ul></div><p class="signature">See you at Hogwarts!<br>Professor McGonagall</p></div>${btn(icon("star") + " Let’s go to Hogwarts!", "letter-done", "primary wide")}`, finishLetter);
     celebrate(c.house);
   }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 260);
 }
 function houseAnimal(name) {
   const h = HOUSES[name], shapes = {
-    Gryffindor: `<path d="M28 70q-14-16-6-38 2-25 28-25t28 25q8 22-6 38l-22 9z" fill="#be7b37"/><ellipse cx="50" cy="44" rx="22" ry="25" fill="#efc26f"/><circle cx="31" cy="27" r="8" fill="#efc26f"/><circle cx="69" cy="27" r="8" fill="#efc26f"/><ellipse cx="50" cy="56" rx="13" ry="10" fill="#ffe3a2"/><path d="M46 50h8l-4 5z" fill="#6b3d35"/><path d="M50 55v6m-7-3q7 7 14 0" stroke="#6b3d35" fill="none" stroke-width="2"/>`,
-    Slytherin: `<path d="M28 72c34 18 58-10 25-17-31-6-23-19-5-17" fill="none" stroke="#91bd95" stroke-width="18" stroke-linecap="round"/><ellipse cx="54" cy="29" rx="21" ry="17" fill="#b6d1a4"/><path d="M67 41l8 7 6-2m-6 2v6" fill="none" stroke="#d58d9a" stroke-width="3"/><path d="M24 67q22 14 39 3" fill="none" stroke="#d8dc9b" stroke-width="4"/>`,
-    Ravenclaw: `<path d="M37 45L6 22q-8 23 24 43l9-4M63 45l31-23q8 23-24 43l-9-4" fill="#adc1dd"/><ellipse cx="50" cy="51" rx="21" ry="28" fill="#738da9"/><ellipse cx="50" cy="31" rx="19" ry="22" fill="#eee8d8"/><path d="M43 39l8 13 9-16z" fill="#d4a65a"/><path d="M39 79v7m21-7v7" stroke="#d4a65a" stroke-width="5"/>`,
-    Hufflepuff: `<ellipse cx="50" cy="60" rx="29" ry="25" fill="#777985"/><circle cx="29" cy="21" r="10" fill="#626575"/><circle cx="71" cy="21" r="10" fill="#626575"/><ellipse cx="50" cy="38" rx="29" ry="28" fill="#e9e5d7"/><path d="M34 14q-12 25 9 43l2-19-4-23M66 14q12 25-9 43l-2-19 4-23" fill="#535467"/><ellipse cx="50" cy="57" rx="9" ry="6" fill="#353746"/><path d="M34 79l-9 6m41-6l9 6" stroke="#e8dfc5" stroke-width="5"/>`
+    Gryffindor: `<circle cx="50" cy="44" r="35" fill="#9f602d"/><path d="M23 23l-7 10 5 9-7 10 10 8 1 12 13-1 12 12 12-12 13 1 1-12 10-8-7-10 5-9-7-10" fill="#b77a35"/><circle cx="31" cy="27" r="10" fill="#efbc61"/><circle cx="69" cy="27" r="10" fill="#efbc61"/><circle cx="31" cy="27" r="5" fill="#784b33"/><circle cx="69" cy="27" r="5" fill="#784b33"/><ellipse cx="50" cy="45" rx="23" ry="27" fill="#f3c974"/><circle cx="40" cy="41" r="3.5" fill="#342831"/><circle cx="60" cy="41" r="3.5" fill="#342831"/><ellipse cx="42" cy="55" rx="10" ry="8" fill="#ffe5ad"/><ellipse cx="58" cy="55" rx="10" ry="8" fill="#ffe5ad"/><path d="M44 49h12l-6 7z" fill="#51362e"/><path d="M50 56v6m-8-1q8 9 16 0" stroke="#51362e" fill="none" stroke-width="2.5"/><path d="M23 51l13 2m-11 5l11-1m28-4l13-2m-13 6l11 1" stroke="#51362e" stroke-width="1.5"/>`,
+    Slytherin: `<ellipse cx="48" cy="68" rx="33" ry="12" fill="#365c48"/><path d="M22 66c14 17 53 10 50-2-2-12-43 1-43-14 0-13 39-7 31-24" stroke="#a3cb8a" stroke-width="15" stroke-linecap="round" fill="none"/><path d="M21 68q21 10 45 1" stroke="#dce4ae" stroke-width="4" fill="none"/><ellipse cx="60" cy="23" rx="19" ry="15" fill="#b7d49a"/><circle cx="56" cy="20" r="3.5" fill="#263b31"/><circle cx="72" cy="23" r="2" fill="#263b31"/><path d="M72 31l13 5m-2-1l7-4m-7 4l5 6" stroke="#c45f76" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    Ravenclaw: `<path d="M39 39L5 15l-3 15 8-2-5 14 12-2-5 13 13-2-2 12 19-9M61 39l34-24 3 15-8-2 5 14-12-2 5 13-13-2 2 12-19-9" fill="#d3b584" stroke="#7a6144" stroke-width="2" stroke-linejoin="round"/><path d="M43 65l-7 16 14-5 14 5-7-16" fill="#a1845d"/><ellipse cx="50" cy="51" rx="17" ry="22" fill="#8a7359"/><path d="M34 34q-3-24 17-24 19 0 17 25l-11 10-15-6z" fill="#fff2d3"/><path d="M56 27l18 6-16 8 2-7-8-1z" fill="#e1ad4b"/><path d="M43 24l12 3" stroke="#493d35" stroke-width="3"/><circle cx="50" cy="29" r="3" fill="#292b35"/><path d="M42 70l-4 7m20-7l4 7" stroke="#e1ad4b" stroke-width="4"/>`,
+    Hufflepuff: `<ellipse cx="50" cy="64" rx="29" ry="20" fill="#8a8a85"/><circle cx="28" cy="25" r="11" fill="#383c42"/><circle cx="72" cy="25" r="11" fill="#383c42"/><circle cx="28" cy="25" r="6" fill="#c6c5b8"/><circle cx="72" cy="25" r="6" fill="#c6c5b8"/><path d="M22 37q0-22 28-22t28 22q-3 29-28 38-25-9-28-38" fill="#343940"/><path d="M44 16h12l-1 28 9 17-14 11-14-11 9-17z" fill="#fff3d8"/><path d="M23 37q6 20 16 25l-3-26M77 37q-6 20-16 25l3-26" fill="#deded2"/><circle cx="35" cy="42" r="4" fill="#f6e8c7"/><circle cx="65" cy="42" r="4" fill="#f6e8c7"/><circle cx="35" cy="42" r="2.5" fill="#24252c"/><circle cx="65" cy="42" r="2.5" fill="#24252c"/><ellipse cx="50" cy="62" rx="10" ry="7" fill="#242932"/><path d="M30 77l-5 6m9-5l-2 6m34-6l2 6m2-7l5 6" stroke="#e9e5d3" stroke-width="3"/>`
   };
-  return `<svg viewBox="0 0 100 90" role="img" aria-label="${h.animal}">${shapes[name]}<circle cx="40" cy="34" r="3" fill="#262b3c"/><circle cx="61" cy="34" r="3" fill="#262b3c"/><circle cx="41" cy="33" r="1" fill="white"/><circle cx="62" cy="33" r="1" fill="white"/></svg>`;
+  return `<svg viewBox="0 0 100 90" role="img" aria-label="${h.animal}">${shapes[name]}</svg>`;
+}
+function paintAnimal(context, name) {
+  const doc = new DOMParser().parseFromString(houseAnimal(name), "image/svg+xml");
+  for (const el of doc.documentElement.children) {
+    const a = (k) => Number(el.getAttribute(k) || 0), path = el.tagName === "path" ? new Path2D(el.getAttribute("d")) : new Path2D();
+    if (el.tagName === "circle") path.arc(a("cx"), a("cy"), a("r"), 0, Math.PI * 2);
+    if (el.tagName === "ellipse") path.ellipse(a("cx"), a("cy"), a("rx"), a("ry"), 0, 0, Math.PI * 2);
+    const fill = el.getAttribute("fill") || "black", stroke = el.getAttribute("stroke");
+    if (fill !== "none") {
+      context.fillStyle = fill;
+      context.fill(path);
+    }
+    if (stroke) {
+      context.strokeStyle = stroke;
+      context.lineWidth = a("stroke-width") || 1;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.stroke(path);
+    }
+  }
 }
 let momentTimer;
 function bigMoment(kind, name) {
@@ -3330,6 +3831,7 @@ function bigMoment(kind, name) {
   $("#effect-label").textContent = "";
   $("#fx2d").replaceChildren();
   const host = $("#moment");
+  $("#stage").classList.add("has-effect");
   if (kind === "sorting") {
     const h = HOUSES[name];
     host.innerHTML = `<div class="house-moment" style="--house-glow:${h.color}ce"><div class="house-shout"><small>THE HAT SAYS…</small>${name.toUpperCase()}!</div><div class="house-visitor">${houseAnimal(name)}${h.animal}</div></div>`;
@@ -3341,7 +3843,10 @@ function bigMoment(kind, name) {
     Sound.play("chime");
   }
   R.happy();
-  momentTimer = setTimeout(() => host.replaceChildren(), kind === "sorting" ? 5500 : 3600);
+  momentTimer = setTimeout(() => {
+    host.replaceChildren();
+    $("#stage").classList.remove("has-effect");
+  }, kind === "sorting" ? 5500 : 3600);
   $("#stage").scrollIntoView({ block: "center", behavior: "instant" });
 }
 function characterOptions(id = S.id) {
@@ -3366,9 +3871,10 @@ function setChoice(key, value) {
   const c = Store.current();
   if (!c) return;
   if (key === "scarf" || key === "holdBroom") value = value === "true";
-  if (!["kind", "skin", "hair", "hairColor", "eyes", "face", "glasses", "outfit", "robe", "trim", "pattern", "hat", "scarf", "shoes", "broom", "holdBroom", "school", "owl", "pet"].includes(key)) return;
+  if (!["kind", "skin", "hair", "hairColor", "eyes", "face", "glasses", "outfit", "robe", "trim", "pattern", "hat", "beard", "scarf", "shoes", "broom", "holdBroom", "school", "owl", "pet"].includes(key)) return;
   if (key === "kind" && ["pointed", "crooked"].includes(c.hat)) c.hat = value === "witch" ? "crooked" : "pointed";
   c[key] = value;
+  if (key === "broom") c.holdBroom = value !== "none";
   Store.save();
   refreshActor();
   if (S.screen === "editor") partialEditor();
@@ -3381,13 +3887,30 @@ function effectArt(e, color) {
   if (!shape) return icon(e === "dance" ? "music" : "sparkle");
   return `<svg viewBox="0 0 24 26" fill="${e === "patronus" ? color : "none"}" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${shape}"/></svg>`;
 }
+function storybookSpell(e) {
+  const art = {
+    light: '<circle cx="279" cy="161" r="120" fill="url(#spell-halo)"/><path d="M0 0h400v320H0z" fill="#fff0a8" opacity=".13"/><path d="M279 133v56m-28-28h56m-48-20l40 40m-40 0l40-40" stroke="#fff4bd" stroke-width="3"/><circle cx="279" cy="161" r="10" fill="#fffbea"/>',
+    disarm: '<path d="M278 165l48-35-29-13 43-58" stroke="#ff6878" stroke-width="14" fill="none" stroke-linejoin="round"/><path d="M278 165l48-35-29-13 43-58" stroke="#fff1cb" stroke-width="4" fill="none"/>',
+    fire: '<g class="storybook-flame"><path d="M276 259q-25-40 0-74 2 27 17 11-5-40 22-63-6 37 16 66 31 49-9 64z" fill="#ee753e"/><path d="M285 257q-15-33 11-55-3 25 13 12 0-22 11-32 15 65-11 75z" fill="#ffd17b"/><path d="M297 258q-10-20 11-32 13 23-1 33z" fill="#fff1b1"/></g>',
+    float: '<g class="storybook-feather"><path d="M73 163q-37-48 27-83 27 55-27 83" fill="#fff5dc" stroke="#c8ad7d" stroke-width="2"/><path d="M64 180l36-100m-24 64l21-8m-15-9l22-8m-15-10l17-7" stroke="#b8915a" stroke-width="2" fill="none"/></g>',
+    water: '<path d="M278 162q31-108 65 67" stroke="#8de4ff" stroke-width="9" fill="none"/><path d="M278 162q31-108 65 67" stroke="#ddf9ff" stroke-width="3" fill="none"/><ellipse cx="343" cy="252" rx="29" ry="9" fill="none" stroke="#8de4ff" stroke-width="3"/><path d="M337 247l-17-24m25 23l2-28m7 31l18-18" stroke="#b8efff" stroke-width="5" stroke-linecap="round"/>'
+  }[e];
+  return art ? `<svg class="storybook-spell-effect" data-story-effect="${e}" viewBox="0 0 400 320" aria-hidden="true"><defs><radialGradient id="spell-halo"><stop stop-color="#fff3ae" stop-opacity=".9"/><stop offset="1" stop-color="#fff3ae" stop-opacity="0"/></radialGradient></defs>${art}</svg>` : "";
+}
 function effect(e, color, label) {
+  clearTimeout(momentTimer);
+  $("#moment").replaceChildren();
+  $("#stage").classList.add("has-effect");
   R.startEffect(e, color);
   $("#effect-label").textContent = label;
   clearTimeout(effectTimer);
-  effectTimer = setTimeout(() => $("#effect-label").textContent = "", 4500);
+  effectTimer = setTimeout(() => {
+    $("#effect-label").textContent = "";
+    $("#stage").classList.remove("has-effect");
+  }, 4500);
   const symbols = { light: "✦", night: "✧", float: "❦", unlock: "⚿", disarm: "ϟ", repair: "♧", fire: "♨", water: "●", patronus: Store.current()?.patronus === "fox" ? "🦊" : Store.current()?.patronus === "otter" ? "🦦" : "🐇", frog: "🐸", summon: "🧸", bubbles: "◌", butterflies: "ʚɞ", snow: "❄", rainbow: "🌈", dance: "♫", confetti: "✦", flowers: "✿" };
   $("#fx2d").innerHTML = Array.from({ length: R.state === "ready" ? 6 : 20 }, (_, i) => `<span class="spark" style="left:${15 + i * 19 % 75}%;top:${45 + i % 4 * 8}%;--dx:${Math.sin(i * 2) * 80}px;--spark:${color};animation-delay:${i % 5 * 0.08}s">${R.state === "ready" ? "✦" : effectArt(e, color)}</span>`).join("");
+  if (R.state !== "ready") $("#fx2d").insertAdjacentHTML("afterbegin", storybookSpell(e));
   clearTimeout(sparkTimer);
   sparkTimer = setTimeout(() => $("#fx2d").replaceChildren(), 3500);
   Sound.play(e);
@@ -3407,12 +3930,11 @@ function cast(spell, source = "tap") {
   Store.save();
   const line = spell.effect === "patronus" ? `Your ${c.patronus} Patronus!` : spell.effect === "unlock" ? "Click! A secret opens." : spell.effect === "repair" ? "Good as new!" : spell.effect === "frog" ? "Ribbit! Very dignified." : spell.effect === "summon" ? "A teddy, just for you." : spell.name + "!";
   effect(spell.effect, spell.color || "#d3b5ed", line);
-  const top = $("#stage").getBoundingClientRect().top + window.scrollY - 10;
-  window.scrollTo({ top, behavior: "instant" });
+  if (S.screen !== "spells") $("#stage").scrollIntoView({ block: "center", behavior: "instant" });
 }
 function pocket() {
   const c = Store.current();
-  if (!c) return newCharacter();
+  if (!c) return go("welcome");
   const list = [...SPELLS.filter((s) => c.learned.includes(s.id) || s.id === "lumos"), ...c.spells];
   modal("Your spellbook", `<p class="center fine">Pick a spell to cast it here!</p><div class="spell-grid">${list.map((s) => `<button class="spell-card" data-pocket-cast="${esc(s.id)}"><span class="symbol">${esc(s.symbol || "✦")}</span><b>${esc(s.name)}</b></button>`).join("")}</div>${btn(icon("plus") + " Learn another spell", "more-spells", "wide")}`);
 }
@@ -3534,9 +4056,10 @@ function setupTrace() {
 }
 const actions = {
   new: newCharacter,
+  "scroll-tabs": (b) => $("#stage-tools .tabbar")?.scrollBy({ left: Number(b.dataset.dir) * 160, behavior: "smooth" }),
   edit: () => go("editor"),
   room: () => go("room"),
-  back: () => go(S.screen === "editor" ? "room" : S.screen === "map" ? "home" : "room"),
+  back: () => go(S.screen === "editor" ? "room" : ["map", "welcome"].includes(S.screen) ? "home" : "room"),
   finish: () => {
     const c = Store.current();
     c.name = c.name.trim() || "Little Moonbeam";
@@ -3546,10 +4069,7 @@ const actions = {
   },
   acceptance,
   "open-seal": openSeal,
-  "letter-done": () => {
-    closeModal();
-    go("room");
-  },
+  "letter-done": closeModal,
   close: closeModal,
   "reset-view": () => R.reset(),
   pocket,
@@ -3593,8 +4113,11 @@ const actions = {
     S.sortStart = performance.now();
     S.quiz = 0;
     S.votes = [];
+    S.answerReady = 0;
+    S.sortResult = null;
     S.chooseHouse = false;
     render();
+    window.scrollTo({ top: 0, behavior: "instant" });
     Sound.play("hat");
   },
   "choose-house": () => {
@@ -3604,10 +4127,16 @@ const actions = {
     $("#house-picker")?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "center" });
   },
   answer: (b) => {
+    if (!S.sorting || Number(b.dataset.question) !== S.quiz || performance.now() < (S.answerReady || 0)) return;
+    S.answerReady = performance.now() + 450;
     S.votes.push(b.dataset.house);
     if (S.quiz < 3) {
       S.quiz++;
       render();
+      const question = S.quiz;
+      setTimeout(() => {
+        if (S.sorting && S.quiz === question) $$("[data-action=answer]").forEach((b2) => b2.disabled = false);
+      }, 460);
       Sound.play("hat");
     } else {
       const scores = Object.keys(HOUSES).map((h) => [h, S.votes.filter((x) => x === h).length]);
@@ -3742,6 +4271,8 @@ document.addEventListener("click", (e) => {
   if (b.dataset.tab) {
     S.tab = b.dataset.tab;
     partialEditor();
+    refreshActor();
+    b.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
     return;
   }
   if (b.dataset.set) return setChoice(b.dataset.set, b.dataset.value);
@@ -3770,6 +4301,7 @@ document.addEventListener("click", (e) => {
   if (b.dataset.spell) {
     S.spell = b.dataset.spell;
     render();
+    window.scrollTo({ top: 0, behavior: "instant" });
     return;
   }
   if (b.dataset.invent) {
@@ -3790,6 +4322,14 @@ document.addEventListener("click", (e) => {
     return;
   }
   if (b.dataset.letterText) $("#letter-text").value = b.dataset.letterText;
+});
+document.addEventListener("change", (e) => {
+  if (e.target.id === "spell-picker") {
+    S.spell = e.target.value;
+    const y = scrollY;
+    render();
+    window.scrollTo({ top: y, behavior: "instant" });
+  }
 });
 document.addEventListener("input", (e) => {
   const el = e.target, c = Store.current();
@@ -3812,6 +4352,10 @@ document.addEventListener("input", (e) => {
     refreshActor();
   }
 });
+$("#dialog").addEventListener("cancel", (e) => {
+  e.preventDefault();
+  closeModal();
+});
 $("#dialog").addEventListener("click", (e) => {
   if (e.target === $("#dialog")) {
     const r = e.target.getBoundingClientRect();
@@ -3819,6 +4363,7 @@ $("#dialog").addEventListener("click", (e) => {
   }
 });
 document.addEventListener("visibilitychange", () => {
+  R.updateLoop();
   if (document.hidden) {
     Sound.stopMusic();
     if (Sound.ctx) Sound.ctx.suspend().catch(() => {
