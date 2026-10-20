@@ -2540,6 +2540,9 @@ const R = {
       key.shadow.normalBias = 0.025;
       key.shadow.bias = -2e-4;
       this.scene.add(key);
+      const faceFill = new T.DirectionalLight("#ffe4d4", 0.85);
+      faceFill.position.set(0.5, 2.8, 5);
+      this.scene.add(faceFill);
       const rim = new T.DirectionalLight("#a2cbe5", 2.3);
       rim.position.set(4, 3, -2);
       this.scene.add(rim);
@@ -2805,7 +2808,7 @@ const R = {
     this.focusAge = young ? "student" : "older";
     this.focusKind = (Store.current() || DEMO).kind;
     const face = this.actor?.userData.bones.Head.getWorldPosition(new this.T.Vector3());
-    const target = new this.T.Vector3(0, close ? (face?.y || 2.5 * h) + 0.16 : 1.48, 0);
+    const target = new this.T.Vector3(0, close ? (face?.y || 2.5 * h) + 0.045 : 1.48, 0);
     const position = new this.T.Vector3(close ? 0.025 : 0.3, close ? target.y + 0.025 : 2.1, close ? 1.85 : 5.9);
     if (smooth && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
       this.controls.minDistance = Math.min(this.controls.minDistance, minDistance);
@@ -3416,6 +3419,13 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         }
       }
       x.putImageData(pixels, 0, 0);
+      // A small softbox reflection keeps both irises readable at phone size.
+      for (const [u, v] of [[0.293, 0.715], [0.707, 0.296]]) {
+        x.fillStyle = "#fff9eb";
+        x.beginPath();
+        x.ellipse((u - 0.025) * cv.width, (v - 0.032) * cv.height, cv.width * 0.012, cv.height * 0.016, 0, 0, Math.PI * 2);
+        x.fill();
+      }
       const t = new this.T.CanvasTexture(cv);
       t.flipY = source.flipY;
       t.colorSpace = this.T.SRGBColorSpace;
@@ -3429,7 +3439,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       const T = this.T;
       const m = new T.MeshPhysicalMaterial({
         color,
-        roughness: type === "eye" ? 0.3 : 0.83,
+        roughness: type === "eye" ? 0.14 : 0.83,
         metalness: 0,
         map: source?.map || null,
         normalMap: source?.normalMap || null,
@@ -3441,6 +3451,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       if (type === "eye" && source?.map) {
         m.color.set("#ffffff");
         m.map = this.eyeTexture(source.map, color);
+        m.clearcoat = 1;
+        m.clearcoatRoughness = 0.12;
       }
       if (["cloth", "silk", "velvet", "leather"].includes(type)) {
         m.map = this.surfaceTexture("fabric");
@@ -3448,9 +3460,12 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         m.bumpScale = 3e-3;
       }
       if (type === "skin") {
-        m.roughness = 0.78;
+        m.roughness = 0.72;
         m.normalScale.set(0.1, 0.1);
         m.color.multiplyScalar(1.06);
+        m.sheen = 0.18;
+        m.sheenColor.set("#edac96");
+        m.sheenRoughness = 0.9;
       }
       if (type === "hair") {
         m.roughness = 0.72;
@@ -3480,7 +3495,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         m.sheen = 0.08;
       }
       m.side = T.DoubleSide;
-      m.envMapIntensity = type === "eye" ? 0.7 : 0.4;
+      m.envMapIntensity = type === "eye" ? 1.1 : 0.4;
       this.mat.set(id, m);
     }
     return this.mat.get(id);
@@ -3632,7 +3647,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       o.receiveShadow = true;
       o.frustumCulled = false;
       const n = o.material.name.toLowerCase();
-      if (n.includes("hair")) o.material = this.humanMaterial("brows", c.hairColor, o.material, "hair");
+      if (n.includes("hair")) o.material = this.humanMaterial(o.name === "student-lashes" ? "lashes" : "brows", o.name === "student-lashes" && !male ? "#241811" : c.hairColor, o.material, "hair");
       else if (n.includes("eye")) o.material = this.humanMaterial("eyes", c.eyes, o.material, "eye");
       else {
         if (c.outfit === "quidditch") {
@@ -3644,7 +3659,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
           gloves.push({ parent: o.parent, glove });
         }
         o.geometry = this.maskedGeometry(o.geometry, sex + "-skin-" + c.outfit, (x, y) => y > 1.51 || y > 1.485 && Math.abs(x) < 0.065 || c.outfit !== "quidditch" && Math.abs(x) > (["muggle", "gown"].includes(c.outfit) ? 0.32 : 0.655));
-        if (o.morphTargetDictionary?.Smile !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Smile] = c.expression === "calm" ? 0 : 0.28;
+        if (o.morphTargetDictionary?.Smile !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Smile] = c.expression === "calm" ? 0 : 0.42;
         if (o.morphTargetDictionary?.Blink !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Blink] = 0;
         o.material = this.humanMaterial("skin", c.skin, o.material, "skin");
         o.name = "human-skin";
