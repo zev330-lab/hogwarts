@@ -2258,7 +2258,7 @@ const EFFECTS = [["bubbles", "◌ Bubbles"], ["butterflies", "ʚɞ Butterflies"]
 const MOTIONS = { up: [[0.2, 0.8], [0.5, 0.2], [0.8, 0.8]], down: [[0.2, 0.2], [0.5, 0.8], [0.8, 0.2]], wave: Array.from({ length: 32 }, (_, i) => [0.12 + i * 0.76 / 31, 0.5 + Math.sin(i / 31 * Math.PI * 2) * 0.28]), zigzag: [[0.25, 0.15], [0.7, 0.15], [0.35, 0.5], [0.75, 0.5], [0.3, 0.85]], circle: Array.from({ length: 40 }, (_, i) => [0.5 + Math.cos(i / 39 * 2 * Math.PI) * 0.3, 0.5 + Math.sin(i / 39 * 2 * Math.PI) * 0.36]), loop: [[0.15, 0.7], [0.3, 0.3], [0.6, 0.2], [0.8, 0.4], [0.65, 0.7], [0.35, 0.6], [0.4, 0.4], [0.85, 0.8]], star: [[0.5, 0.12], [0.73, 0.85], [0.14, 0.4], [0.86, 0.4], [0.27, 0.85], [0.5, 0.12]] };
 const pick = (a) => a[Math.floor(Math.random() * a.length)], uid = () => globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 function fresh() {
-  return { id: uid(), name: "Havi Moonbeam", kind: "witch", beard: "none", bodyShape: "regular", ageBuild: "student", expression: "friendly", skin: SKINS[1], hair: "waves", hairColor: HAIRS[0], eyes: EYES[0], face: "rosy", glasses: "round", outfit: "robes", robe: COLORS[0], trim: "#e7b65b", pattern: "plain", hat: "crooked", scarf: false, shoes: "boots", broom: "none", holdBroom: false, school: "Hogwarts", house: null, owl: null, owlName: "Luna", pet: null, petName: "Pip", wand: { wood: "holly", core: "phoenix feather", length: 11, flex: "springy", handle: "twisted", color: "#9b6b43", inlay: "gold", chosen: false, tries: 0 }, spells: [], learned: [], patronus: null, accepted: false, created: Date.now() };
+  return { id: uid(), name: "Havi Moonbeam", kind: "witch", beard: "none", bodyShape: "regular", ageBuild: "student", expression: "friendly", skin: SKINS[1], hair: "long", hairColor: HAIRS[0], eyes: EYES[0], face: "plain", glasses: "none", outfit: "robes", robe: COLORS[0], trim: "#e7b65b", pattern: "plain", hat: "crooked", scarf: false, shoes: "boots", broom: "none", holdBroom: false, school: "Hogwarts", house: null, owl: null, owlName: "Luna", pet: null, petName: "Pip", wand: { wood: "holly", core: "phoenix feather", length: 11, flex: "springy", handle: "twisted", color: "#9b6b43", inlay: "gold", chosen: false, tries: 0 }, spells: [], learned: [], patronus: null, accepted: false, created: Date.now() };
 }
 const DEMO = { ...fresh(), id: "demo", name: "Your next adventure", owl: "snowy" };
 const Store = {
@@ -2798,11 +2798,11 @@ const R = {
     if (this.actor) this.actor.rotation.y = 0;
     const close = S.screen === "editor" && ["you", "face", "hair", "hats"].includes(S.tab);
     this.focusKey = close ? "portrait" : "full";
-    this.controls.minDistance = close ? 2.3 : 4.3;
+    this.controls.minDistance = close ? 1.25 : 3.8;
     const young = (Store.current() || DEMO).ageBuild !== "older", h = young ? 0.885 : 1;
     this.focusAge = young ? "student" : "older";
-    this.cam.position.set(close ? 0.08 : 0.3, close ? 2.72 * h : 2.55, close ? 3.1 : 6.8);
-    this.controls.target.set(0, close ? 2.5 * h : 1.55, 0);
+    this.cam.position.set(close ? 0.08 : 0.3, close ? 2.72 * h : 2.1, close ? 1.85 : 5.9);
+    this.controls.target.set(0, close ? 2.66 * h : 1.55, 0);
     this.controls.update();
   },
   resize() {
@@ -3369,7 +3369,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
   async loadModels() {
     if (this.assets) return;
     const loader = new this.T.GLTFLoader();
-    const names = ["female", "male", "female-clothes", "male-clothes", "hair", "gestures"];
+    const names = ["female", "male", "female-clothes", "male-clothes", "female-hair", "male-hair"];
     const entries = await Promise.all(names.map(async (name) => [name, await loader.loadAsync("./models/" + name + ".glb")]));
     this.assets = Object.fromEntries(entries);
     this.modelStatus = "ready";
@@ -3394,8 +3394,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       const pixels = x.getImageData(0, 0, cv.width, cv.height), rgb = new this.T.Color(color);
       rgb.convertLinearToSRGB();
       for (let y = 0; y < cv.height; y++) for (let xx = 0; xx < cv.width; xx++) {
-        const radius = Math.hypot(xx / cv.width - 0.5, y / cv.height - 0.5), i = (y * cv.width + xx) * 4;
-        if (radius < 0.105 && radius > 0.047 && pixels.data[i] < 190) {
+        const radius = Math.min(Math.hypot(xx / cv.width - 0.293, y / cv.height - 0.715), Math.hypot(xx / cv.width - 0.707, y / cv.height - 0.296)), i = (y * cv.width + xx) * 4;
+        if (radius < 0.116 && radius > 0.038 && pixels.data[i] < 190) {
           const light = 0.55 + (pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2]) / 420;
           pixels.data[i] = rgb.r * 255 * light;
           pixels.data[i + 1] = rgb.g * 255 * light;
@@ -3440,6 +3440,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       }
       if (type === "hair") {
         m.roughness = 0.72;
+        m.alphaTest = source?.alphaTest || 0.32;
+        m.alphaToCoverage = true;
         m.side = T.DoubleSide;
       }
       if (type === "silk") {
@@ -3489,13 +3491,13 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const T = this.T, id = "tailored-v2:" + key;
     if (!this.geo.has(id)) {
       const positions = [], uvs = [], indices = [], joints = [], weights = [], groups = [];
-      const rows = 24, cols = options.pleats ? 64 : 48;
+      const rows = 12, cols = options.pleats ? 48 : 32;
       for (let j = 0; j <= rows; j++) {
         const t = j / rows * (profile.length - 1), k = Math.min(profile.length - 2, Math.floor(t)), f = t - k;
         const row = profile[k].map((v, i) => v + (profile[k + 1][i] - v) * f), [y, width, depth] = row;
         const gap = options.gap || 0;
         for (let i = 0; i <= cols; i++) {
-          const v = i / cols, angle = gap + v * (Math.PI * 2 - gap * 2), fold = 1 + Math.cos(angle * (options.pleats || 18)) * ((options.pleats ? 0.045 : 0.014) * j / rows);
+          const v = i / cols, angle = gap + v * (Math.PI * 2 - gap * 2), fold = 1 + Math.cos(angle * (options.pleats || 12)) * ((options.pleats ? 0.045 : 0.014) * j / rows);
           let yy = y, ww = width, dd = depth;
           if (options.vneck) {
             yy -= 0.19 * (Math.cos(angle) > 0 ? Math.max(0, 1 - Math.abs(Math.sin(angle)) / 0.78) : 0) * Math.max(0, (y - 1.22) / (profile[0][0] - 1.22));
@@ -3506,7 +3508,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
               dd = a[2] + (b[2] - a[2]) * f2;
             }
           }
-          if (options.backEase) dd += 0.45 * Math.max(0, -Math.cos(angle)) * (profile[0][0] - yy) / (profile[0][0] - profile[profile.length - 1][0]);
+          if (options.backEase) dd += 0.11 * Math.max(0, -Math.cos(angle)) * (profile[0][0] - yy) / (profile[0][0] - profile[profile.length - 1][0]);
           positions.push(Math.sin(angle) * ww * fold, yy, Math.cos(angle) * dd * fold + (options.z ?? -0.03));
           uvs.push(v * 2, j / rows * 2);
           const upper = Math.max(0, Math.min(1, (yy - 1.03) / 0.35));
@@ -3551,10 +3553,11 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     rig.updateMatrixWorld(true);
     const start = rig.worldToLocal(bones["upperarm_" + side].getWorldPosition(new T.Vector3())), elbow = rig.worldToLocal(bones["lowerarm_" + side].getWorldPosition(new T.Vector3())), end = rig.worldToLocal(bones["hand_" + side].getWorldPosition(new T.Vector3()));
     if (!this.geo.has(key)) {
-      const pos = [], uv = [], ix = [], joint = [], weight = [], rows = 20, cols = 24;
+      const pos = [], uv = [], ix = [], joint = [], weight = [], rows = 12, cols = 16;
+      start.x -= sgn * .035; start.y += .008;
       const length = (short ? 0.38 : 1) * (Math.abs(end.x - start.x) - 0.02);
       for (let j = 0; j <= rows; j++) {
-        const t = j / rows, x = start.x + sgn * length * t, y = start.y + (end.y - start.y) * t, z = start.z + (end.z - start.z) * t, rad = wide ? 0.095 + Math.pow(t, 2) * 0.025 : 0.075 - t * 0.035;
+        const t = j / rows, x = start.x + sgn * length * t, y = start.y + (end.y - start.y) * t, z = start.z + (end.z - start.z) * t, rad = (wide ? 0.08 + Math.pow(t, 2) * 0.03 : 0.067 - t * 0.03) * (.65 + .35 * Math.min(1, t * 8));
         for (let i = 0; i <= cols; i++) {
           const a = i / cols * Math.PI * 2;
           pos.push(x, y + Math.cos(a) * rad, z + Math.sin(a) * rad);
@@ -3588,9 +3591,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     return m;
   },
   clothSurface(rig, bones, sex, outfit, material) {
-    const male = sex === "male", waist = male ? 0.18 : 0.145;
+    const male = sex === "male", waist = male ? 0.15 : 0.14;
     if (!["robes", "gown", "dress", "cloak", "quidditch"].includes(outfit)) return null;
-    const profiles = { robes: [[male ? 1.55 : 1.51, 0.075, 0.085], [male ? 1.49 : 1.45, male ? 0.275 : 0.22, 0.16], [1.25, waist + 0.065, 0.175], [1.02, waist + 0.05, 0.16], [0.15, waist + 0.28, 0.23]], gown: [[1.06, waist + 8e-3, 0.118], [0.85, waist + 0.07, 0.17], [0.5, waist + 0.19, 0.24], [0.045, waist + 0.34, 0.34]], dress: [[1.04, waist + 0.025, 0.14], [0.75, waist + 0.14, 0.21], [0.13, waist + 0.26, 0.24]], cloak: [[male ? 1.56 : 1.52, 0.085, 0.12], [1.44, male ? 0.31 : 0.25, 0.2], [1.05, waist + 0.1, 0.23], [0.1, waist + 0.25, 0.3]], quidditch: [[1.04, waist + 0.02, 0.13], [0.94, waist + 0.025, 0.14]] };
+    const profiles = { robes: [[male ? 1.51 : 1.50, 0.075, 0.085], [1.445, male ? 0.225 : 0.205, 0.16], [1.25, waist + 0.065, 0.175], [1.02, waist + 0.05, 0.16], [0.15, waist + 0.28, 0.23]], gown: [[1.06, waist + 8e-3, 0.118], [0.85, waist + 0.07, 0.17], [0.5, waist + 0.19, 0.24], [0.045, waist + 0.34, 0.34]], dress: [[1.04, waist + 0.025, 0.14], [0.75, waist + 0.14, 0.21], [0.13, waist + 0.26, 0.24]], cloak: [[male ? 1.52 : 1.51, 0.085, 0.12], [1.44, male ? 0.26 : 0.23, 0.2], [1.05, waist + 0.1, 0.23], [0.1, waist + 0.25, 0.3]], quidditch: [[1.04, waist + 0.02, 0.13], [0.94, waist + 0.025, 0.14]] };
     return this.tailoredSurface(rig, bones, sex + ":" + outfit, "outfit-" + outfit, profiles[outfit], material, { gap: outfit === "robes" ? 0.6 : outfit === "cloak" ? 1.04 : 0, backEase: outfit !== "quidditch", lining: outfit === "robes" || outfit === "cloak", pleats: outfit === "gown" ? 28 : 0 });
   },
   makeHuman(c, portrait = false) {
@@ -3621,26 +3624,14 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         if (c.outfit === "quidditch") {
           const glove = o.clone();
           glove.name = "quidditch-gloves";
-          glove.geometry = this.maskedGeometry(o.geometry, sex + "-gloves", (x) => Math.abs(x) > (male ? 0.69 : 0.63));
+          glove.geometry = this.maskedGeometry(o.geometry, sex + "-gloves", (x) => Math.abs(x) > 0.655);
           glove.material = this.humanMaterial("glove-leather", "#573a28", null, "leather");
           glove.skeleton = new T.Skeleton(o.skeleton.bones, o.skeleton.boneInverses.map((m) => m.clone()));
           gloves.push({ parent: o.parent, glove });
         }
-        o.geometry = this.maskedGeometry(o.geometry, sex + "-skin-" + c.outfit, (x, y) => y > (male ? 1.53 : 1.48) || y > (male ? 1.49 : 1.45) && Math.abs(x) < 0.05 || c.outfit !== "quidditch" && Math.abs(x) > (["muggle", "gown"].includes(c.outfit) ? male ? 0.36 : 0.3 : male ? 0.69 : 0.63));
-        const faceKey = "face-v2:" + sex + ":" + c.outfit + ":" + (c.ageBuild || "student") + ":" + (c.expression || "friendly");
-        if (!this.geo.has(faceKey)) {
-          const geo = o.geometry.clone(), p = geo.attributes.position, mouth = male ? 1.639 : 1.594;
-          for (let i = 0; i < p.count; i++) {
-            let x = p.getX(i), y = p.getY(i), z = p.getZ(i);
-            if ((c.expression || "friendly") === "friendly" && z > 0.055 && Math.abs(x) < 0.048 && Math.abs(y - mouth) < 0.027) y += 4e-3 * Math.min(1, Math.abs(x) / 0.028) * Math.max(0, 1 - Math.abs(y - mouth) / 0.027);
-            if (c.ageBuild !== "older" && y > mouth - 0.045 && y < mouth + 0.025) x *= 0.96;
-            p.setXYZ(i, x, y, z);
-          }
-          geo.computeVertexNormals();
-          geo.computeBoundingSphere();
-          this.geo.set(faceKey, geo);
-        }
-        o.geometry = this.geo.get(faceKey);
+        o.geometry = this.maskedGeometry(o.geometry, sex + "-skin-" + c.outfit, (x, y) => y > 1.51 || y > 1.485 && Math.abs(x) < 0.065 || c.outfit !== "quidditch" && Math.abs(x) > (["muggle", "gown"].includes(c.outfit) ? 0.32 : 0.655));
+        if (o.morphTargetDictionary?.Smile !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Smile] = c.expression === "calm" ? 0 : 0.28;
+        if (o.morphTargetDictionary?.Blink !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Blink] = 0;
         o.material = this.humanMaterial("skin", c.skin, o.material, "skin");
         o.name = "human-skin";
       }
@@ -3654,9 +3645,11 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     for (const original2 of parts) {
       const m = original2.clone(), name = original2.name.toLowerCase(), skin = original2.material.name.toLowerCase().includes("regular");
       // Closed gowns and dress robes replace trousers; hidden peasant legs must not pierce the skirt.
+      if (name.includes("feet") && !name.includes("feet-" + c.shoes)) continue;
+      if (name.includes("legs") && name.includes("tights") !== (c.outfit === "robes" && !male)) continue;
       if (skin || !/feet|legs/.test(name) || name.includes("legs") && ["gown", "dress"].includes(c.outfit)) continue;
       m.skeleton = new T.Skeleton(original2.skeleton.bones.map((b) => bones[b.name]), original2.skeleton.boneInverses.map((v) => v.clone()));
-      if (name.includes("arms")) m.geometry = this.maskedGeometry(original2.geometry, sex + "-sleeves-" + c.outfit + original2.geometry.uuid, (x) => Math.abs(x) < (["muggle", "gown"].includes(c.outfit) ? male ? 0.36 : 0.3 : male ? 0.69 : 0.63));
+      if (name.includes("arms")) m.geometry = this.maskedGeometry(original2.geometry, sex + "-sleeves-" + c.outfit + original2.geometry.uuid, (x) => Math.abs(x) < (["muggle", "gown"].includes(c.outfit) ? 0.32 : 0.655));
       const feet = name.includes("feet"), legs = name.includes("legs");
       const color = feet ? c.shoes === "trainers" ? "#c8c3b4" : c.shoes === "slippers" ? "#554436" : "#272321" : legs ? c.outfit === "quidditch" ? "#e5dcc6" : c.outfit === "muggle" ? "#315b91" : c.outfit === "robes" && !male ? "#202633" : "#4b5362" : robeColor;
       if (legs && c.shoes !== "boots") {
@@ -3678,22 +3671,6 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         m.geometry = this.geo.get(key);
       }
       if (legs) m.geometry = this.maskedGeometry(m.geometry, sex + ":lower-legs:" + c.outfit + ":" + c.shoes, (x, y) => y < (c.outfit === "robes" && !male ? 0.65 : 1));
-      if (feet && c.shoes !== "boots") {
-        const key = sex + "-footwear-" + c.shoes + original2.geometry.uuid;
-        if (!this.geo.has(key)) {
-          const geo = original2.geometry.clone(), pos = geo.attributes.position;
-          for (let i = 0; i < pos.count; i++) {
-            const y = pos.getY(i);
-            if (y > 0.12) pos.setY(i, 0.12 + (y - 0.12) * (c.shoes === "slippers" ? 0.08 : 0.2));
-          }
-          pos.needsUpdate = true;
-          geo.computeVertexNormals();
-          geo.computeBoundingBox();
-          geo.computeBoundingSphere();
-          this.geo.set(key, geo);
-        }
-        m.geometry = this.geo.get(key);
-      }
       m.material = this.humanMaterial(sex + "-" + (feet ? "shoes" : legs ? "trousers" : "shirt"), color, null, feet ? "leather" : "cloth");
       m.name = feet ? "shoes-" + c.shoes : legs ? "uniform-trousers" : "tailored-shirt";
       m.castShadow = true;
@@ -3711,8 +3688,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       bone.attach(group);
       return group;
     };
-    const ny = male ? 1.555 : 1.515, waist = male ? 0.18 : 0.145;
-    const torso = [[ny, 0.065, 0.074], [ny - 0.065, male ? 0.24 : 0.185, 0.125], [1.34, male ? 0.225 : 0.17, 0.15], [1.17, waist, 0.115], [1.015, waist + 5e-3, 0.12]];
+    const ny = male ? 1.51 : 1.50, waist = male ? 0.15 : 0.14;
+    const torso = [[ny, 0.065, 0.074], [ny - 0.065, male ? 0.205 : 0.185, 0.125], [1.34, male ? 0.185 : 0.17, 0.125], [1.17, waist, 0.115], [1.015, waist + 5e-3, 0.12]];
     const white = this.humanMaterial("shirt-white", "#f3f5f7", null), grey = this.humanMaterial("school-knit", "#505b6b", null);
     if (c.outfit === "robes") {
       this.tailoredSurface(rig, bones, sex + ":white-shirt", "white-collared-shirt", torso, white);
@@ -3800,81 +3777,27 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     }
     if (c.pattern !== "plain" && c.outfit !== "robes") for (let i = 0; i < 6; i++) this.glyph(detail, c.pattern === "stars" ? "✦" : "☾", c.trim, [(i % 3 - 1) * 0.08, 1.08 + Math.floor(i / 3) * 0.11, 0.132], 0.022);
     attach(bones.spine_03, detail);
-    const headY = male ? 1.81 : 1.766, head = new T.Group();
+    const headY = 1.81, head = new T.Group();
     head.name = "head-accessories";
     const hair = new T.Group();
     hair.name = "hair-" + c.hair;
     head.add(hair);
-    const hairName = { waves: "Hair_Long", short: "Hair_SimpleParted", long: "Hair_Long", braids: "Hair_Long", curls: "Hair_Buzzed", buns: "Hair_Buns", pixie: "Hair_SimpleParted" }[c.hair] || "Hair_Long";
-    const original = this.assets.hair.scene.getObjectByName(hairName);
-    original.updateWorldMatrix(true, false);
-    const hairKey = "fitted:" + sex + ":" + c.hair;
-    if (!this.geo.has(hairKey)) {
-      const geo = original.geometry.clone();
-      geo.applyMatrix4(original.matrixWorld);
-      const pos = geo.attributes.position, sourceY = ["Hair_Long", "Hair_Buns"].includes(hairName) ? 1.766 : 1.81;
-      for (let i = 0; i < pos.count; i++) {
-        let x = pos.getX(i), y = pos.getY(i) + headY - sourceY, z = pos.getZ(i);
-        if (c.hair === "waves" && y < headY - 0.13) y = headY - 0.13 + (y - (headY - 0.13)) * 0.65;
-        if (c.hair === "long" && y < headY - 0.13) y = headY - 0.13 + (y - (headY - 0.13)) * 1.8;
-        if (c.hair === "braids" && y < headY - 0.13) {
-          y = headY - 0.13 + (y - (headY - 0.13)) * 0.7;
-          x *= 0.92;
-        }
-        if (c.hair === "pixie") {
-          x *= 0.95;
-          if (y > headY - 0.055) y += Math.max(0, y - (headY - 0.055)) * (0.5 + 0.7 * Math.sin(x * 120 + z * 45) ** 4);
-          else y = headY - 0.055 + (y - headY + 0.055) * 0.78;
-        }
-        if (c.hair === "curls") {
-          x *= 1.22;
-          z = (z + 0.025) * 1.22 - 0.025;
-          y = headY - 0.12 + (y - headY + 0.12) * 1.15;
-        }
-        pos.setXYZ(i, x, y, z);
-      }
-      pos.needsUpdate = true;
-      geo.computeVertexNormals();
-      geo.computeBoundingBox();
-      geo.computeBoundingSphere();
-      this.geo.set(hairKey, geo);
-    }
-    const hm = this.humanMaterial("hair", c.hairColor, original.material, "hair");
-    const mesh = new T.Mesh(this.geo.get(hairKey), hm);
+    const original = this.assets[sex + "-hair"].scene.getObjectByName(sex + "-" + c.hair) || this.assets[sex + "-hair"].scene.getObjectByName(sex + "-long");
+    const mesh = new T.Mesh(original.geometry, this.humanMaterial("hair", c.hairColor, original.material, "hair"));
     mesh.castShadow = true;
     hair.add(mesh);
-    if (c.hair === "braids") for (const side of [-1, 1]) {
-      for (let strand = 0; strand < 3; strand++) {
-        const pts = Array.from({ length: 26 }, (_, i) => {
-          const t = i / 25;
-          return [side * (0.095 + 0.025 * Math.sin(t * 23 + strand * 2.1)), headY - 0.13 - t * 0.29, 0.02 + 0.018 * Math.cos(t * 23 + strand * 2.1)];
-        });
-        this.line(hair, pts, c.hairColor, 0.014);
+    // Saved beards remain opt-in magic costume pieces; young students never
+    // acquire stubble, and witches never render this wizard-only accessory.
+    if (male && c.beard && c.beard !== "none") {
+      const beard = new T.Group(); beard.name = "beard-" + c.beard;
+      const length = c.beard === "long" ? 0.24 : 0.095;
+      for (let i = 0; i < 15; i++) {
+        const x = (i / 14 - 0.5) * 0.10;
+        this.line(beard, [[x, 1.565, 0.14], [x * .85, 1.55 - length * .5, .145], [x * .3, 1.55 - length, .13]], c.hairColor, .006);
       }
-      this.mesh(hair, "cylinder", c.trim, [side * 0.095, headY - 0.39, 0.02], [0.026, 0.017, 0.026]);
+      this.mergeParts(beard); head.add(beard);
     }
-    if (c.hair === "curls") for (let j = 0; j < 80; j++) {
-      const phi = j * 2.399, u = (j + 0.5) / 80, theta = 0.12 + u * (Math.sin(phi) > 0.35 ? 1.12 : 1.44);
-      const centre = [Math.cos(phi) * Math.sin(theta) * 0.112, headY - 0.12 + Math.cos(theta) * 0.165, Math.sin(phi) * Math.sin(theta) * 0.105 - 0.025];
-      const pts = Array.from({ length: 10 }, (_, i) => {
-        const t = i / 9 * Math.PI * 2;
-        return [centre[0] + Math.cos(t) * 8e-3, centre[1] + Math.sin(t) * 7e-3, centre[2] + Math.sin(t + phi) * 7e-3];
-      });
-      this.line(hair, pts, c.hairColor, 5e-3);
-    }
-    this.mergeParts(hair);
-    if (c.kind === "wizard" && c.beard && c.beard !== "none") {
-      const original2 = this.assets.hair.scene.getObjectByName("Hair_Beard"), beard = original2.clone();
-      beard.geometry = original2.geometry;
-      beard.material = this.humanMaterial("beard", c.hairColor, original2.material, "hair");
-      beard.name = "beard-" + c.beard;
-      if (c.beard === "long") {
-        beard.scale.y = 1.6;
-        beard.position.y = -1.69 * 0.6;
-      }
-      head.add(beard);
-    }
-    const eyeY = male ? 1.7 : 1.655, eyeZ = male ? 0.088 : 0.081;
+    const eyeY = male ? 1.668 : 1.667, eyeZ = male ? 0.165 : 0.160;
     if (c.glasses !== "none") {
       const color = c.glasses === "gold" ? "#ac8c46" : "#2b2723";
       for (const side of [-1, 1]) {
@@ -3898,6 +3821,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     head.add(hat);
     const hatType = !portrait && (S.sorting || S.sortResult) ? "sorting" : !portrait && S.screen === "editor" && S.tab === "hair" ? "none" : c.hat;
     hat.position.y = headY - 0.045;
+    hat.position.z = .035;
     if (["pointed", "crooked", "sorting"].includes(hatType)) {
       const color = hatType === "sorting" ? "#544435" : robeColor;
       this.mesh(hat, "cylinder", color, [0, 0, 0], [hatType === "pointed" ? 0.16 : 0.25, 0.012, 0.19]);
@@ -3942,12 +3866,12 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     if (c.scarf) {
       const scarf = new T.Group();
       scarf.name = "house-scarf";
-      this.mesh(scarf, "torus", house.color, [0, male ? 1.56 : 1.51, -0.015], [0.08, 0.08, 0.09]).rotation.x = Math.PI / 2;
+      this.mesh(scarf, "torus", house.color, [0, 1.51, -0.015], [0.08, 0.08, 0.09]).rotation.x = Math.PI / 2;
       this.mesh(scarf, "box", house.color, [0.075, 1.35, chestZ + 0.03], [0.055, 0.32, 0.012]);
       for (let i = 0; i < 5; i++) this.mesh(scarf, "box", house.trim, [0.075, 1.21 + i * 0.056, chestZ + 0.038], [0.056, 0.018, 5e-3]);
       attach(bones.spine_03, scarf);
     }
-    const mixer = new T.AnimationMixer(rig), idle = mixer.clipAction(this.assets.gestures.animations.find((x) => x.name === "Idle_Loop"));
+    const mixer = new T.AnimationMixer(rig), idle = mixer.clipAction(this.assets[sex].animations.find((x) => x.name === "Idle_Loop"));
     idle.play();
     mixer.update(0.35);
     a.updateMatrixWorld(true);
@@ -3994,8 +3918,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     }
     const build = { slender: 0.88, regular: 1, broad: 1.13 }[c.bodyShape] || 1;
     const student = c.ageBuild !== "older", heightScale = student ? 1.38 : 1.56;
-    rig.scale.set(heightScale * build * (student ? 0.91 : 1), heightScale, heightScale * (student ? 0.94 : 1));
-    a.userData = { rig, bones, mixer, idle, head: bones.Head, hair, hat, body: bones.spine_03, wandTip, broom, sex, build, student, heightScale, rest, portrait };
+    rig.scale.set(heightScale * build * (student ? 1 : 1.05), heightScale, heightScale);
+    bones.Head.scale.setScalar(student ? 1 : .94);
+    a.userData = { rig, bones, mixer, idle, clips: this.assets[sex].animations, head: bones.Head, hair, hat, body: bones.spine_03, wandTip, broom, sex, build, student, heightScale, rest, portrait };
     this.relaxHands(a.userData);
     a.updateMatrixWorld(true);
     return a;
@@ -4028,13 +3953,24 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     this.flight = null;
     this.animStart = performance.now();
     this.lastFrameTime = null;
-    this.humanGesture = { type: "wave", start: performance.now() };
+    this.playGesture("wave");
   },
   relaxHands(u) {
     for (const [name, bone] of Object.entries(u.bones)) if (/^(index|middle|ring|pinky|thumb)_/.test(name)) {
       const holding = name.endsWith("_r") ? !!u.wandTip : !!u.broom;
       bone.quaternion.slerp(u.rest[name], holding ? 0.23 : 0.78);
     }
+  },
+  aimWand(u, reach) {
+    if (!u.wandTip || reach <= 0) return;
+    const T = this.T, bone = u.bones.hand_r;
+    this.actor.updateMatrixWorld(true);
+    const direction = new T.Vector3(0, 1, 0).applyQuaternion(u.wandTip.parent.getWorldQuaternion(new T.Quaternion()));
+    const aim = new T.Vector3(-0.2, 0.4, 1).normalize().applyQuaternion(this.actor.quaternion);
+    const turn = new T.Quaternion().slerp(new T.Quaternion().setFromUnitVectors(direction, aim), reach);
+    const parent = bone.parent.getWorldQuaternion(new T.Quaternion());
+    bone.quaternion.premultiply(parent.clone().invert().multiply(turn).multiply(parent));
+    bone.updateWorldMatrix(false, true);
   },
   animateHuman(t, reduced) {
     const u = this.actor?.userData;
@@ -4049,39 +3985,24 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const sec = t / 1e3;
     if (!reduced) {
       u.bones.spine_02.rotateZ(Math.sin(sec * 0.65) * 6e-3);
-      u.bones.Head.rotateY(Math.sin(sec * 0.45) * 0.035);
+      u.bones.Head.rotateY(Math.sin(sec * 0.45) * 0.055);
+      const breath = 1 + Math.sin(sec * 1.5) * .004;
+      u.bones.spine_02.scale.set(breath, breath, breath);
     }
     const gesture = this.humanGesture, age = gesture ? (t - gesture.start) / 1e3 : 99;
-    if (gesture && age < 2.4 && !reduced) {
-      const blend = Math.sin(Math.min(1, age / 2.4) * Math.PI);
-      const turnBone = (bone, turn) => {
-        const parentQ = bone.parent.getWorldQuaternion(new this.T.Quaternion());
-        bone.quaternion.premultiply(parentQ.clone().invert().multiply(turn).multiply(parentQ));
-        bone.updateWorldMatrix(false, true);
-      };
-      const raise = (bone, angle, axis = new this.T.Vector3(0, 0, 1)) => turnBone(bone, new this.T.Quaternion().setFromAxisAngle(axis, angle));
-      if (gesture.type === "wave") {
-        raise(u.bones.upperarm_l, blend * 1.35);
-        raise(u.bones.lowerarm_l, blend * 1.1);
-        u.bones.hand_l.rotateY(Math.sin(age * 12) * 0.28 * blend);
-      } else if (gesture.type === "cheer") {
-        for (const side of ["l", "r"]) {
-          raise(u.bones["upperarm_" + side], (side === "l" ? 1 : -1) * blend * 2.3);
-          raise(u.bones["lowerarm_" + side], (side === "l" ? 1 : -1) * blend * 0.2);
-        }
-      } else if (gesture.type === "cast") {
-        const reach = age < 0.4 ? age / 0.4 : age < 1.2 ? 1 : Math.max(0, (2.1 - age) / 0.9);
-        const axis = new this.T.Vector3(1, 0, 0).applyQuaternion(this.actor.quaternion);
-        raise(u.bones.upperarm_r, -reach, axis);
-        raise(u.bones.lowerarm_r, -0.8 * reach, axis);
-        if (u.wandTip) {
-          const wand = u.wandTip.parent;
-          const direction = new this.T.Vector3(0, 1, 0).applyQuaternion(wand.getWorldQuaternion(new this.T.Quaternion()));
-          const aim = new this.T.Vector3(-0.25, 0.5, 1).normalize().applyQuaternion(this.actor.quaternion);
-          const turn = new this.T.Quaternion().setFromUnitVectors(direction, aim);
-          turnBone(u.bones.hand_r, new this.T.Quaternion().slerp(turn, reach));
-        }
-      }
+    if (gesture?.type === "cast" && !reduced) this.aimWand(u, Math.min(1, age / .4, Math.max(0, (2.2 - age) / .7)));
+    const blink = reduced ? 0 : Math.max(0, 1 - Math.abs((sec % 4.3) - 3.8) / .095);
+    u.rig.traverse(o => {
+      if (o.morphTargetDictionary?.Blink !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Blink] = blink;
+      if (o.name === "student-eyes" || o.name === "student-lashes") o.visible = blink < .6;
+    });
+    if (u.activeAction && age > u.activeAction.getClip().duration - .3 && !u.recovering) {
+      u.idle.enabled = true; u.idle.setEffectiveWeight(1).play();
+      u.activeAction.crossFadeTo(u.idle, .3, false); u.recovering = true;
+    }
+    if (gesture?.type === "dance" || gesture?.type === "showoff") {
+      const turn = Math.min(1, Math.max(0, age / 2.6));
+      this.actor.rotation.y = (this.actorYaw || 0) + (!reduced && turn < 1 ? Math.PI * 2 * (turn * turn * (3 - 2 * turn)) : 0);
     }
     if (this.flight) {
       const p = (t - this.flight) / 4e3;
@@ -4101,13 +4022,15 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
   playGesture(type) {
     if (!this.actor?.userData.mixer) return;
     const u = this.actor.userData;
-    if (type === "cast" || type === "dance") {
-      const clip = this.assets.gestures.animations.find((a) => a.name === (type === "dance" ? "Dance_Loop" : "Spell_Simple_Shoot"));
+    const name = { wave: "Wave", cheer: "Cheer", cast: "Spell_Simple_Shoot", dance: "Dance_Loop", showoff: "ShowOff" }[type];
+    const clip = u.clips.find(a => a.name === name);
+    if (clip && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const previous = u.activeAction && !u.recovering ? u.activeAction : u.idle;
       const action = u.mixer.clipAction(clip);
-      action.reset().setLoop(this.T.LoopOnce, 1);
-      action.clampWhenFinished = false;
-      action.setEffectiveWeight(0.85);
-      action.play();
+      action.reset().setLoop(this.T.LoopOnce, 1).setEffectiveWeight(1).play();
+      action.clampWhenFinished = true;
+      if (previous !== action) action.crossFadeFrom(previous, .22, false);
+      u.activeAction = action; u.recovering = false;
     }
     this.humanGesture = { type, start: performance.now() };
   },
@@ -4390,7 +4313,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const sec = t / 1e3, reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     this.controls.update();
     if (this.actor) {
-      this.actor.position.y = (this.place === "grounds" ? 0.12 : 0.04) + (reduced ? 0 : Math.sin(sec * 1.8) * 0.025);
+      this.actor.position.y = (this.place === "grounds" ? 0.12 : 0.04);
       this.animateHuman(t, reduced);
     }
     this.candles.forEach((c, i) => {
@@ -4958,7 +4881,12 @@ function setChoice(key, value) {
   if (!c) return;
   if (key === "scarf" || key === "holdBroom") value = value === "true";
   if (!["kind", "bodyShape", "ageBuild", "expression", "skin", "hair", "hairColor", "eyes", "face", "glasses", "outfit", "robe", "trim", "pattern", "hat", "beard", "scarf", "shoes", "broom", "holdBroom", "school", "owl", "pet"].includes(key)) return;
-  if (key === "kind" && ["pointed", "crooked"].includes(c.hat)) c.hat = value === "witch" ? "crooked" : "pointed";
+  if (key === "kind") {
+    if (!c.customHair && ["long", "short"].includes(c.hair)) c.hair = value === "witch" ? "long" : "short";
+    if (!c.customHat && ["pointed", "crooked"].includes(c.hat)) c.hat = value === "witch" ? "crooked" : "pointed";
+  }
+  if (key === "hair") c.customHair = true;
+  if (key === "hat") c.customHat = true;
   if (key === "outfit" && !c.outfitColors) c.outfitColors = c.robe && c.robe !== COLORS[0] ? { [c.outfit]: c.robe } : {};
   c[key] = value;
   if (key === "robe") c.outfitColors = { ...c.outfitColors, [c.outfit]: value };
@@ -4969,6 +4897,7 @@ function setChoice(key, value) {
   refreshActor();
   if (S.screen === "editor") partialEditor();
   else if (S.screen === "pets" || S.screen === "sorting") render();
+  if (["kind", "hair", "outfit"].includes(key)) R.playGesture("showoff");
   Sound.play(key === "owl" ? "hoot" : "spark");
 }
 function effectArt(e, color) {
