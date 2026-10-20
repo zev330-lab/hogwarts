@@ -2258,7 +2258,7 @@ const EFFECTS = [["bubbles", "◌ Bubbles"], ["butterflies", "ʚɞ Butterflies"]
 const MOTIONS = { up: [[0.2, 0.8], [0.5, 0.2], [0.8, 0.8]], down: [[0.2, 0.2], [0.5, 0.8], [0.8, 0.2]], wave: Array.from({ length: 32 }, (_, i) => [0.12 + i * 0.76 / 31, 0.5 + Math.sin(i / 31 * Math.PI * 2) * 0.28]), zigzag: [[0.25, 0.15], [0.7, 0.15], [0.35, 0.5], [0.75, 0.5], [0.3, 0.85]], circle: Array.from({ length: 40 }, (_, i) => [0.5 + Math.cos(i / 39 * 2 * Math.PI) * 0.3, 0.5 + Math.sin(i / 39 * 2 * Math.PI) * 0.36]), loop: [[0.15, 0.7], [0.3, 0.3], [0.6, 0.2], [0.8, 0.4], [0.65, 0.7], [0.35, 0.6], [0.4, 0.4], [0.85, 0.8]], star: [[0.5, 0.12], [0.73, 0.85], [0.14, 0.4], [0.86, 0.4], [0.27, 0.85], [0.5, 0.12]] };
 const pick = (a) => a[Math.floor(Math.random() * a.length)], uid = () => globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 function fresh() {
-  return { id: uid(), name: "Havi Moonbeam", kind: "witch", beard: "none", bodyShape: "regular", ageBuild: "student", expression: "friendly", skin: SKINS[1], hair: "long", hairColor: HAIRS[0], eyes: EYES[0], face: "plain", glasses: "none", outfit: "robes", robe: COLORS[0], trim: "#e7b65b", pattern: "plain", hat: "crooked", scarf: false, shoes: "boots", broom: "none", holdBroom: false, school: "Hogwarts", house: null, owl: null, owlName: "Luna", pet: null, petName: "Pip", wand: { wood: "holly", core: "phoenix feather", length: 11, flex: "springy", handle: "twisted", color: "#9b6b43", inlay: "gold", chosen: false, tries: 0 }, spells: [], learned: [], patronus: null, accepted: false, created: Date.now() };
+  return { id: uid(), name: "Havi Moonbeam", kind: "witch", beard: "none", styleChoices: {}, bodyShape: "regular", ageBuild: "student", expression: "friendly", skin: SKINS[1], hair: "braids", hairColor: HAIRS[0], eyes: EYES[0], face: "plain", glasses: "none", outfit: "robes", robe: COLORS[0], trim: "#e7b65b", pattern: "plain", hat: "crooked", scarf: false, shoes: "boots", broom: "none", holdBroom: false, school: "Hogwarts", house: null, owl: null, owlName: "Luna", pet: null, petName: "Pip", wand: { wood: "holly", core: "phoenix feather", length: 11, flex: "springy", handle: "twisted", color: "#9b6b43", inlay: "gold", chosen: false, tries: 0 }, spells: [], learned: [], patronus: null, accepted: false, created: Date.now() };
 }
 const DEMO = { ...fresh(), id: "demo", name: "Your next adventure", owl: "snowy" };
 const Store = {
@@ -2277,7 +2277,7 @@ const Store = {
         this.volatile = true;
         return;
       }
-      this.data = { ...this.data, ...d, settings: { ...this.data.settings, ...d.settings }, points: { ...this.data.points, ...d.points }, letters: Array.isArray(d.letters) ? d.letters.filter((x) => x && typeof x === "object") : [], characters: Array.isArray(d.characters) ? d.characters.filter((c) => c && typeof c === "object" && typeof c.id === "string").map((c) => ({ ...fresh(), ...c, wand: { ...fresh().wand, ...c.wand }, spells: Array.isArray(c.spells) ? c.spells.filter((s) => s && typeof s.name === "string") : [], learned: Array.isArray(c.learned) ? c.learned : [] })) : [] };
+      this.data = { ...this.data, ...d, settings: { ...this.data.settings, ...d.settings }, points: { ...this.data.points, ...d.points }, letters: Array.isArray(d.letters) ? d.letters.filter((x) => x && typeof x === "object") : [], characters: Array.isArray(d.characters) ? d.characters.filter((c) => c && typeof c === "object" && typeof c.id === "string").map((c) => ({ ...fresh(), ...c, styleChoices: c.styleChoices || { hair: !!c.hair, hat: !!c.hat }, hair: c.hair || (c.kind === "wizard" ? "short" : "braids"), hat: c.hat || (c.kind === "wizard" ? "pointed" : "crooked"), wand: { ...fresh().wand, ...c.wand }, spells: Array.isArray(c.spells) ? c.spells.filter((s) => s && typeof s.name === "string") : [], learned: Array.isArray(c.learned) ? c.learned : [] })) : [] };
     } catch (e) {
       this.volatile = true;
     }
@@ -2446,7 +2446,7 @@ function charSVG(c, stage = false) {
   const under = school ? `<path d="M78 88h44v91H78z" fill="#505b6b"/><path d="m85 85 15 34 15-34" fill="#f3f5f7" stroke="${house.color}" stroke-width="2"/><path d="m98 84 4 0 2 5-4 4-4-4z m0 7-3 21 5 7 5-7-3-21" fill="${house.color}"/><path d="m97 96 6-2m-7 8 8-2m-8 8 8-2" stroke="${house.trim}" stroke-width="2"/><path d="m90 81 10 4-7 10-6-11m23-3-10 4 7 10 6-11" fill="white"/>${!male ? `<path d="M78 153h44l8 43H70z" fill="#505b6b"/><path d="m80 157-5 38m13-38-2 38m13-38v38m12-38 2 38m8-38 5 38" stroke="#303947" stroke-width="1.5"/>` : ""}` : "";
   const uniform = school ? `<path d="M${100 - width} 87l11-5 4 63-9 93H${100 - hem}z M${100 + width} 87l-11-5-4 63 9 93h${hem - 18}z" fill="${robe}"/><path d="m88 85 5 60-10 92m29-152-5 60 10 92" fill="none" stroke="${house.color}" stroke-width="4"/><g transform="translate(114 105) scale(.15)">${houseAnimal(c.house || "Gryffindor").replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : "";
   const decoration = jewel ? `<path d="m78 153 22 5 22-5" fill="none" stroke="${trim}" stroke-width="2"/><path d="m78 162-14 73m23-73-5 73m18-73v73m13-73 5 73m5-73 13 73" stroke="#ffffff30" stroke-width="1.3"/>` : formal ? `<path d="M91 85v148m18-148v148" stroke="${trim}" stroke-width="2"/>${[102, 115, 128, 141].map((y) => `<circle cx="100" cy="${y}" r="1.5" fill="${trim}"/>`).join("")}` : c.outfit === "cloak" ? `<path d="m88 86-7 151h38L112 86" fill="#3f6575"/><path d="m83 88-12 149m46-149 12 149" stroke="${house.color}" stroke-width="3"/><circle cx="100" cy="89" r="3" fill="${trim}"/>` : c.outfit === "muggle" ? '<text x="100" y="122" text-anchor="middle" fill="#f8db55" font-size="18">✦</text>' : "";
-  return `<svg viewBox="0 0 200 280" aria-hidden="true" data-human-portrait="${esc(c.kind)}"><ellipse cx="100" cy="259" rx="42" ry="5" fill="#090e1738"/><g transform="translate(${100 * (1 - shape * youth)} ${259 * (1 - youth)}) scale(${shape * youth} ${youth})"><path d="M86 176l-4 74h12l7-60 5 60h12l-4-74" fill="${c.outfit === "muggle" ? "#315b91" : c.outfit === "quidditch" ? "#e5dcc6" : "#30343b"}"/><path d="M81 245l-7 10q10 5 21 0v-10m11 0v11q14 5 23-1l-11-10" fill="${c.shoes === "trainers" ? "#d3cebd" : "#252321"}"/><path d="M91 71v14h18V71" fill="${skin}"/>${school ? "" : `<path d="M${100 - width} 87q26-13 ${width * 2} 0l${long ? hem - width : 2} ${long ? 151 : 81}h-${long ? hem * 2 : width * 2 + 4}z" fill="${robe}"/>`}${under}${uniform}<path d="M${100 - width} 88l-13 59 5 43m${width * 2 + 8}-102 14 59-5 43" fill="none" stroke="${robe}" stroke-width="${school ? 19 : 15}"/><path d="M64 187l-1 12q4 8 7-1l1-11m59 0 1 12q5 7 7-1l-1-11" fill="${c.outfit === "quidditch" ? "#573a28" : skin}"/>${decoration}${c.pattern !== "plain" && !school ? Array.from({ length: 8 }, (_, i) => `<text x="${84 + i % 3 * 14}" y="${151 + Math.floor(i / 3) * 22}" fill="${trim}" font-size="5">${c.pattern === "stars" ? "✦" : "☾"}</text>`).join("") : ""}${c.outfit === "jumper" ? `<text x="100" y="129" text-anchor="middle" fill="${trim}" font-size="18" font-family="Georgia">${esc(c.name[0] || "H")}</text>` : ""}${c.outfit === "quidditch" ? `<text x="100" y="110" text-anchor="middle" fill="${house.trim}" font-size="5">${esc(c.name.split(" ")[0].toUpperCase())}</text><text x="100" y="132" text-anchor="middle" fill="${house.trim}" font-size="20">7</text><path d="m63 147 3 20m69-20-3 20" stroke="#573a28" stroke-width="12"/>` : ""}<path d="${hairBack}" fill="${hc}" data-hair="${esc(c.hair)}"/><ellipse cx="100" cy="52" rx="13" ry="19" fill="${skin}"/><path d="M87 45q-3-19 14-17 18 1 12 19l-7-11-9 7z" fill="${hc}"/><path d="m91 46 5-1m8 0 6 1" stroke="${hc}" stroke-width="1.3"/><path d="m91 51 5 .2m9-.2 5-.2" stroke="${c.eyes}" stroke-width="1.7"/><path d="m101 50-2 8 4 1" fill="none" stroke="#815b47" stroke-width=".7"/><path d="${c.expression === "calm" ? "M96 64q4 1 8-1" : "M96 63q4 4 8-1"}" fill="none" stroke="#8c544b" stroke-width="1"/>${c.face === "freckles" ? '<path d="M90 57h1m2 1h1m14-1h1m-3 2h1" stroke="#87573d"/>' : ""}${glasses}${c.kind === "wizard" && c.beard !== "none" ? `<path d="M88 60q12 14 24 0l-4 14-8 ${c.beard === "long" ? 18 : 4}-9-14z" fill="${hc}"/>` : ""}${hat}${c.scarf ? `<path d="M89 80q12 6 23 0l-2 42-8 2 1-37-14-1" fill="${house.color}"/><path d="M103 95h8m-8 12h7m-7 12h6" stroke="${house.trim}" stroke-width="3"/>` : ""}${showBroom(c) ? '<path d="m61 169-4 83" stroke="#8d6c41" stroke-width="3"/><path d="m57 234-10 23m10-23 9 23m-9-23v25" stroke="#a68a54" stroke-width="3"/>' : ""}${c.wand?.chosen ? `<path d="m136 184 17-43" stroke="${c.wand.color}" stroke-width="2"/>` : ""}${c.owl ? `<g transform="translate(65 65) scale(.23)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}</g></svg>`;
+  return `<svg viewBox="0 0 200 280" aria-hidden="true" data-human-portrait="${esc(c.kind)}"><ellipse cx="100" cy="259" rx="42" ry="5" fill="#090e1738"/><g transform="translate(${100 * (1 - shape * youth)} ${259 * (1 - youth)}) scale(${shape * youth} ${youth})"><path d="M86 176l-4 74h12l7-60 5 60h12l-4-74" fill="${c.outfit === "muggle" ? "#315b91" : c.outfit === "quidditch" ? "#e5dcc6" : "#30343b"}"/><path d="M81 245l-7 10q10 5 21 0v-10m11 0v11q14 5 23-1l-11-10" fill="${c.shoes === "trainers" ? "#d3cebd" : "#252321"}"/><path d="M91 71v14h18V71" fill="${skin}"/>${school ? "" : `<path d="M${100 - width} 87q26-13 ${width * 2} 0l${long ? hem - width : 2} ${long ? 151 : 81}h-${long ? hem * 2 : width * 2 + 4}z" fill="${robe}"/>`}${under}${uniform}<path d="M${100 - width} 88l-13 59 5 43m${width * 2 + 8}-102 14 59-5 43" fill="none" stroke="${robe}" stroke-width="${school ? 19 : 15}"/><path d="M64 187l-1 12q4 8 7-1l1-11m59 0 1 12q5 7 7-1l-1-11" fill="${c.outfit === "quidditch" ? "#573a28" : skin}"/>${decoration}${c.pattern !== "plain" && !school ? Array.from({ length: 8 }, (_, i) => `<text x="${84 + i % 3 * 14}" y="${151 + Math.floor(i / 3) * 22}" fill="${trim}" font-size="5">${c.pattern === "stars" ? "✦" : "☾"}</text>`).join("") : ""}${c.outfit === "jumper" ? `<text x="100" y="129" text-anchor="middle" fill="${trim}" font-size="18" font-family="Georgia">${esc(c.name[0] || "H")}</text>` : ""}${c.outfit === "quidditch" ? `<text x="100" y="110" text-anchor="middle" fill="${house.trim}" font-size="5">${esc(c.name.split(" ")[0].toUpperCase())}</text><text x="100" y="132" text-anchor="middle" fill="${house.trim}" font-size="20">7</text><path d="m63 147 3 20m69-20-3 20" stroke="#573a28" stroke-width="12"/>` : ""}<path d="${hairBack}" fill="${hc}" data-hair="${esc(c.hair)}"/><ellipse cx="100" cy="52" rx="13" ry="19" fill="${skin}"/><path d="M87 45q-3-19 14-17 18 1 12 19l-7-11-9 7z" fill="${hc}"/><path d="m91 46 5-1m8 0 6 1" stroke="${hc}" stroke-width="1.3"/><path d="m91 51 5 .2m9-.2 5-.2" stroke="${c.eyes}" stroke-width="1.7"/><path d="m101 50-2 8 4 1" fill="none" stroke="#815b47" stroke-width=".7"/><path d="${c.expression === "calm" ? "M96 64q4 1 8-1" : "M96 63q4 4 8-1"}" fill="none" stroke="#8c544b" stroke-width="1"/>${c.face === "freckles" ? '<path d="M90 57h1m2 1h1m14-1h1m-3 2h1" stroke="#87573d"/>' : ""}${glasses}${c.kind === "wizard" && ["short", "long"].includes(c.beard) ? `<path d="M88 60q12 14 24 0l-4 14-8 ${c.beard === "long" ? 18 : 4}-9-14z" fill="${hc}"/>` : ""}${hat}${c.scarf ? `<path d="M89 80q12 6 23 0l-2 42-8 2 1-37-14-1" fill="${house.color}"/><path d="M103 95h8m-8 12h7m-7 12h6" stroke="${house.trim}" stroke-width="3"/>` : ""}${showBroom(c) ? '<path d="m61 169-4 83" stroke="#8d6c41" stroke-width="3"/><path d="m57 234-10 23m10-23 9 23m-9-23v25" stroke="#a68a54" stroke-width="3"/>' : ""}${c.wand?.chosen ? `<path d="m136 184 17-43" stroke="${c.wand.color}" stroke-width="2"/>` : ""}${c.owl ? `<g transform="translate(65 65) scale(.23)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}</g></svg>`;
 }
 const R = {
   state: "loading",
@@ -2522,7 +2522,7 @@ const R = {
         }
       });
       for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) r.domElement.addEventListener(type, (e) => fingers.delete(e.pointerId));
-      this.controls.addEventListener("start", () => this.interacting = true);
+      this.controls.addEventListener("start", () => { this.interacting = true; this.cameraMove = null; });
       this.controls.addEventListener("end", () => this.interacting = false);
       this.reset();
       this.scene.add(new T.HemisphereLight("#b8cff0", "#182330", 0.7));
@@ -2792,18 +2792,31 @@ const R = {
       c.visible = false;
     });
   },
-  reset() {
+  reset(smooth = false) {
     if (!this.cam) return;
-    this.actorYaw = 0;
-    if (this.actor) this.actor.rotation.y = 0;
+    if (!smooth) {
+      this.actorYaw = 0;
+      if (this.actor) this.actor.rotation.y = 0;
+    }
     const close = S.screen === "editor" && ["you", "face", "hair", "hats"].includes(S.tab);
     this.focusKey = close ? "portrait" : "full";
-    this.controls.minDistance = close ? 1.25 : 3.8;
+    const minDistance = close ? 1.25 : 3.8;
     const young = (Store.current() || DEMO).ageBuild !== "older", h = young ? 0.885 : 1;
     this.focusAge = young ? "student" : "older";
-    this.cam.position.set(close ? 0.08 : 0.3, close ? 2.72 * h : 2.1, close ? 1.85 : 5.9);
-    this.controls.target.set(0, close ? 2.66 * h : 1.55, 0);
-    this.controls.update();
+    this.focusKind = (Store.current() || DEMO).kind;
+    const face = this.actor?.userData.bones.Head.getWorldPosition(new this.T.Vector3());
+    const target = new this.T.Vector3(0, close ? (face?.y || 2.5 * h) + 0.16 : 1.48, 0);
+    const position = new this.T.Vector3(close ? 0.025 : 0.3, close ? target.y + 0.025 : 2.1, close ? 1.85 : 5.9);
+    if (smooth && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      this.controls.minDistance = Math.min(this.controls.minDistance, minDistance);
+      this.cameraMove = { start: performance.now(), from: this.cam.position.clone(), fromTarget: this.controls.target.clone(), position, target, minDistance };
+    } else {
+      this.cameraMove = null;
+      this.controls.minDistance = minDistance;
+      this.cam.position.copy(position);
+      this.controls.target.copy(target);
+      this.controls.update();
+    }
   },
   resize() {
     if (!this.renderer) return;
@@ -3435,8 +3448,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         m.bumpScale = 3e-3;
       }
       if (type === "skin") {
-        m.roughness = 0.7;
-        m.color.multiplyScalar(1.12);
+        m.roughness = 0.78;
+        m.normalScale.set(0.1, 0.1);
+        m.color.multiplyScalar(1.06);
       }
       if (type === "hair") {
         m.roughness = 0.72;
@@ -3788,7 +3802,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     hair.add(mesh);
     // Saved beards remain opt-in magic costume pieces; young students never
     // acquire stubble, and witches never render this wizard-only accessory.
-    if (male && c.beard && c.beard !== "none") {
+    if (male && ["short", "long"].includes(c.beard)) {
       const beard = new T.Group(); beard.name = "beard-" + c.beard;
       const length = c.beard === "long" ? 0.24 : 0.095;
       for (let i = 0; i < 15; i++) {
@@ -3824,17 +3838,17 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     hat.position.z = .035;
     if (["pointed", "crooked", "sorting"].includes(hatType)) {
       const color = hatType === "sorting" ? "#544435" : robeColor;
-      this.mesh(hat, "cylinder", color, [0, 0, 0], [hatType === "pointed" ? 0.16 : 0.25, 0.012, 0.19]);
+      this.mesh(hat, "cylinder", color, [0, 0, 0], [hatType === "pointed" ? 0.15 : 0.205, 0.012, 0.19]);
       const pts = [];
       for (let i = 0; i <= 12; i++) {
         const t = i / 12;
-        pts.push(new T.Vector2(0.13 * Math.pow(1 - t, 0.8), t * 0.37));
+        pts.push(new T.Vector2(0.13 * Math.pow(1 - t, 0.8), t * 0.27));
       }
       const geo = new T.LatheGeometry(pts, 32);
       const pos = geo.attributes.position;
       for (let i = 0; i < pos.count; i++) {
         const y = pos.getY(i);
-        pos.setX(i, pos.getX(i) + (hatType === "pointed" ? 0 : -0.12 * Math.pow(y / 0.37, 3)));
+        pos.setX(i, pos.getX(i) + (hatType === "pointed" ? 0 : -0.12 * Math.pow(y / 0.27, 3)));
         pos.setZ(i, pos.getZ(i) + 6e-3 * Math.sin(pos.getX(i) * 35 + y * 30));
       }
       geo.computeVertexNormals();
@@ -3920,7 +3934,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const student = c.ageBuild !== "older", heightScale = student ? 1.38 : 1.56;
     rig.scale.set(heightScale * build * (student ? 1 : 1.05), heightScale, heightScale);
     bones.Head.scale.setScalar(student ? 1 : .94);
-    a.userData = { rig, bones, mixer, idle, clips: this.assets[sex].animations, head: bones.Head, hair, hat, body: bones.spine_03, wandTip, broom, sex, build, student, heightScale, rest, portrait };
+    a.userData = { rig, bones, mixer, idle, clips: this.assets[sex].animations, head: bones.Head, hair, hat, body: bones.spine_03, wandTip, broom, sex, build, student, heightScale, rest, portrait, characterKey: c.id + ":" + S.screen };
     this.relaxHands(a.userData);
     a.updateMatrixWorld(true);
     return a;
@@ -3934,11 +3948,19 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     this.petHeads = this.petHeads.filter((p) => p.env);
     this.wings = this.wings.filter((w) => w.userData.env);
     const focus = S.screen === "editor" && ["you", "face", "hair", "hats"].includes(S.tab) ? "portrait" : "full";
-    if (focus !== this.focusKey || (c.ageBuild || "student") !== this.focusAge) this.reset();
+    const reframe = focus !== this.focusKey || (c.ageBuild || "student") !== this.focusAge || focus === "portrait" && c.kind !== this.focusKind;
+    const previous = this.actor?.userData;
     this.actor = this.makeHuman(c);
     this.actor.rotation.y = this.actorYaw || 0;
     this.scene.add(this.actor);
+    if (reframe) this.reset(true);
     const u = this.actor.userData;
+    if (previous) {
+      u.mixer.setTime(previous.mixer.time);
+      this.relaxHands(u);
+      u.transitionPose = Object.fromEntries(Object.entries(previous.bones).map(([name, bone]) => [name, bone.quaternion.clone()]));
+      u.transitionStart = performance.now();
+    }
     this.body = u.body;
     this.head = u.head;
     this.hair = u.hair;
@@ -3953,7 +3975,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     this.flight = null;
     this.animStart = performance.now();
     this.lastFrameTime = null;
-    this.playGesture("wave");
+    if (!previous || previous.characterKey !== u.characterKey) this.playGesture("wave");
   },
   relaxHands(u) {
     for (const [name, bone] of Object.entries(u.bones)) if (/^(index|middle|ring|pinky|thumb)_/.test(name)) {
@@ -4004,6 +4026,12 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       const turn = Math.min(1, Math.max(0, age / 2.6));
       this.actor.rotation.y = (this.actorYaw || 0) + (!reduced && turn < 1 ? Math.PI * 2 * (turn * turn * (3 - 2 * turn)) : 0);
     }
+    if ((!gesture || age >= 2.6) && !this.flight) this.actor.rotation.y = this.actorYaw || 0;
+    if (u.transitionPose) {
+      const progress = Math.min(1, (t - u.transitionStart) / 250), ease = progress * progress * (3 - 2 * progress);
+      for (const [name, bone] of Object.entries(u.bones)) bone.quaternion.slerpQuaternions(u.transitionPose[name], bone.quaternion.clone(), ease);
+      if (progress === 1) u.transitionPose = null;
+    }
     if (this.flight) {
       const p = (t - this.flight) / 4e3;
       if (p >= 1) {
@@ -4022,6 +4050,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
   playGesture(type) {
     if (!this.actor?.userData.mixer) return;
     const u = this.actor.userData;
+    u.transitionPose = Object.fromEntries(Object.entries(u.bones).map(([name, bone]) => [name, bone.quaternion.clone()]));
+    u.transitionStart = performance.now();
     const name = { wave: "Wave", cheer: "Cheer", cast: "Spell_Simple_Shoot", dance: "Dance_Loop", showoff: "ShowOff" }[type];
     const clip = u.clips.find(a => a.name === name);
     if (clip && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -4311,6 +4341,15 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     this.frame = requestAnimationFrame((x) => this.loop(x));
     this.frames++;
     const sec = t / 1e3, reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (this.cameraMove) {
+      const move = this.cameraMove, progress = Math.min(1, (t - move.start) / 550), ease = progress * progress * (3 - 2 * progress);
+      this.cam.position.lerpVectors(move.from, move.position, ease);
+      this.controls.target.lerpVectors(move.fromTarget, move.target, ease);
+      if (progress === 1) {
+        this.controls.minDistance = move.minDistance;
+        this.cameraMove = null;
+      }
+    }
     this.controls.update();
     if (this.actor) {
       this.actor.position.y = (this.place === "grounds" ? 0.12 : 0.04);
@@ -4881,12 +4920,11 @@ function setChoice(key, value) {
   if (!c) return;
   if (key === "scarf" || key === "holdBroom") value = value === "true";
   if (!["kind", "bodyShape", "ageBuild", "expression", "skin", "hair", "hairColor", "eyes", "face", "glasses", "outfit", "robe", "trim", "pattern", "hat", "beard", "scarf", "shoes", "broom", "holdBroom", "school", "owl", "pet"].includes(key)) return;
-  if (key === "kind") {
-    if (!c.customHair && ["long", "short"].includes(c.hair)) c.hair = value === "witch" ? "long" : "short";
-    if (!c.customHat && ["pointed", "crooked"].includes(c.hat)) c.hat = value === "witch" ? "crooked" : "pointed";
+  if (key === "kind" && value !== c.kind) {
+    if (!c.styleChoices?.hair) c.hair = value === "witch" ? "braids" : "short";
+    if (!c.styleChoices?.hat) c.hat = value === "witch" ? "crooked" : "pointed";
   }
-  if (key === "hair") c.customHair = true;
-  if (key === "hat") c.customHat = true;
+  if (["hair", "hat"].includes(key)) c.styleChoices = { ...c.styleChoices, [key]: true };
   if (key === "outfit" && !c.outfitColors) c.outfitColors = c.robe && c.robe !== COLORS[0] ? { [c.outfit]: c.robe } : {};
   c[key] = value;
   if (key === "robe") c.outfitColors = { ...c.outfitColors, [c.outfit]: value };
@@ -5120,7 +5158,7 @@ const actions = {
   },
   random: () => {
     const c = Store.current();
-    Object.assign(c, { skin: pick(SKINS), hair: pick(["waves", "curls", "buns", "braids", "short", "long", "pixie"]), hairColor: pick(HAIRS), eyes: pick(EYES), face: pick(["rosy", "freckles", "plain"]), glasses: pick(["none", "round", "square", "gold"]), outfit: pick(["robes", "gown", "jumper", "quidditch", "muggle", "cloak", "dress"]), robe: pick(COLORS), hat: pick(["pointed", "crooked", "beanie", "tiara", "top", "flowers", "none"]), pattern: pick(["plain", "stars", "moons"]) });
+    Object.assign(c, { styleChoices: { hair: true, hat: true }, skin: pick(SKINS), hair: pick(["waves", "curls", "buns", "braids", "short", "long", "pixie"]), hairColor: pick(HAIRS), eyes: pick(EYES), face: pick(["rosy", "freckles", "plain"]), glasses: pick(["none", "round", "square", "gold"]), outfit: pick(["robes", "gown", "jumper", "quidditch", "muggle", "cloak", "dress"]), robe: pick(COLORS), hat: pick(["pointed", "crooked", "beanie", "tiara", "top", "flowers", "none"]), pattern: pick(["plain", "stars", "moons"]) });
     Store.save();
     partialEditor();
     refreshActor();
