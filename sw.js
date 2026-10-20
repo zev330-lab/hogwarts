@@ -1,4 +1,4 @@
-const CACHE = 'hogwarts-v4-realism';
+const CACHE = 'hogwarts-v5-uniforms';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './vendor/three.js', './models/female.glb', './models/male.glb', './models/female-clothes.glb', './models/male-clothes.glb', './models/hair.glb', './models/gestures.glb'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
