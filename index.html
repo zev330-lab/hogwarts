@@ -3805,9 +3805,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     if (male && ["short", "long"].includes(c.beard)) {
       const beard = new T.Group(); beard.name = "beard-" + c.beard;
       const length = c.beard === "long" ? 0.24 : 0.095;
-      for (let i = 0; i < 15; i++) {
-        const x = (i / 14 - 0.5) * 0.10;
-        this.line(beard, [[x, 1.565, 0.14], [x * .85, 1.55 - length * .5, .145], [x * .3, 1.55 - length, .13]], c.hairColor, .006);
+      for (let i = 0; i < 25; i++) {
+        const x = (i / 24 - 0.5) * 0.10;
+        this.line(beard, [[x, 1.575, 0.145], [x * .85, 1.55 - length * .5, .145], [x * .3, 1.55 - length, .13]], c.hairColor, .007);
       }
       this.mergeParts(beard); head.add(beard);
     }
@@ -4624,7 +4624,7 @@ function editorPanel() {
     case "face":
       return `<h2>Eyes, cheeks & glasses</h2>${field("Eye colour", swatches("eyes", EYES, c.eyes))}${field("A little detail", choices("face", [["rosy", "❀ Rosy cheeks"], ["freckles", "∴ Freckles"], ["plain", "♡ Just me"]], c.face))}${field("Glasses", choices("glasses", [["none", "○ None"], ["round", "◎ Round"], ["square", "▢ Square"], ["gold", "✦ Gold"], ["heart", "♡ Oval"]], c.glasses))}`;
     case "hair":
-      return `<h2>Pick some fun hair!</h2>${field("Hair style", choices("hair", [["waves", "≈ Waves"], ["short", "⌁ Short"], ["long", "〰 Long"], ["braids", "❦ Braids"], ["curls", "꩜ Curls"], ["buns", "◉ Buns"], ["pixie", "✧ Pixie"]], c.hair))}${field("Hair colour", swatches("hairColor", HAIRS, c.hairColor))}${c.kind === "wizard" ? field("A wizard beard?", choices("beard", [["none", "○ No beard"], ["short", "⌁ Little beard"], ["long", "✧ Long beard"]], c.beard || "none")) : ""}<p class="fine">Your hat is resting while you try hair.</p>`;
+      return `<h2>Pick some fun hair!</h2>${field("Hair style", choices("hair", [["waves", "≈ Waves"], ["short", "⌁ Short"], ["long", "〰 Long"], ["braids", "❦ Braids"], ["curls", "꩜ Curls"], ["buns", "◉ Buns"], ["pixie", "✧ Pixie"]], c.hair))}${field("Hair colour", swatches("hairColor", HAIRS, c.hairColor))}${c.kind === "wizard" ? field("A magic fake beard?", choices("beard", [["none", "○ No beard"], ["short", "⌁ Little beard"], ["long", "✧ Long beard"]], c.beard || "none")) : ""}<p class="fine">Your hat is resting while you try hair.</p>`;
     case "clothes":
       return `<h2>What shall we wear?</h2>${field("Outfit", choices("outfit", [["robes", "✦ School robes"], ["quidditch", "⚑ Quidditch kit"], ["gown", "❀ Yule Ball gown"], ["dress", "♧ Dress robes"], ["jumper", "♡ Cosy jumper"], ["muggle", "✧ Muggle clothes"], ["cloak", "☾ Travelling cloak"]], c.outfit))}${!["robes", "jumper", "quidditch", "cloak"].includes(c.outfit) ? field("Main colour", swatches("robe", COLORS, outfitColor(c))) : '<p class="fine">Your house colours are woven into this outfit.</p>'}${field("Trim colour", swatches("trim", ["#e7b65b", "#c6d4dc", "#dba3b8", "#b6d0ac", "#f3e4c7", "#776593"], c.trim))}${field("Pattern", choices("pattern", [["plain", "○ Plain"], ["stars", "✦ Stars"], ["moons", "☾ Moons"]], c.pattern))}`;
     case "hats":
