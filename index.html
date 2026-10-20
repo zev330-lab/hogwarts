@@ -364,6 +364,7 @@ textarea {
   margin-top: 10px;
   color: var(--muted);
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 .stage-foot::before,
 .stage-foot::after {
@@ -492,6 +493,51 @@ textarea {
   border: 0;
   background: none;
   padding: 0 0 15px;
+}
+.character-card > .card-visit {
+  padding: 0;
+}
+.card-name {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 7px;
+}
+.card-name h3 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+.card-name button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  padding: 5px 0;
+}
+.card-name h3 button {
+  width: 100%;
+  font: inherit;
+  overflow-wrap: anywhere;
+}
+.card-name .card-pencil {
+  flex: 0 0 44px;
+  border: 1px solid #b39150;
+  border-radius: 50%;
+  background: #f0dfb9;
+  color: #50391b;
+  font-size: 24px;
+}
+.character-card > small {
+  display: block;
+  margin: 5px 8px 15px;
+}
+.change-name {
+  margin-top: 8px;
+}
+#rename-name {
+  min-height: 56px;
+  font-size: 22px;
 }
 .portrait {
   height: 168px;
@@ -4598,8 +4644,8 @@ function refreshWorld() {
 }
 const btn = (text, action, cls = "", attrs = "") => `<button class="btn ${cls}" data-action="${action}" ${attrs}>${text}</button>`;
 const tile = (title2, sub, ic, page) => `<button class="tile" data-go="${page}"><span>${icon(ic)}</span><span class="arrow">↗</span><div><b>${title2}</b><small>${sub}</small></div></button>`;
-function title(eyebrow, heading, sub = "") {
-  return `${S.screen === "home" ? "" : '<div class="intro-row"><button class="back" data-action="back" aria-label="Back">' + icon("back") + "</button><div>"}<div class="eyebrow">${eyebrow}</div><h1>${heading}</h1>${sub ? `<p>${sub}</p>` : ""}${S.screen === "home" ? "" : "</div></div>"}`;
+function title(eyebrow, heading, sub = "", action = "") {
+  return `${S.screen === "home" ? "" : '<div class="intro-row"><button class="back" data-action="back" aria-label="Back">' + icon("back") + "</button><div>"}<div class="eyebrow">${eyebrow}</div><h1>${heading}</h1>${action}${sub ? `<p>${sub}</p>` : ""}${S.screen === "home" ? "" : "</div></div>"}`;
 }
 function choices(key, values, current, scope = "set") {
   return `<div class="choices">${values.map((v) => {
@@ -4617,7 +4663,7 @@ function home() {
   $("#stage-foot").textContent = "Look up! Even the candles can fly.";
   let s = btn(icon("plus") + " Make a witch or wizard", "new", "primary wide");
   s += `<div class="section-head"><h2>Your magical friends</h2><small>${chars.length} ${chars.length === 1 ? "friend" : "friends"}</small></div>`;
-  s += chars.length ? `<div class="cards">${chars.map((c) => `<article class="character-card"><button data-open="${esc(c.id)}" aria-label="Visit ${esc(c.name)}"><div class="portrait" data-portrait="${esc(c.id)}">${charSVG(c)}</div><h3>${esc(c.name)}</h3><small>${esc(c.school === "Hogwarts" ? c.house || c.school : c.school)}</small></button><button class="card-menu" data-menu="${esc(c.id)}" aria-label="Options for ${esc(c.name)}">⋯</button></article>`).join("")}</div>` : `<div class="empty"><h2>Who will you make first?</h2><p>A starry witch with a tiny owl?<br>A dragon-loving wizard? You decide.</p></div>`;
+  s += chars.length ? `<div class="cards">${chars.map((c) => `<article class="character-card"><button class="card-visit" data-open="${esc(c.id)}" aria-label="Visit ${esc(c.name)}"><div class="portrait" data-portrait="${esc(c.id)}">${charSVG(c)}</div></button><div class="card-name"><h3><button data-rename="${esc(c.id)}" aria-label="Change name for ${esc(c.name)}">${esc(c.name)}</button></h3><button class="card-pencil" data-rename="${esc(c.id)}" aria-label="Change name for ${esc(c.name)}">✎</button></div><small>${esc(c.school === "Hogwarts" ? c.house || c.school : c.school)}</small><button class="card-menu" data-menu="${esc(c.id)}" aria-label="Options for ${esc(c.name)}">⋯</button></article>`).join("")}</div>` : `<div class="empty"><h2>Who will you make first?</h2><p>A starry witch with a tiny owl?<br>A dragon-loving wizard? You decide.</p></div>`;
   s += `<div class="divider">${icon("cup")} The House Cup</div><div class="panel"><div class="house-cup">${Object.entries(HOUSES).map(([h, d]) => `<div>${crest(h)}<strong>${Number(Store.data.points[h]) || 0}</strong><small>${h}</small><div class="cup-bar" style="--house:${d.color}"></div></div>`).join("")}</div><p class="fine" style="text-align:center">Cast spells and send letters to win house points!</p></div><p class="fine" style="text-align:center">Made for Havi. Happy spell-casting! ✧</p>`;
   return s;
 }
@@ -4635,7 +4681,7 @@ function editorPanel() {
   const c = Store.current();
   switch (S.tab) {
     case "you":
-      return `<h2>Hello! What’s your name?</h2><div class="field"><label for="character-name">My name is…</label><input id="character-name" maxlength="32" value="${esc(c.name)}" autocomplete="off"></div>${btn(icon("sparkle") + " Give me a magic name", "magic-name", "soft")}${field("I am a…", choices("kind", [["witch", "✧ Witch"], ["wizard", "✦ Wizard"]], c.kind))}${field("Student", choices("ageBuild", [["student", "Younger student"], ["older", "Older student"]], c.ageBuild || "student"))}${field("Build", choices("bodyShape", [["slender", "Slender"], ["regular", "Regular"], ["broad", "Broad"]], c.bodyShape || "regular"))}${field("Expression", choices("expression", [["friendly", "Gentle smile"], ["calm", "Calm"]], c.expression || "friendly"))}${field("Skin tone", swatches("skin", SKINS, c.skin))}`;
+      return `<div class="field"><label for="character-name">My name is…</label><input id="character-name" maxlength="32" value="${esc(c.name)}" autocomplete="off"></div>${btn(icon("sparkle") + " Give me a magic name", "magic-name", "soft")}${field("I am a…", choices("kind", [["witch", "✧ Witch"], ["wizard", "✦ Wizard"]], c.kind))}${field("Student", choices("ageBuild", [["student", "Younger student"], ["older", "Older student"]], c.ageBuild || "student"))}${field("Build", choices("bodyShape", [["slender", "Slender"], ["regular", "Regular"], ["broad", "Broad"]], c.bodyShape || "regular"))}${field("Expression", choices("expression", [["friendly", "Gentle smile"], ["calm", "Calm"]], c.expression || "friendly"))}${field("Skin tone", swatches("skin", SKINS, c.skin))}`;
     case "face":
       return `<h2>Eyes, cheeks & glasses</h2>${field("Eye colour", swatches("eyes", EYES, c.eyes))}${field("A little detail", choices("face", [["rosy", "❀ Rosy cheeks"], ["freckles", "∴ Freckles"], ["plain", "♡ Just me"]], c.face))}${field("Glasses", choices("glasses", [["none", "○ None"], ["round", "◎ Round"], ["square", "▢ Square"], ["gold", "✦ Gold"], ["heart", "♡ Oval"]], c.glasses))}`;
     case "hair":
@@ -4652,8 +4698,8 @@ function editorPanel() {
 }
 function room() {
   const c = Store.current(), h = c.school === "Hogwarts" ? c.house : null;
-  $("#intro").innerHTML = title(esc(h || c.school), esc(c.name), "Ready to play? Pick an adventure!");
-  $("#stage-foot").textContent = c.owl ? `${c.owlName} is very happy to see you.` : "What shall we do today?";
+  $("#intro").innerHTML = title(esc(h || c.school), esc(c.name), "Ready to play? Pick an adventure!", btn("✎ Change name", "change-name", "soft change-name"));
+  $("#stage-foot").textContent = `${c.name} · ${c.owl ? `${c.owlName} is very happy to see you.` : "What shall we do today?"}`;
   return `<div class="row equal">${btn(icon("shirt") + " Dress up", "edit", "soft")}${btn(icon("mail") + " My letter", "acceptance")}</div><div class="tiles">${tile("The Sorting", h ? "Meet your house" : "Which house are you?", "hat", "sorting")}${tile("Ollivanders", c.wand.chosen ? "Your wand is waiting" : "Find your perfect wand", "wand", "wands")}${tile("Owl Emporium", c.owl ? `${esc(c.owlName)} & friends` : "Meet your new best friend", "owl", "pets")}${tile("Spell workshop", `${c.learned.length} spells discovered`, "sparkle", "spells")}${tile("Owl post", "Send a friend a letter", "mail", "post")}${tile("Castle grounds", "Fly over the lake", "castle", "grounds")}</div>${c.patronus ? `<div class="panel green"><h3>✧ Your Patronus is a ${esc(c.patronus)}.</h3><p class="fine">A bright little friend, made of your happiest thoughts.</p></div>` : ""}${btn("⋯ Rename, copy & more", "character-options")}`;
 }
 const QUIZ = [{ q: "A tiny dragon is lost. You…", answers: [["Gryffindor", "🛡 Help it find its way"], ["Hufflepuff", "♡ Give it a warm hug"], ["Ravenclaw", "⌕ Look for its footprints"], ["Slytherin", "✧ Make a clever plan"]] }, { q: "Pick a magical treasure.", answers: [["Ravenclaw", "📖 A book of secret stars"], ["Gryffindor", "⚔ A brave little sword"], ["Slytherin", "🗝 A key to hidden rooms"], ["Hufflepuff", "🌱 A seed that needs a friend"]] }, { q: "Your friend feels sad. You…", answers: [["Hufflepuff", "♡ Sit with them and listen"], ["Slytherin", "✦ Plan a lovely surprise"], ["Gryffindor", "☀ Help them face their worry"], ["Ravenclaw", "✧ Invent something to cheer them up"]] }, { q: "Where would you explore?", answers: [["Slytherin", "☾ A secret passage"], ["Ravenclaw", "☆ A tower of starlight"], ["Hufflepuff", "❀ A garden full of creatures"], ["Gryffindor", "♨ A dragon’s mountain"]] }];
@@ -4755,6 +4801,18 @@ function go(page, id) {
   render();
   R.reset();
   window.scrollTo({ top: 0, behavior: "instant" });
+  revealEditorName();
+}
+function revealEditorName() {
+  if (S.screen !== "editor" || S.tab !== "you") return;
+  requestAnimationFrame(() => {
+    const label = $('label[for="character-name"]'), wrap = $("#stage-wrap");
+    if (!label || S.screen !== "editor" || S.tab !== "you") return;
+    const labelBox = label.getBoundingClientRect(), stageBox = wrap.getBoundingClientRect(), style = getComputedStyle(wrap);
+    const above = style.position === "sticky" && stageBox.left < labelBox.right && stageBox.right > labelBox.left;
+    const top = above ? wrap.offsetHeight + (parseFloat(style.top) || 0) + 12 : 12;
+    window.scrollBy({ top: labelBox.top - top, behavior: "instant" });
+  });
 }
 function render() {
   $("#app").classList.toggle("quiz-mode", S.screen === "sorting" && S.sorting);
@@ -4917,6 +4975,23 @@ function characterOptions(id = S.id) {
   if (!c) return;
   S.optionId = c.id;
   modal(esc(c.name), `${btn(icon("shirt") + " Dress up", "option-edit", "wide")}${btn("✎ Rename", "rename", "wide")}${btn("✧ Make a twin", "duplicate", "wide")}${btn("♡ Say goodbye", "delete-ask", "danger wide")}`);
+}
+function renameCharacter(id = S.id) {
+  const c = Store.data.characters.find((c2) => c2.id === id);
+  if (!c) return;
+  S.optionId = c.id;
+  modal("A new name?", `<div class="field"><label for="rename-name">My name is…</label><input id="rename-name" value="${esc(c.name)}" maxlength="32" autocomplete="off" enterkeyhint="done" aria-describedby="rename-note"><p id="rename-note" class="fine" role="status" hidden></p></div>${btn(icon("check") + " Save name", "rename-save", "primary wide")}${btn("Cancel", "close", "wide")}`);
+  $("#rename-name").focus({ preventScroll: true });
+  $("#rename-name").select();
+}
+function saveCharacterName(c, value) {
+  const name = value.trim().slice(0, 32);
+  if (!name) return false;
+  c.name = name;
+  // Letters already carry the sender ID; keep their saved display name current.
+  for (const letter of Store.data.letters) if (letter.from === c.id) letter.fromName = name;
+  Store.save();
+  return true;
 }
 function sortTo(h) {
   const c = Store.current();
@@ -5165,8 +5240,7 @@ const actions = {
   },
   "magic-name": () => {
     const c = Store.current();
-    c.name = pick(["Havi", "Luna", "Ivy", "Willow", "Nova", "Clover", "Poppy", "Theo", "Rowan", "Jasper"]) + " " + pick(["Moonbeam", "Starling", "Bramble", "Wisp", "Firefly", "Honeydew", "Stardust"]);
-    Store.save();
+    saveCharacterName(c, pick(["Havi", "Luna", "Ivy", "Willow", "Nova", "Clover", "Poppy", "Theo", "Rowan", "Jasper"]) + " " + pick(["Moonbeam", "Starling", "Bramble", "Wisp", "Firefly", "Honeydew", "Stardust"]));
     partialEditor();
     refreshActor();
     Sound.play();
@@ -5268,18 +5342,16 @@ const actions = {
     closeModal();
     go("editor", id);
   },
-  rename: () => {
-    const c = Store.data.characters.find((c2) => c2.id === S.optionId);
-    modal("A new name?", `<div class="field"><label for="rename-name">My name is…</label><input id="rename-name" value="${esc(c.name)}" maxlength="32"></div>${btn(icon("check") + " Save name", "rename-save", "primary wide")}`);
-  },
+  rename: () => renameCharacter(S.optionId),
+  "change-name": () => renameCharacter(),
   "rename-save": () => {
     const c = Store.data.characters.find((c2) => c2.id === S.optionId), n = $("#rename-name").value.trim();
-    if (!n) {
-      toast("Let’s give your friend a name.");
+    if (!saveCharacterName(c, n)) {
+      $("#rename-note").textContent = "Your friend is keeping their name. Try a new one, or tap Cancel.";
+      $("#rename-note").hidden = false;
+      $("#rename-name").focus();
       return;
     }
-    c.name = n.slice(0, 32);
-    Store.save();
     closeModal();
     render();
   },
@@ -5339,12 +5411,14 @@ document.addEventListener("click", (e) => {
   if (b.dataset.go) return go(b.dataset.go);
   if (b.dataset.open) return go("room", b.dataset.open);
   if (b.dataset.menu) return characterOptions(b.dataset.menu);
+  if (b.dataset.rename) return renameCharacter(b.dataset.rename);
   if (b.dataset.action) return actions[b.dataset.action]?.(b);
   if (b.dataset.tab) {
     S.tab = b.dataset.tab;
     partialEditor();
     refreshActor();
     b.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
+    revealEditorName();
     return;
   }
   if (b.dataset.set) return setChoice(b.dataset.set, b.dataset.value);
@@ -5406,9 +5480,7 @@ document.addEventListener("change", (e) => {
 document.addEventListener("input", (e) => {
   const el = e.target, c = Store.current();
   if (el.id === "character-name" && c) {
-    c.name = el.value.slice(0, 32);
-    Store.save();
-    if (c.outfit === "jumper") refreshActor();
+    if (saveCharacterName(c, el.value) && ["jumper", "quidditch"].includes(c.outfit)) refreshActor();
   }
   if (el.id === "pet-name" && c) {
     c[el.dataset.nameKey] = el.value.slice(0, 26) || "Luna";
@@ -5422,6 +5494,12 @@ document.addEventListener("input", (e) => {
     $("#length-value").textContent = el.value;
     Store.save();
     refreshActor();
+  }
+});
+$("#dialog").addEventListener("keydown", (e) => {
+  if (e.target.id === "rename-name" && e.key === "Enter" && !e.isComposing) {
+    e.preventDefault();
+    actions["rename-save"]();
   }
 });
 $("#dialog").addEventListener("cancel", (e) => {
