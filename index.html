@@ -1801,6 +1801,21 @@ dialog .center {
   height: 48px;
   min-height: 48px;
 }
+.swatches [data-set="hairColor"] {
+  width: 100%;
+  height: auto;
+  min-height: 64px;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px 2px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+.swatches [data-set="hairColor"] .dot {
+  width: 28px;
+  height: 28px;
+  box-shadow: none;
+}
 .wood-chip {
   display: inline-block;
   flex: none;
@@ -2266,12 +2281,19 @@ select:focus-visible {
 .empty .eyebrow {
   color: #7c5b26;
 }
+.view-switch {
+  position:absolute; top:6px; right:61px; z-index:5;
+  width:48px; height:48px; padding:0; border-radius:50%;
+  border:1px solid #c9ad75; background:#f4e5c6; color:#27323a;
+  font: bold 17px Georgia, serif;
+}
+#stage .stage-label { max-width:calc(100% - 128px); }
 </style>
 </head><body>
 <div id="app">
 <header class="mast"><button class="brand" data-go="home" aria-label="Havi's Hogwarts, home"><span class="brandmark" id="brand-icon"></span><span class="brand-name">Havi's Hogwarts<small>LET’S MAKE MAGIC</small></span></button><button id="sound" class="round" data-action="sound" aria-label="Sound on" aria-pressed="true"></button><button id="music" class="round" data-action="music" aria-label="Music off" aria-pressed="false"></button></header>
 <div id="storage-note" role="status" hidden></div><section id="intro" class="intro"></section>
-<div id="stage-wrap"><div id="stage" aria-label="Your magical character and world"><div id="fallback"></div><div id="model-loading" role="status" hidden>Opening the school trunks…</div><span class="stage-label" id="place-label"></span><button class="stage-reset" data-action="reset-view" aria-label="Reset view"></button><div id="effect-label" role="status"></div><div id="fx2d"></div><div id="moment" aria-live="polite"></div><span class="stage-help" id="stage-help">Drag to turn · pinch to zoom</span><button class="spellbook-pocket" data-action="pocket" aria-label="Cast from your spellbook"></button></div><div id="stage-foot" class="stage-foot"></div><div id="stage-tools"></div></div>
+<div id="stage-wrap"><div id="stage" aria-label="Your magical character and world"><div id="fallback"></div><div id="model-loading" role="status" hidden>Opening the school trunks…</div><span class="stage-label" id="place-label"></span><button class="view-switch" id="view-switch" data-action="switch-view" aria-label="Switch to 2D">2D</button><button class="stage-reset" data-action="reset-view" aria-label="Reset view"></button><div id="effect-label" role="status"></div><div id="fx2d"></div><div id="moment" aria-live="polite"></div><span class="stage-help" id="stage-help">Drag to turn · pinch to zoom</span><button class="spellbook-pocket" data-action="pocket" aria-label="Cast from your spellbook"></button></div><div id="stage-foot" class="stage-foot"></div><div id="stage-tools"></div></div>
 <div id="toast" role="status" hidden></div><main id="content"></main>
 </div><nav id="nav" aria-label="Main navigation"></nav><dialog id="dialog" aria-labelledby="dialog-title"></dialog><div id="celebration" class="celebration"></div>
 <script>
@@ -2289,7 +2311,12 @@ function crest(h) {
   return `<svg class="crest" viewBox="0 0 62 72" aria-label="${esc(h)} ${d.animal}"><path d="M3 4Q31-3 59 4v32c0 18-28 32-28 32S3 54 3 36z" fill="${d.color}" stroke="${d.trim}" stroke-width="2"/><path d="M7 8q24-5 48 0v28c0 14-24 27-24 27S7 50 7 36z" fill="none" stroke="${d.trim}" opacity=".5"/><g transform="translate(7 11) scale(.48)">${houseAnimal(h in HOUSES ? h : "Gryffindor").replace(/<svg[^>]*>|<\/svg>/g, "")}</g><path d="M20 56h22" stroke="${d.trim}"/></svg>`;
 }
 const SKINS = ["#f7d3b5", "#e9b38f", "#ce916d", "#a76b4b", "#754a39", "#4d332d"];
-const HAIRS = ["#49302b", "#191d2c", "#a96435", "#e7bc63", "#d9d6df", "#a883cf", "#dc8da4", "#63a9aa"];
+const HAIR_NAMES = {
+  "#49302b": "Dark brown", "#191d2c": "Black", "#a96435": "Auburn",
+  "#d94b18": "Copper red", "#e7bc63": "Blond", "#d9d6df": "Silver",
+  "#a883cf": "Lilac", "#dc8da4": "Pink", "#63a9aa": "Teal"
+};
+const HAIRS = Object.keys(HAIR_NAMES);
 const COLORS = ["#252a32", "#742936", "#24504d", "#344c32", "#80522c", "#44344f", "#814956", "#b5a684", "#1689a6", "#224bb0", "#862a82", "#c13068", "#17866b", "#9d2542", "#b47e27", "#5d347e"];
 function outfitColor(c) {
   const house = HOUSES[c.house] || HOUSES.Gryffindor;
@@ -2307,41 +2334,133 @@ function fresh() {
   return { id: uid(), name: "Havi Moonbeam", kind: "witch", beard: "none", styleChoices: {}, bodyShape: "regular", ageBuild: "student", expression: "friendly", skin: SKINS[1], hair: "braids", hairColor: HAIRS[0], eyes: EYES[0], face: "plain", glasses: "none", outfit: "robes", robe: COLORS[0], trim: "#e7b65b", pattern: "plain", hat: "crooked", scarf: false, shoes: "boots", broom: "none", holdBroom: false, school: "Hogwarts", house: null, owl: null, owlName: "Luna", pet: null, petName: "Pip", wand: { wood: "holly", core: "phoenix feather", length: 11, flex: "springy", handle: "twisted", color: "#9b6b43", inlay: "gold", chosen: false, tries: 0 }, spells: [], learned: [], patronus: null, accepted: false, created: Date.now() };
 }
 const DEMO = { ...fresh(), id: "demo", name: "Your next adventure", owl: "snowy" };
+function emptySave() {
+  return { version: 1, characters: [], points: { Gryffindor: 0, Slytherin: 0, Ravenclaw: 0, Hufflepuff: 0 }, letters: [], settings: { sound: true, music: false, view: "3d" } };
+}
+function readSave(raw) {
+  const d = JSON.parse(raw);
+  const owns = (obj, k) => Object.prototype.hasOwnProperty.call(obj,k);
+  const record = v => v !== null && typeof v === "object" && !Array.isArray(v);
+  const require = condition => { if (!condition) throw Error("Invalid Hogwarts save"); };
+  const hex = v => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v);
+  const token = v => typeof v === "string" && /^[\w -]+$/.test(v) && !(v in Object.prototype);
+  require(record(d) && d.version === 1 && Array.isArray(d.characters));
+  require(d.settings === undefined || record(d.settings));
+  require(d.points === undefined || record(d.points));
+  for (const house of Object.keys(HOUSES)) if (d.points && house in d.points) require(Number.isFinite(d.points[house]));
+  for (const k of ["sound", "music"]) if (d.settings && k in d.settings) require(typeof d.settings[k] === "boolean");
+  require(d.letters === undefined || Array.isArray(d.letters) && d.letters.every(l => record(l) && typeof l.text === "string"));
+  const ids = new Set();
+  const defaults = fresh();
+  for (const c of d.characters) {
+    require(record(c) && typeof c.name === "string" && typeof c.id === "string" && c.id && !ids.has(c.id));
+    ids.add(c.id);
+    if (c.styleChoices !== undefined) require(record(c.styleChoices));
+    for (const k of ["accepted","scarf","holdBroom"]) if (k in c) require(typeof c[k] === "boolean");
+    for (const k of ["owlName","petName"]) if (k in c) require(typeof c[k] === "string");
+    if (c.patronus != null) require(typeof c.patronus === "string");
+    for (const k of ["skin","hairColor","eyes","robe","trim"]) if (k in c) require(hex(c[k]));
+    for (const k of ["kind","beard","bodyShape","ageBuild","expression","hair","face","glasses","outfit","pattern","hat","shoes","broom","school"]) if (k in c) require(token(c[k]));
+    if (c.house != null) require(typeof c.house === "string" && owns(HOUSES, c.house));
+    for (const k of ["owl","pet"]) if (c[k] != null) require(typeof c[k] === "string" && owns(PETS, c[k]));
+    if (c.outfitColors !== undefined) {
+      require(record(c.outfitColors));
+      for (const k of ["gown","dress","muggle",c.outfit]) if (owns(c.outfitColors,k)) require(hex(c.outfitColors[k]));
+    }
+    if (c.wand !== undefined) {
+      require(record(c.wand));
+      if ("chosen" in c.wand) require(typeof c.wand.chosen === "boolean");
+      if ("tries" in c.wand) require(Number.isFinite(c.wand.tries));
+      if ("color" in c.wand) require(hex(c.wand.color));
+      if ("length" in c.wand) require(Number.isFinite(c.wand.length));
+      for (const k of ["wood","core","flex","handle","inlay"]) if (k in c.wand) require(token(c.wand[k]));
+    }
+    if (c.spells !== undefined) require(Array.isArray(c.spells) && c.spells.every(s => record(s) && typeof s.name === "string" && typeof s.id === "string" && token(s.effect) && token(s.motion) && hex(s.color)));
+    if (c.learned !== undefined) require(Array.isArray(c.learned) && c.learned.every(id => typeof id === "string"));
+  }
+  const missing = (v, template) => Object.keys(template).some(k => !owns(v || {}, k));
+  const base = emptySave();
+  const needsDefaults = missing(d, base) || missing(d.settings, base.settings) || missing(d.points, base.points) ||
+    d.characters.some(c => missing(c, defaults) || missing(c.wand, defaults.wand));
+  return { original: d, needsDefaults };
+}
+function withDefaults(d) {
+  const base = emptySave();
+  return { ...base, ...d, settings: { ...base.settings, ...d.settings }, points: { ...base.points, ...d.points },
+    characters: d.characters.map(c => {
+      const defaults = fresh();
+      return { ...defaults, hair: c.kind === "wizard" ? "short" : "braids", hat: c.kind === "wizard" ? "pointed" : "crooked",
+        styleChoices: { hair: !!c.hair, hat: !!c.hat }, ...c, wand: { ...defaults.wand, ...c.wand } };
+    }) };
+}
 const Store = {
   key: "havi-hogwarts-v1",
-  data: { version: 1, characters: [], points: { Gryffindor: 0, Slytherin: 0, Ravenclaw: 0, Hufflepuff: 0 }, letters: [], settings: { sound: true, music: false } },
+  data: emptySave(),
   volatile: false,
   future: false,
-  load() {
-    try {
-      const raw = localStorage.getItem(this.key);
-      if (!raw) return;
-      const d = JSON.parse(raw);
-      if (!d || typeof d !== "object" || Array.isArray(d)) throw Error("bad save");
-      if (Number(d.version) > 1) {
-        this.future = true;
-        this.volatile = true;
-        return;
-      }
-      this.data = { ...this.data, ...d, settings: { ...this.data.settings, ...d.settings }, points: { ...this.data.points, ...d.points }, letters: Array.isArray(d.letters) ? d.letters.filter((x) => x && typeof x === "object") : [], characters: Array.isArray(d.characters) ? d.characters.filter((c) => c && typeof c === "object" && typeof c.id === "string").map((c) => ({ ...fresh(), ...c, styleChoices: c.styleChoices || { hair: !!c.hair, hat: !!c.hat }, hair: c.hair || (c.kind === "wizard" ? "short" : "braids"), hat: c.hat || (c.kind === "wizard" ? "pointed" : "crooked"), wand: { ...fresh().wand, ...c.wand }, spells: Array.isArray(c.spells) ? c.spells.filter((s) => s && typeof s.name === "string") : [], learned: Array.isArray(c.learned) ? c.learned : [] })) : [] };
-    } catch (e) {
-      this.volatile = true;
+  locked: false,
+  lastRaw: null,
+  archive(raw, suffix) {
+    // Retain distinct originals, including a second old save opened on this device.
+    let key = this.key + "-" + suffix;
+    for (let n = 2; ; n++) {
+      const existing = localStorage.getItem(key);
+      if (existing === raw) return;
+      if (existing === null) { localStorage.setItem(key, raw); return; }
+      key = this.key + "-" + suffix + "-" + n;
     }
   },
-  save() {
-    if (this.future) return this.notice();
+  load() {
     try {
-      localStorage.setItem(this.key, JSON.stringify(this.data));
-      this.volatile = false;
-    } catch (e) {
-      this.volatile = true;
+      this.lastRaw = localStorage.getItem(this.key);
+      if (this.lastRaw === null) return;
+      this.future = Number(JSON.parse(this.lastRaw)?.version) > 1;
+      const { original, needsDefaults } = readSave(this.lastRaw);
+      if (needsDefaults) {
+        try { this.archive(this.lastRaw, "before-upgrade"); }
+        catch (error) {
+          // A full device can still display a complete pre-toggle collection
+          // directly. Keep the stored bytes protected and skip migration.
+          const priorKeys = Object.keys(DEMO);
+          if (original.settings && original.points && original.letters &&
+              original.characters.every(c => priorKeys.every(k => k in c) && c.wand)) this.data = original;
+          throw error;
+        }
+      }
+      this.data = needsDefaults ? withDefaults(original) : original;
+    } catch {
+      this.locked = this.volatile = true;
     }
+  },
+  write(data) {
+    if (this.locked) throw Error("Protected save");
+    if (localStorage.getItem(this.key) !== this.lastRaw) {
+      this.locked = true;
+      throw Error("Save changed in another window");
+    }
+    const raw = JSON.stringify(data);
+    if (raw !== this.lastRaw) localStorage.setItem(this.key, raw);
+    this.lastRaw = raw;
+    this.volatile = false;
+  },
+  save() {
+    try { this.write(this.data); }
+    catch { this.volatile = true; }
     this.notice();
+  },
+  restore(raw) {
+    const { original, needsDefaults } = readSave(raw);
+    if (this.locked) throw Error("Protected save");
+    if (this.lastRaw !== null) this.archive(this.lastRaw, "before-import");
+    if (needsDefaults) this.archive(raw, "before-upgrade");
+    const next = needsDefaults ? withDefaults(original) : original;
+    this.write(next);
+    this.data = next;
   },
   notice() {
     const e = $("#storage-note");
     e.hidden = !this.volatile;
-    e.textContent = this.future ? "This save is from a newer game. You can play here, but your newer save will stay safe." : "Your magic works, but this browser cannot save it right now. Keep this page open.";
+    e.textContent = this.future ? "This save is from a newer game. You can play here, but your newer save will stay safe." : this.locked && this.lastRaw !== null ? "Your original save is protected. Grown-ups can export a copy in the Great Hall." : "Your magic works, but this browser cannot save it right now. Keep this page open.";
   },
   current() {
     return this.data.characters.find((c) => c.id === S.id);
@@ -2474,25 +2593,73 @@ function petSVG(key) {
 function showBroom(c, stage = true) {
   return c.broom !== "none" && (c.holdBroom || c.outfit === "quidditch" || stage && S.screen === "grounds");
 }
+let illustrationId = 0;
+function illustratedHead(c, hatType, robe, trim, house) {
+  const id = "student-art-" + ++illustrationId, skin = c.skin, hair = c.hairColor;
+  const paint = part => `url(#${id}-${part})`;
+  const fullHair = ["curls", "buns"].includes(c.hair);
+  const closedHat = ["pointed","crooked","sorting","top","beanie"].includes(hatType);
+  const crownWidth = fullHair ? 1.15 : 1;
+  // All head details share this coordinate system. The cap meets the hairline
+  // at y=38. Bulky hair widens the seat while the eyes stay at y=51.
+  const defs = `<defs>
+    <linearGradient id="${id}-shade" x2=".95" y2=".35"><stop stop-color="#ffe1bd" stop-opacity=".32"/><stop offset=".51" stop-color="#f6c1a2" stop-opacity="0"/><stop offset="1" stop-color="#5f302a" stop-opacity=".29"/></linearGradient>
+    <linearGradient id="${id}-silk" x2=".85" y2=".6"><stop stop-color="#111326" stop-opacity=".35"/><stop offset=".36" stop-color="#fff2cd" stop-opacity=".22"/><stop offset=".65" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#151228" stop-opacity=".35"/></linearGradient>
+    <clipPath id="${id}-cap"><path d="M60 35Q100 42 140 35V115H60Z"/></clipPath>
+  </defs>`;
+  const back = {
+    waves:"M85 43Q83 25 102 27Q118 25 116 48Q114 57 120 65Q117 77 108 77L104 65L92 77Q79 73 83 65Q88 58 85 43Z",
+    short:"M85 51Q79 27 100 26Q124 26 115 55L110 45L89 45L88 55Z",
+    long:"M84 45Q83 24 102 26Q120 26 117 52Q116 75 123 99Q117 107 110 103Q99 86 91 104Q81 108 78 101Q85 74 84 45Z",
+    braids:"M84 49Q80 25 101 26Q119 26 116 50L113 69Q103 76 88 70Z",
+    curls:"M82 63Q74 58 78 49Q71 40 79 32Q76 22 88 22Q92 13 101 19Q112 12 119 23Q129 24 125 36Q133 44 124 52Q128 62 116 67L108 60L91 66Z",
+    buns:"M85 51Q80 27 101 27Q122 27 116 53Z M86 42C68 43 69 21 81 20C96 17 101 36 86 42Z M115 42C101 39 104 18 119 20C133 22 132 42 115 42Z",
+    pixie:"M84 48L81 29L90 33L93 21L101 28L112 18L111 31L120 28L114 50Z"
+  }[c.hair];
+  const braid = x => `<g transform="translate(${x} 0)" fill="${hair}">${Array.from({length:7}, (_,i) => `<path d="M0 ${62+5*i}q-7 2-3 8q5 3 7-3q1-3-4-5Z" stroke="#271923" stroke-opacity=".42" stroke-width=".8"/><path d="m-2 ${65+5*i} 3 2" stroke="#fff1cc" opacity=".25"/>`).join("")}<path d="m-2 98-2 8 7-1-1-7" /><path d="M-3 98h6" stroke="${trim}" stroke-width="2.4"/></g>`;
+  const backHair = `<g data-hair="${esc(c.hair)}" ${closedHat ? `clip-path="${paint("cap")}"` : ""}><path d="${back}" fill="${hair}"/><path d="${back}" fill="${paint("silk")}"/>${c.hair === "braids" ? braid(84)+braid(116) : ""}</g>`;
+  const jaw = "M86 48Q85 33 100 32Q116 32 114 50L113 58Q111 67 104 71Q100 74 96 71Q88 66 87 58Z";
+  const eyes = [93.7,106.3].map(x => `<g data-eye="" transform="translate(${x} 51)"><path d="M-3.7 0Q-.6-4.2 3.7-.4Q.6 3.7-3.7 0Z" fill="#fff3e3"/><ellipse rx="1.85" ry="1.95" fill="${c.eyes}"/><circle r=".93" fill="#24212a"/><circle cx="-.59" cy="-.75" r=".55" fill="#fffaf0"/><path d="M-3.7 0Q-.6-3.7 3.7-.4" fill="none" stroke="#49332f" stroke-width=".72"/></g>`).join("");
+  const glasses = c.glasses === "none" ? "" : `<g data-glasses="${esc(c.glasses)}" fill="none" stroke="${c.glasses === "gold" ? "#b4873f" : "#393643"}" stroke-width="1.25" stroke-linecap="round"><path d="M87.7 50.3l-2.6-1.6m13.9 1.8q1-1.35 2 0m11.3-.2 2.7-1.8"/>${[93.7,106.3].map(x => c.glasses === "square" ? `<rect x="${x-5.35}" y="46.65" width="10.7" height="8.7" rx="1.6"/>` : `<ellipse cx="${x}" cy="51" rx="5.35" ry="${c.glasses === "heart" ? 3.65 : 5}"/>`).join("")}</g>`;
+  const cheeks = c.face === "rosy" ? '<g fill="#cc6f71" opacity=".46"><ellipse cx="90.8" cy="57.3" rx="3.2" ry="1.8"/><ellipse cx="109.2" cy="57.3" rx="3.2" ry="1.8"/></g>' : c.face === "freckles" ? '<path d="M89 56h.3m2 1.6h.6m2-2h.4m13.2 1h.4m1.8 1.5h.5m1-2.3h.4" stroke="#935d41" stroke-linecap="round" stroke-width="1.25"/>' : "";
+  const fringe = "M85 48Q82 26 101 26Q119 26 115 49Q111 46 107 38Q102 44 94 45Q97 42 98 39Q92 45 85 48Z";
+  let hat = "";
+  if (["pointed","crooked","sorting"].includes(hatType)) {
+    const crown = hatType === "pointed" ? "M84 36Q90 21 101 1Q107 9 117 36Z" : "M83 36Q91 23 93 14Q92 10 85 11Q90 3 101 8Q109 10 108 18L117 36Z";
+    const color = hatType === "sorting" ? "#795941" : robe;
+    hat = `<path d="${crown}" fill="${color}"/><path d="${crown}" fill="${paint("silk")}"/><path d="M87 30q14 5 27-.2l1.8 4q-16 5-30 0Z" fill="${trim}"/><path d="M74 35Q84 32 90 35Q106 39 120 33Q126 31 128 34Q119 41 101 41Q84 40 74 36Z" fill="${color}" stroke="#b29c78" stroke-width=".9"/>${hatType === "sorting" ? '<path d="m95 22 3 2 3-2m1 0 4-2m-10 8q5-3 9-1" fill="none" stroke="#33271e" stroke-width="1.6"/>' : ""}`;
+  } else if (hatType === "top") {
+    hat = `<path d="m85 10 29-1-2 26H88Z" fill="${robe}"/><path d="m85 10 29-1-2 26H88Z" fill="${paint("silk")}"/><path d="M87 29q12 2 26-1v6H88Z" fill="${trim}"/><ellipse cx="100" cy="36.5" rx="23" ry="3.9" fill="${robe}" stroke="#a78d66" stroke-width=".9"/>`;
+  } else if (hatType === "beanie") {
+    hat = `<path d="M83 38Q81 19 97 17Q115 14 118 37Z" fill="${house.color}"/><path d="M83 38Q81 19 97 17Q115 14 118 37Z" fill="${paint("silk")}"/><path d="M83 35q16 4 35-.5v5q-17 5-35 0Z" fill="${trim}"/><path d="M87 36v4m5-3.2v4m5-3.7v4m5-3.8v3.5m5-4v3.7m5-4.5v3.5" stroke="#403c4a" opacity=".4"/>`;
+  } else if (hatType === "tiara") {
+    hat = `<path d="M85 38l2-9 7 5 6-13 6 13 7-6 2 10q-15 5-30 0Z" fill="${trim}" stroke="#785c3d" stroke-width=".8"/><path d="m100 28 2.3 4.1-2.3 3.7-2.3-3.7Z" fill="#6a9caf"/>`;
+  } else if (hatType === "flowers") {
+    hat = `<path d="M84 38q16-6 32 0" fill="none" stroke="#63734b" stroke-width="2.4"/>${[85,92,100,108,115].map((x,i) => `<g transform="translate(${x} ${34+Math.abs(2-i)*1.35})" fill="${trim}">${[0,72,144,216,288].map(a => `<ellipse cy="-1.8" rx="1.5" ry="2.1" transform="rotate(${a})"/>`).join("")}<circle r="1.2" fill="#bd8a40"/></g>`).join("")}`;
+  }
+  const beard = c.kind === "wizard" && ["short","long"].includes(c.beard) ? `<path d="M88 60q12 14 24 0l-4 14-8 ${c.beard === "long" ? 18 : 4}-9-14Z" fill="${hair}"/>` : "";
+  return `${defs}${backHair}<g fill="${skin}"><ellipse cx="86.7" cy="54" rx="2.6" ry="4.2"/><ellipse cx="113.3" cy="54" rx="2.6" ry="4.2"/><path d="${jaw}"/></g><path d="${jaw}" fill="${paint("shade")}"/>${cheeks}${eyes}
+    <path d="M89.7 46.3q3.4-2.3 7-.8m6.8-.1q3.6-1.6 7.1.8" fill="none" stroke="${hair}" stroke-width="1.35" stroke-linecap="round"/>
+    <path d="M100.3 51.8q.1 3.5-1.8 5.8q1.8 1.4 3.9.1" fill="none" stroke="#945d48" stroke-width=".78"/>
+    <path d="${c.expression === "calm" ? "M95.8 63q4.4 1.4 8.2-.1q-3.7 3.2-8.2.1Z" : "M95 62.8q5.2 3.2 10.2-.8q-3.4 7-10.2.8Z"}" fill="#92514b"/>
+    ${beard}${glasses}<g ${closedHat ? `clip-path="${paint("cap")}"` : ""}><path d="${fringe}" fill="${hair}"/><path d="${fringe}" fill="${paint("silk")}"/></g>
+    <g data-hat="${esc(hatType)}" transform="translate(100 0) scale(${crownWidth} 1) translate(-100 0)">${hat}</g>`;
+}
 function charSVG(c, stage = false) {
-  const house = HOUSES[c.school === "Hogwarts" ? c.house : null] || HOUSES.Gryffindor, skin = c.skin, hc = c.hairColor, robe = outfitColor(c), trim = c.trim || house.trim;
+  const house = HOUSES[c.school === "Hogwarts" ? c.house : null] || HOUSES.Gryffindor, skin = c.skin, robe = outfitColor(c), trim = c.trim || house.trim;
   const youth = c.ageBuild !== "older" ? 0.92 : 1;
   const male = c.kind === "wizard", width = male ? 29 : 25, shape = { slender: 0.88, regular: 1, broad: 1.13 }[c.bodyShape] || 1;
   const long = ["robes", "gown", "dress", "cloak"].includes(c.outfit), hem = c.outfit === "gown" ? 44 : male ? 29 : 38;
   const hatType = stage && (S.sorting || S.sortResult) ? "sorting" : stage && S.screen === "editor" && S.tab === "hair" ? "none" : c.hat;
-  const hairBack = { waves: "M87 41q13-12 26 0l3 31-10 4H88z", short: "M87 49q-5-25 16-20 17 2 11 21l-8-9z", long: "M87 39q14-13 27 4l7 63-37-2z", braids: "M86 43q14-15 29 0l-3 30-8-13-13 12z M87 60l-4 43 6 2 4-42z M111 61l2 43 6-1-3-43z", curls: "M81 52q-8-12 1-20-2-12 11-12 8-10 17-1 15-1 13 13 11 11 0 25l-10-16z", buns: "M87 45q-4-23 15-20 18 0 12 23z M87 32a11 11 0 1 0-1 .1 M116 32a11 11 0 1 0-1 .1", pixie: "M87 47l-4-19 10 6 3-15 8 11 9-11-1 15 10-4-7 21-15-10z" }[c.hair];
-  let hat = "";
-  if (["crooked", "pointed", "sorting"].includes(hatType)) hat = `<path d="M71 35q29 9 58 0l-11-3-10-${hatType === "pointed" ? 40 : 27} ${hatType === "pointed" ? "" : "-10-8 2 16"}-13 19z" fill="${hatType === "sorting" ? "#69513a" : robe}" stroke="#b89b63" stroke-width="1"/><path d="M86 28q14 4 28 0" stroke="${trim}" stroke-width="3"/>${hatType === "sorting" ? '<path d="m94 21 5 2 5-2m-5 5h8" fill="none" stroke="#2b241b" stroke-width="2"/>' : ""}`;
-  else if (hatType === "beanie") hat = `<path d="M85 40q-1-24 15-23 17 0 16 23z" fill="${house.color}"/><path d="M85 38h31" stroke="${trim}" stroke-width="5"/>`;
-  else if (hatType === "top") hat = `<path d="M73 35h54M88 35V4h24v31" fill="${robe}" stroke="${robe}" stroke-width="7"/><path d="M87 26h27" stroke="${trim}" stroke-width="4"/>`;
-  else if (hatType === "tiara") hat = `<path d="m86 34 3-10 6 7 5-14 5 14 7-7 3 10" fill="none" stroke="${trim}" stroke-width="2"/>`;
-  else if (hatType === "flowers") hat = `<path d="M85 34q15-7 30 0" fill="none" stroke="#7b855a" stroke-width="3"/>${[88, 95, 103, 111].map((x, i) => `<circle cx="${x}" cy="${31 + i % 2 * 2}" r="3" fill="${trim}"/>`).join("")}`;
-  const glasses = c.glasses === "none" ? "" : `<g fill="none" stroke="${c.glasses === "gold" ? "#b29555" : "#403b32"}" stroke-width="1"><${c.glasses === "square" ? 'rect x="88" y="47" width="9" height="8" rx="1"' : 'ellipse cx="93" cy="51" rx="5" ry="4"'}/><${c.glasses === "square" ? 'rect x="103" y="47" width="9" height="8" rx="1"' : 'ellipse cx="108" cy="51" rx="5" ry="4"'}/><path d="M98 50h5m-15 0-3-1m28 1 3-1"/></g>`;
   const school = c.outfit === "robes", jewel = c.outfit === "gown", formal = c.outfit === "dress";
-  const under = school ? `<path d="M78 88h44v91H78z" fill="#505b6b"/><path d="m85 85 15 34 15-34" fill="#f3f5f7" stroke="${house.color}" stroke-width="2"/><path d="m98 84 4 0 2 5-4 4-4-4z m0 7-3 21 5 7 5-7-3-21" fill="${house.color}"/><path d="m97 96 6-2m-7 8 8-2m-8 8 8-2" stroke="${house.trim}" stroke-width="2"/><path d="m90 81 10 4-7 10-6-11m23-3-10 4 7 10 6-11" fill="white"/>${!male ? `<path d="M78 153h44l8 43H70z" fill="#505b6b"/><path d="m80 157-5 38m13-38-2 38m13-38v38m12-38 2 38m8-38 5 38" stroke="#303947" stroke-width="1.5"/>` : ""}` : "";
-  const uniform = school ? `<path d="M${100 - width} 87l11-5 4 63-9 93H${100 - hem}z M${100 + width} 87l-11-5-4 63 9 93h${hem - 18}z" fill="${robe}"/><path d="m88 85 5 60-10 92m29-152-5 60 10 92" fill="none" stroke="${house.color}" stroke-width="4"/><g transform="translate(114 105) scale(.15)">${houseAnimal(c.house || "Gryffindor").replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : "";
+  const under = school ? `<path d="M75 89q7-6 17-7l8 5 8-5q12 1 17 7l-3 90H78Z" fill="#505b6b"/><path d="m85 85 15 34 15-34" fill="#f3f5f7" stroke="${house.color}" stroke-width="2"/><path d="m98 84 4 0 2 5-4 4-4-4z m0 7-3 21 5 7 5-7-3-21" fill="${house.color}"/><path d="m97 96 6-2m-7 8 8-2m-8 8 8-2" stroke="${house.trim}" stroke-width="2"/><path d="m90 81 10 4-7 10-6-11m23-3-10 4 7 10 6-11" fill="white"/>${!male ? `<path d="M78 153h44l8 43H70z" fill="#505b6b"/><path d="m80 157-5 38m13-38-2 38m13-38v38m12-38 2 38m8-38 5 38" stroke="#303947" stroke-width="1.5"/>` : ""}` : "";
+  const uniform = school ? `<path d="M${100-width} 87Q82 82 90 81L94 144L82 237Q71 240 ${100-hem} 236L75 146Z M${100+width} 87Q118 82 110 81L106 144L118 237Q129 240 ${100+hem} 236L125 146Z" fill="${robe}"/><path d="m88 85 5 60-10 92m29-152-5 60 10 92" fill="none" stroke="${house.color}" stroke-width="4"/><g transform="translate(114 105) scale(.15)">${houseAnimal(c.house || "Gryffindor").replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : "";
   const decoration = jewel ? `<path d="m78 153 22 5 22-5" fill="none" stroke="${trim}" stroke-width="2"/><path d="m78 162-14 73m23-73-5 73m18-73v73m13-73 5 73m5-73 13 73" stroke="#ffffff30" stroke-width="1.3"/>` : formal ? `<path d="M91 85v148m18-148v148" stroke="${trim}" stroke-width="2"/>${[102, 115, 128, 141].map((y) => `<circle cx="100" cy="${y}" r="1.5" fill="${trim}"/>`).join("")}` : c.outfit === "cloak" ? `<path d="m88 86-7 151h38L112 86" fill="#3f6575"/><path d="m83 88-12 149m46-149 12 149" stroke="${house.color}" stroke-width="3"/><circle cx="100" cy="89" r="3" fill="${trim}"/>` : c.outfit === "muggle" ? '<text x="100" y="122" text-anchor="middle" fill="#f8db55" font-size="18">✦</text>' : "";
-  return `<svg viewBox="0 0 200 280" aria-hidden="true" data-human-portrait="${esc(c.kind)}"><ellipse cx="100" cy="259" rx="42" ry="5" fill="#090e1738"/><g transform="translate(${100 * (1 - shape * youth)} ${259 * (1 - youth)}) scale(${shape * youth} ${youth})"><path d="M86 176l-4 74h12l7-60 5 60h12l-4-74" fill="${c.outfit === "muggle" ? "#315b91" : c.outfit === "quidditch" ? "#e5dcc6" : "#30343b"}"/><path d="M81 245l-7 10q10 5 21 0v-10m11 0v11q14 5 23-1l-11-10" fill="${c.shoes === "trainers" ? "#d3cebd" : "#252321"}"/><path d="M91 71v14h18V71" fill="${skin}"/>${school ? "" : `<path d="M${100 - width} 87q26-13 ${width * 2} 0l${long ? hem - width : 2} ${long ? 151 : 81}h-${long ? hem * 2 : width * 2 + 4}z" fill="${robe}"/>`}${under}${uniform}<path d="M${100 - width} 88l-13 59 5 43m${width * 2 + 8}-102 14 59-5 43" fill="none" stroke="${robe}" stroke-width="${school ? 19 : 15}"/><path d="M64 187l-1 12q4 8 7-1l1-11m59 0 1 12q5 7 7-1l-1-11" fill="${c.outfit === "quidditch" ? "#573a28" : skin}"/>${decoration}${c.pattern !== "plain" && !school ? Array.from({ length: 8 }, (_, i) => `<text x="${84 + i % 3 * 14}" y="${151 + Math.floor(i / 3) * 22}" fill="${trim}" font-size="5">${c.pattern === "stars" ? "✦" : "☾"}</text>`).join("") : ""}${c.outfit === "jumper" ? `<text x="100" y="129" text-anchor="middle" fill="${trim}" font-size="18" font-family="Georgia">${esc(c.name[0] || "H")}</text>` : ""}${c.outfit === "quidditch" ? `<text x="100" y="110" text-anchor="middle" fill="${house.trim}" font-size="5">${esc(c.name.split(" ")[0].toUpperCase())}</text><text x="100" y="132" text-anchor="middle" fill="${house.trim}" font-size="20">7</text><path d="m63 147 3 20m69-20-3 20" stroke="#573a28" stroke-width="12"/>` : ""}<path d="${hairBack}" fill="${hc}" data-hair="${esc(c.hair)}"/><ellipse cx="100" cy="52" rx="13" ry="19" fill="${skin}"/><path d="M87 45q-3-19 14-17 18 1 12 19l-7-11-9 7z" fill="${hc}"/><path d="m91 46 5-1m8 0 6 1" stroke="${hc}" stroke-width="1.3"/><path d="m91 51 5 .2m9-.2 5-.2" stroke="${c.eyes}" stroke-width="1.7"/><path d="m101 50-2 8 4 1" fill="none" stroke="#815b47" stroke-width=".7"/><path d="${c.expression === "calm" ? "M96 64q4 1 8-1" : "M96 63q4 4 8-1"}" fill="none" stroke="#8c544b" stroke-width="1"/>${c.face === "freckles" ? '<path d="M90 57h1m2 1h1m14-1h1m-3 2h1" stroke="#87573d"/>' : ""}${glasses}${c.kind === "wizard" && ["short", "long"].includes(c.beard) ? `<path d="M88 60q12 14 24 0l-4 14-8 ${c.beard === "long" ? 18 : 4}-9-14z" fill="${hc}"/>` : ""}${hat}${c.scarf ? `<path d="M89 80q12 6 23 0l-2 42-8 2 1-37-14-1" fill="${house.color}"/><path d="M103 95h8m-8 12h7m-7 12h6" stroke="${house.trim}" stroke-width="3"/>` : ""}${showBroom(c) ? '<path d="m61 169-4 83" stroke="#8d6c41" stroke-width="3"/><path d="m57 234-10 23m10-23 9 23m-9-23v25" stroke="#a68a54" stroke-width="3"/>' : ""}${c.wand?.chosen ? `<path d="m136 184 17-43" stroke="${c.wand.color}" stroke-width="2"/>` : ""}${c.owl ? `<g transform="translate(65 65) scale(.23)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}</g></svg>`;
+  return `<svg viewBox="${stage ? "0 0 200 280" : "57 0 86 111"}" aria-hidden="true" data-human-portrait="${esc(c.kind)}"><ellipse cx="100" cy="259" rx="42" ry="5" fill="#090e1738"/><g transform="translate(${100 * (1 - shape * youth)} ${259 * (1 - youth)}) scale(${shape * youth} ${youth})"><path d="M86 176l-4 74h12l7-60 5 60h12l-4-74" fill="${c.outfit === "muggle" ? "#315b91" : c.outfit === "quidditch" ? "#e5dcc6" : "#30343b"}"/><path d="M81 245l-7 10q10 5 21 0v-10m11 0v11q14 5 23-1l-11-10" fill="${c.shoes === "trainers" ? "#d3cebd" : c.shoes === "slippers" ? "#925e74" : "#252321"}"/><path d="M93 65q2 11-3 16l10 6 10-6q-6-6-3-16Z" fill="${skin}"/><path d="M93.6 68q6 6 13.1-.8l-.2 3q-7.6 6.4-13 1Z" fill="#784c41" opacity=".22"/>${school ? "" : `<path d="M${100 - width} 87q26-13 ${width * 2} 0l${long ? hem - width : 2} ${long ? 151 : 81}h-${long ? hem * 2 : width * 2 + 4}z" fill="${robe}"/>`}${under}${uniform}${[-1,1].map(side => `<g transform="translate(100 0) scale(${side} 1)">
+    <path d="M${width-5} 86Q${width+3} 82 ${width+7} 94L39 142L38 185Q34 189 27 185L28 148L${width-8} 104Z" fill="${robe}"/>
+    <path d="m${width+3} 95 9 49-2 36" fill="none" stroke="#fff2d6" opacity=".16" stroke-width="1.7"/>
+    <path d="M27 184q6 3 12 0" fill="none" stroke="${trim}" stroke-width="1.6"/>
+    <path d="m29 187-.8 7.2q-1 3.4-3 3l.6-5.5-1.8 2q-2.2.6-1.3-1.7l3.6-5.6Z" transform="translate(6 0)" fill="${c.outfit === "quidditch" ? "#573a28" : skin}"/></g>`).join("")}${decoration}${c.pattern !== "plain" ? Array.from({ length: 8 }, (_, i) => `<text x="${school ? (i % 2 ? 119 : 81) : 84 + i % 3 * 14}" y="${151 + Math.floor(i / 3) * 22}" fill="${trim}" font-size="5">${c.pattern === "stars" ? "✦" : "☾"}</text>`).join("") : ""}${c.outfit === "jumper" ? `<text x="100" y="129" text-anchor="middle" fill="${trim}" font-size="18" font-family="Georgia">${esc(c.name[0] || "H")}</text>` : ""}${c.outfit === "quidditch" ? `<text x="100" y="110" text-anchor="middle" fill="${house.trim}" font-size="5">${esc(c.name.split(" ")[0].toUpperCase())}</text><text x="100" y="132" text-anchor="middle" fill="${house.trim}" font-size="20">7</text><path d="m63 147 3 20m69-20-3 20" stroke="#573a28" stroke-width="12"/>` : ""}${illustratedHead(c, hatType, robe, trim, house)}${c.scarf ? `<path d="M89 80q12 6 23 0l-2 42-8 2 1-37-14-1" fill="${house.color}"/><path d="M103 95h8m-8 12h7m-7 12h6" stroke="${house.trim}" stroke-width="3"/>` : ""}${showBroom(c) ? '<path d="m61 169-4 83" stroke="#8d6c41" stroke-width="3"/><path d="m57 234-10 23m10-23 9 23m-9-23v25" stroke="#a68a54" stroke-width="3"/>' : ""}${c.wand?.chosen ? `<path d="m136 184 17-43" stroke="${c.wand.color}" stroke-width="2"/>` : ""}${c.owl ? `<g transform="translate(65 65) scale(.23)">${petSVG(c.owl).replace(/<svg[^>]*>|<\/svg>/g, "")}</g>` : ""}</g></svg>`;
 }
 const R = {
   state: "loading",
@@ -2516,28 +2683,32 @@ const R = {
   effect: null,
   animStart: 0,
   frames: 0,
+  animationTime: 0,
+  loadTicket: 0,
   async init() {
-    if (location.hash.includes("no3d")) {
-      this.state = "fallback";
-      return;
-    }
+    const ticket = ++this.loadTicket;
+    let step = "loading Three.js";
+    this.lastFailure = null;
     try {
-      const probe = document.createElement("canvas").getContext("webgl2");
-      if (!probe) {
-        this.state = "fallback";
-        return;
-      }
-      probe.getExtension("WEBGL_lose_context")?.loseContext();
       const T = this.T = await import("./vendor/three.js");
-      this.modelStatus = "loading";
+      if (ticket !== this.loadTicket) return;
+      step = "loading student models";
+      this.modelStatus = this.assets ? "ready" : "loading";
+      $("#model-loading").textContent = "Opening the school trunks…";
       $("#model-loading").hidden = false;
-      await this.loadModels();
+      this.loadingModels ||= this.loadModels().finally(() => { this.loadingModels = null; });
+      await this.loadingModels;
+      if (ticket !== this.loadTicket) return;
       $("#model-loading").hidden = true;
-      if (location.hash.includes("no3d")) {
-        this.state = "fallback";
-        return;
-      }
-      const r = this.renderer = new T.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "low-power" });
+
+      // Allocate the stage's one context after the async loads. Discarding a
+      // probe context used to start GPU teardown just before the real request.
+      step = "creating WebGL2 context";
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("webgl2", {antialias:true, alpha:false, powerPreference:"low-power"});
+      if (!context) throw Error("WebGL2 unavailable");
+      step = "initializing renderer";
+      const r = this.renderer = new T.WebGLRenderer({canvas, context});
       r.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
       r.outputColorSpace = T.SRGBColorSpace;
       r.toneMapping = T.ACESFilmicToneMapping;
@@ -2574,7 +2745,7 @@ const R = {
       this.scene.add(new T.HemisphereLight("#b8cff0", "#182330", 0.7));
       this.setupEnvironment();
       const key = this.keyLight = new T.DirectionalLight("#fff0da", 4.2);
-      key.position.set(-3, 5, 6);
+      key.position.set(-4.4, 5.2, 4.5);
       key.castShadow = true;
       key.shadow.mapSize.set(512, 512);
       key.shadow.camera.left = -4;
@@ -2586,8 +2757,8 @@ const R = {
       key.shadow.normalBias = 0.025;
       key.shadow.bias = -2e-4;
       this.scene.add(key);
-      const faceFill = new T.DirectionalLight("#ffe4d4", 0.85);
-      faceFill.position.set(0.5, 2.8, 5);
+      const faceFill = new T.DirectionalLight("#fff0e5", 1.04);
+      faceFill.position.set(3.2, 2.9, 4.0);
       this.scene.add(faceFill);
       const rim = new T.DirectionalLight("#a2cbe5", 2.3);
       rim.position.set(4, 3, -2);
@@ -2606,18 +2777,23 @@ const R = {
       this.stageObserver.observe($("#stage"));
       r.domElement.addEventListener("webglcontextlost", (e) => {
         e.preventDefault();
+        if (this.renderer !== r) return;
         this.lost = true;
         this.state = "lost";
         this.updateLoop();
         this.releaseScene();
         $("#stage").classList.remove("is3d");
-        $("#stage-help").textContent = "Your magic is still here";
+        updateStageHelp();
+        showDrawnPortraits();
       });
       r.domElement.addEventListener("webglcontextrestored", () => {
+        if (this.renderer !== r) return;
         this.lost = false;
         this.state = "ready";
         this.setupEnvironment();
         this.sync();
+        updateStageHelp();
+        this.updatePortraits();
         $("#stage").classList.add("is3d");
       });
       this.state = "ready";
@@ -2625,6 +2801,8 @@ const R = {
       this.resize();
       this.updateLoop();
     } catch (e) {
+      if (ticket !== this.loadTicket) return;
+      this.lastFailure = {step, message:String(e?.message || e)};
       this.state = "fallback";
       this.modelStatus = this.assets ? "ready" : "failed";
       $("#model-loading").hidden = true;
@@ -2637,7 +2815,7 @@ const R = {
   geometry(k) {
     if (!this.geo.has(k)) {
       const T = this.T;
-      if (k === "softbox") {
+      if (k === "softbox" || k === "carton") {
         const shape = new T.Shape(), r = 0.025;
         shape.moveTo(-0.475, -0.5);
         shape.lineTo(0.475, -0.5);
@@ -2648,7 +2826,7 @@ const R = {
         shape.quadraticCurveTo(-0.5, 0.5, -0.5, 0.475);
         shape.lineTo(-0.5, -0.475);
         shape.quadraticCurveTo(-0.5, -0.5, -0.475, -0.5);
-        const geo = new T.ExtrudeGeometry(shape, { depth: 0.8, bevelEnabled: true, bevelSegments: 1, steps: 1, bevelSize: 0.012, bevelThickness: 0.012, curveSegments: 4 });
+        const geo = new T.ExtrudeGeometry(shape, { depth: 0.8, bevelEnabled: true, bevelSegments: 1, steps: 1, bevelSize: 0.012, bevelThickness: 0.012, curveSegments: k === "carton" ? 1 : 4 });
         geo.center();
         geo.scale(1 / 1.05, 1 / 1.05, 1);
         this.geo.set(k, geo);
@@ -3207,9 +3385,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         shelf.rotation.z = side * (col % 2 ? 0.025 : -0.025);
         for (let row = 0; row < 13; row++) {
           const y = 0.21 + row * 0.36;
-          this.soft(shelf, ["#6b545c", "#526c69", "#8a6854", "#625c79"][(row + col) % 4], [Math.sin(row * 3) * 0.045, y, 0], [0.6, 0.29, 0.7]);
-          this.soft(shelf, "#d0af76", [0, y, 0.36], [0.19, 0.075, 0.012]);
-          if (row % 4 === 0) this.mesh(shelf, "sphere", "#a88750", [0.21, y, 0.365], [0.022, 0.022, 0.012]);
+          this.mesh(shelf, "carton", ["#6b545c", "#526c69", "#8a6854", "#625c79"][(row + col) % 4], [Math.sin(row * 3) * 0.045, y, 0], [0.6, 0.29, 0.7]);
+          this.mesh(shelf, "box", "#d0af76", [0, y, 0.36], [0.19, 0.075, 0.012]);
+          if (row % 4 === 0) this.mesh(shelf, "animal", "#a88750", [0.21, y, 0.365], [0.022, 0.022, 0.012]);
         }
       }
       const ladder = this.group(g, [-2.15, 0, -1.7]);
@@ -3432,8 +3610,38 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     if (this.assets) return;
     const loader = new this.T.GLTFLoader();
     const names = ["female", "male", "female-clothes", "male-clothes", "female-hair", "male-hair"];
-    const entries = await Promise.all(names.map(async (name) => [name, await loader.loadAsync("./models/" + name + ".glb")]));
-    this.assets = Object.fromEntries(entries);
+    // These six self-contained GLBs also go into the offline cache. Avoid
+    // competing with installation for a burst of connections on a cold start.
+    this.loadedModels ||= new Map();
+    for (const name of names) {
+      if (this.loadedModels.has(name)) continue;
+      const url = "./models/" + name + ".glb";
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const response = await fetch(url, {cache:attempt === 1 ? "default" : "reload"});
+          if (!response.ok) throw Error("HTTP " + response.status);
+          const bytes = await response.arrayBuffer();
+          const header = new DataView(bytes);
+          if (bytes.byteLength < 12 || header.getUint32(0, true) !== 0x46546c67 ||
+              header.getUint32(8, true) !== bytes.byteLength) throw Error("Incomplete GLB");
+          this.loadedModels.set(name, await loader.parseAsync(bytes, "./models/"));
+          break;
+        } catch (error) {
+          if (attempt === 3) throw Error(name + ".glb after 3 attempts: " + error.message);
+          if (this.state === "loading") {
+            this.modelStatus = "retrying";
+            $("#model-loading").textContent = "Trying the 3D models again… (" + (attempt + 1) + "/3)";
+          }
+          await new Promise(resolve => setTimeout(resolve, 250 * 2 ** (attempt - 1)));
+        }
+      }
+      if (this.state === "loading") {
+        this.modelStatus = "loading";
+        $("#model-loading").textContent = "Opening the school trunks…";
+      }
+    }
+    this.assets = Object.fromEntries(this.loadedModels);
+    this.loadedModels.clear();
     this.modelStatus = "ready";
   },
   setupEnvironment() {
@@ -3444,40 +3652,207 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     room2.dispose();
     pmrem.dispose();
   },
-  eyeTexture(source, color) {
-    const key = "iris:" + color + source.uuid;
-    this.surfaceTextures ||= /* @__PURE__ */ new Map();
-    if (!this.surfaceTextures.has(key)) {
-      const cv = document.createElement("canvas"), img = source.image;
-      cv.width = img.width;
-      cv.height = img.height;
-      const x = cv.getContext("2d");
-      x.drawImage(img, 0, 0);
-      const pixels = x.getImageData(0, 0, cv.width, cv.height), rgb = new this.T.Color(color);
-      rgb.convertLinearToSRGB();
-      for (let y = 0; y < cv.height; y++) for (let xx = 0; xx < cv.width; xx++) {
-        const radius = Math.min(Math.hypot(xx / cv.width - 0.293, y / cv.height - 0.715), Math.hypot(xx / cv.width - 0.707, y / cv.height - 0.296)), i = (y * cv.width + xx) * 4;
-        if (radius < 0.116 && radius > 0.038 && pixels.data[i] < 190) {
-          const light = 0.55 + (pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2]) / 420;
-          pixels.data[i] = rgb.r * 255 * light;
-          pixels.data[i + 1] = rgb.g * 255 * light;
-          pixels.data[i + 2] = rgb.b * 255 * light;
+  eyeTexture(color) {
+    const key = "iris:" + color;
+    this.surfaceTextures ||= new Map();
+    if (this.surfaceTextures.has(key)) return this.surfaceTextures.get(key);
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = 384;
+    const ctx = cv.getContext("2d"), image = ctx.createImageData(cv.width,cv.height);
+    const tint = new this.T.Color(color).convertLinearToSRGB();
+    for (let y=0; y<cv.height; y++) for (let x=0; x<cv.width; x++) {
+      const dx = (x+.5-cv.width/2)/(.492*cv.width);
+      const dy = (y+.5-cv.height/2)/(.492*cv.height);
+      const r = Math.hypot(dx,dy), a = Math.atan2(dy,dx);
+      const rays = Math.sin(66*a + 2.4*Math.sin(13*a+21*r));
+      const fibres = .13*rays + .075*Math.sin(123*a+2*Math.cos(17*r-7*a));
+      const collarette = .293 + .013*Math.sin(18*a) + .007*rays;
+      const crypt = Math.exp(-((r-collarette)**2)/.00032);
+      const rim = this.T.MathUtils.smoothstep(r,.386,.457);
+      const edge = this.T.MathUtils.smoothstep(r,.445,.479);
+      const opening = this.T.MathUtils.smoothstep(r,.177,.202);
+      const lidShade = .77 + .23*this.T.MathUtils.smoothstep(dy,-.42,.20);
+      const corner = this.T.MathUtils.smoothstep(Math.abs(dx),.56,.94);
+      // Fine conjunctival vessels thin out towards the clear limbus.
+      const vein = corner * Math.exp(-((Math.sin(21*dy + 3*Math.sin(5*dx) + 7*dx))**2)/.022);
+      const sclera = [.89-.048*corner,.868-.14*corner-.047*vein,.845-.12*corner-.035*vein];
+      const i = 4*(y*cv.width+x);
+      for (let k=0; k<3; k++) {
+        const base = [tint.r,tint.g,tint.b][k];
+        const pigment = lidShade*((.012 + opening*base*(1.05+fibres+.20*crypt-.46*rim))*(1-edge) + edge*sclera[k]);
+        image.data[i+k] = 255*pigment;
+      }
+      image.data[i+3] = 255;
+    }
+    ctx.putImageData(image,0,0);
+    const texture = new this.T.CanvasTexture(cv);
+    texture.flipY = false;
+    texture.colorSpace = this.T.SRGBColorSpace;
+    this.surfaceTextures.set(key,texture);
+    return texture;
+  },
+  complexion(source, sex, detail, atlas) {
+    if (!["freckles", "rosy"].includes(detail)) return source;
+    const key = source.uuid + detail;
+    if (this.surfaceTextures.has(key)) return this.surfaceTextures.get(key);
+    // Both faces use the MPFB head atlas. These centres are the UVs of the
+    // cheekbones on each bind mesh, so pigment follows a smile or head turn.
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = 1024;
+    const ctx = cv.getContext("2d");
+    ctx.drawImage(source.image, 0, 0, cv.width, cv.height);
+    const u = sex === "male" ? .8675 : .8661;
+    const centres = sex === "male" ? [.4736,.5601] : [.4708,.5628];
+    centres.forEach((v, side) => {
+      ctx.save();
+      ctx.translate((u*atlas[0]+atlas[2])*cv.width, (v*atlas[1]+atlas[3])*cv.height);
+      ctx.scale(atlas[0], (side ? -1 : 1)*atlas[1]);
+      if (detail === "rosy") {
+        ctx.scale(25, 34);
+        const blush = ctx.createRadialGradient(0,0,0,0,0,1);
+        blush.addColorStop(0, "rgba(186,106,96,.17)");
+        blush.addColorStop(.53, "rgba(192,104,96,.065)");
+        blush.addColorStop(1, "rgba(195,92,85,0)");
+        ctx.fillStyle = blush;
+        ctx.fillRect(-1,-1,2,2);
+      } else {
+        // Tiny pigment clusters thin out toward the temples. Deterministic
+        // placement keeps the same student's freckles in every portrait.
+        for (let i=0; i<34; i++) {
+          const angle = i*2.39996 + side*.87;
+          const radius = Math.sqrt((i+.5)/34);
+          const x = Math.cos(angle)*radius*11;
+          const y = Math.sin(angle)*radius*27;
+          const r = .52 + .65*(.5+.5*Math.cos(i*3.4));
+          ctx.fillStyle = i%3 ? "rgba(136,90,65,.50)" : "rgba(146,102,74,.36)";
+          ctx.beginPath(); ctx.ellipse(x,y,r,r*.76,angle,0,Math.PI*2); ctx.fill();
         }
       }
-      x.putImageData(pixels, 0, 0);
-      // A small softbox reflection keeps both irises readable at phone size.
-      for (const [u, v] of [[0.293, 0.715], [0.707, 0.296]]) {
-        x.fillStyle = "#fff9eb";
-        x.beginPath();
-        x.ellipse((u - 0.025) * cv.width, (v - 0.032) * cv.height, cv.width * 0.012, cv.height * 0.016, 0, 0, Math.PI * 2);
-        x.fill();
+      ctx.restore();
+    });
+    const texture = new this.T.CanvasTexture(cv);
+    texture.colorSpace = source.colorSpace;
+    texture.flipY = source.flipY;
+    this.surfaceTextures.set(key, texture);
+    return texture;
+  },
+  embroideredCloth(pattern, trim) {
+    const fabric = this.surfaceTexture("fabric");
+    if (pattern !== "stars" && pattern !== "moons") return fabric;
+    const key = "embroidery:" + pattern + trim;
+    if (this.surfaceTextures.has(key)) return this.surfaceTextures.get(key);
+    const cv = document.createElement("canvas");
+    cv.width = cv.height = 256;
+    const ctx = cv.getContext("2d");
+    // Transparent ground lets the selected thread colour stay visible on black.
+    ctx.fillStyle = trim;
+    for (const [x,y] of [[54,60],[177,188]]) {
+      ctx.save(); ctx.translate(x,y); ctx.beginPath();
+      if (pattern === "stars") {
+        ctx.moveTo(0,-6); ctx.lineTo(1.7,-1.6); ctx.lineTo(5.5,0); ctx.lineTo(1.6,1.5);
+        ctx.lineTo(0,6); ctx.lineTo(-1.7,1.5); ctx.lineTo(-5.5,0); ctx.lineTo(-1.6,-1.6);
+      } else {
+        ctx.moveTo(3,-6); ctx.bezierCurveTo(-7,-6,-7,6,3,6); ctx.bezierCurveTo(-1,4,-2,-2,3,-6);
       }
-      const t = new this.T.CanvasTexture(cv);
-      t.flipY = source.flipY;
-      t.colorSpace = this.T.SRGBColorSpace;
-      this.surfaceTextures.set(key, t);
+      ctx.closePath(); ctx.fill(); ctx.restore();
     }
-    return this.surfaceTextures.get(key);
+    const t = new this.T.CanvasTexture(cv);
+    t.colorSpace = this.T.SRGBColorSpace;
+    t.wrapS = t.wrapT = this.T.RepeatWrapping;
+    this.surfaceTextures.set(key,t);
+    return t;
+  },
+  hairGeometry(original, c, sex) {
+    if (!["waves","curls","short","pixie"].includes(c.hair) || c.glasses === "none") return original.geometry;
+    const key = "swept-fringe:" + sex + ":" + c.hair;
+    if (!this.geo.has(key)) {
+      // Lift the front curls and swept fringe off
+      // the lenses, leaving the side locks and the hairline at the neck alone.
+      const g = original.geometry.clone(), p = g.attributes.position;
+      const smooth = this.T.MathUtils.smoothstep;
+      for (let i=0; i<p.count; i++) {
+        const x=p.getX(i), y=p.getY(i), z=p.getZ(i);
+        const front=smooth(z-(sex === "male" ? .027 : 0), .095, .146);
+        const middle=1-smooth(Math.abs(x), .063, .10);
+        const lift=Math.max(0,1.708-y) * middle * front;
+        p.setXYZ(i,x-.12*lift,y+.97*lift,z);
+      }
+      // Face areas on these small cards round to zero in the packed Int8
+      // normals. Accumulate in floats when refitting the hair around glasses.
+      g.deleteAttribute("normal");
+      g.computeVertexNormals();
+      g.computeBoundingSphere();
+      this.geo.set(key,g);
+    }
+    return this.geo.get(key);
+  },
+  distantHair(near, rows) {
+    const key = "distant-hair:" + near.uuid;
+    if (!this.geo.has(key)) {
+      // Reuse the sloping normal, UV and position at each ribbon edge.
+      // The centre ridge and every other bend are subpixel at full length.
+      const far = new this.T.BufferGeometry(), indices = [];
+      for (const [name, attr] of Object.entries(near.attributes)) far.setAttribute(name, attr);
+      let start = 0, face = 0;
+      for (const count of rows) {
+        const forward = near.index.getX(face+1) === start+3;
+        for (let i=0; i<count-1; i+=2) {
+          const a = start+3*i, b = start+3*Math.min(i+2,count-1);
+          if (forward) indices.push(a,b,a+2, a+2,b,b+2);
+          else indices.push(a,a+2,b, a+2,b+2,b);
+        }
+        start += 3*count;
+        face += 12*(count-1);
+      }
+      far.setIndex(indices);
+      this.geo.set(key,far);
+    }
+    return this.geo.get(key);
+  },
+  fittedGlasses(head, sex, style) {
+    if (style === "none") return;
+    const T = this.T, wizard = sex === "male";
+    const frame = this.group(head);
+    frame.name = "glasses-" + style;
+    const key = "frames:" + sex + ":" + style;
+    const color = style === "gold" ? "#c79a4e" : "#423c41";
+    const metal = this.material(color);
+    if (!this.geo.has(key)) {
+      // In bind coordinates, the wizard brow is 0.184 deep, versus 0.160
+      // on the witch. Wrap each rim back toward the temple from the nose.
+      const y = wizard ? 1.668 : 1.666, centre = wizard ? .036 : .0365;
+      const front = x => (wizard ? .200 : .175) - .29 * Math.abs(x);
+      const rx = .029, ry = style === "heart" ? .018 : style === "square" ? .022 : .0265;
+      for (const side of [-1,1]) {
+        // A rounded rectangle has four straight runs joined by short arcs.
+        const shape = new T.Shape();
+        if (style === "square") {
+          const r = .006;
+          shape.moveTo(-rx+r,-ry); shape.lineTo(rx-r,-ry); shape.quadraticCurveTo(rx,-ry,rx,-ry+r);
+          shape.lineTo(rx,ry-r); shape.quadraticCurveTo(rx,ry,rx-r,ry);
+          shape.lineTo(-rx+r,ry); shape.quadraticCurveTo(-rx,ry,-rx,ry-r);
+          shape.lineTo(-rx,-ry+r); shape.quadraticCurveTo(-rx,-ry,-rx+r,-ry);
+        } else shape.absellipse(0,0,rx,ry,0,Math.PI*2,false,0);
+        const points = shape.getSpacedPoints(40).slice(0,-1).map(p => {
+          const x = side * centre + p.x;
+          return new T.Vector3(x,y+p.y,front(x));
+        });
+        const path = new T.CatmullRomCurve3(points,true);
+        const rim = new T.Mesh(new T.TubeGeometry(path,48,.0026,6,true),metal);
+        rim.userData.ownedGeo = true;
+        frame.add(rim);
+        const hinge = side * (centre+rx);
+        this.line(frame, [[hinge,y+.003,front(hinge)],[side*.077,y+.003,front(hinge)-.012],[side*.089,y,.037],[side*.094,y-.013,.005]],color,.0022);
+      }
+      const bridge = centre-rx;
+      this.line(frame,[[-bridge,y+.003,front(bridge)],[0,y+.009,front(0)],[bridge,y+.003,front(bridge)]],color,.0022);
+      this.mergeParts(frame);
+      this.geo.set(key,frame.children[0].geometry);
+      frame.clear();
+    }
+    const finish = this.humanMaterial("spectacle-metal", color, null, "metal");
+    finish.metalness = .55; finish.roughness = .32;
+    frame.add(new T.Mesh(this.geo.get(key),finish));
   },
   humanMaterial(key, color, source, type = "cloth") {
     const id = "human:" + key + ":" + color + ":" + (source?.uuid || "");
@@ -3494,11 +3869,37 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         sheenColor: new T.Color("#b7a589"),
         sheenRoughness: 0.8
       });
-      if (type === "eye" && source?.map) {
+      if (type === "eye") {
         m.color.set("#ffffff");
-        m.map = this.eyeTexture(source.map, color);
+        m.map = this.eyeTexture(color);
+        m.specularIntensity = .06;
+        m.clearcoat = .045;
+        m.clearcoatRoughness = .18;
+      }
+      if (type === "cornea") {
+        // A clear film contributes reflected light only. A white diffuse
+        // layer over dark irises made them appear cloudy in the old model.
+        m.color.set(0);
+        m.transparent = true;
+        m.blending = T.AdditiveBlending;
+        m.opacity = .72;
+        m.depthWrite = false;
+        m.roughness = .06;
+        m.ior = 1.38;
         m.clearcoat = 1;
-        m.clearcoatRoughness = 0.12;
+        m.clearcoatRoughness = .06;
+        m.onBeforeCompile = shader => {
+          // Two finite light sources reflected by the actual curved normal.
+          // They move across the dome on a turn and vanish behind a blink.
+          shader.fragmentShader = shader.fragmentShader.replace("#include <emissivemap_fragment>", `
+            #include <emissivemap_fragment>
+            vec2 reflection = reflect(-normalize(vViewPosition),normal).xy;
+            float windowLight = length((reflection-vec2(-.22,.26))/vec2(.105,.14));
+            float fillLight = length((reflection-vec2(.30,-.16))/vec2(.062,.055));
+            totalEmissiveRadiance += vec3(1.0,.95,.86)*1.65*(1.-smoothstep(.58,1.,windowLight))
+                                   + vec3(.58,.72,.94)*.58*(1.-smoothstep(.36,1.,fillLight));
+          `);
+        };
       }
       if (["cloth", "silk", "velvet", "leather"].includes(type)) {
         m.map = this.surfaceTexture("fabric");
@@ -3506,18 +3907,80 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         m.bumpScale = 3e-3;
       }
       if (type === "skin") {
-        m.roughness = 0.72;
+        m.vertexColors = true;
+        m.roughness = .67;
+        m.bumpMap = source.map;
+        m.bumpScale = .00042;
+        // A broad warm terminator approximates dermal light scatter. Keep
+        // the existing shadowed direct light and the selected melanin tint.
+        m.onBeforeCompile = shader => {
+          shader.vertexShader = "varying vec3 vSkinBind;\n" + shader.vertexShader.replace(
+            "#include <begin_vertex>", "#include <begin_vertex>\nvSkinBind = position;");
+          shader.fragmentShader = "varying vec3 vSkinBind;\n" + shader.fragmentShader.replace(
+            "#include <roughnessmap_fragment>", `
+              #include <roughnessmap_fragment>
+              // The nose and lower lip catch a tighter highlight than cheeks.
+              vec2 nose = (vSkinBind.xy-vec2(0.,1.634))/vec2(.020,.023);
+              vec2 lip = (vSkinBind.xy-vec2(0.,1.601))/vec2(.026,.007);
+              float faceFront = smoothstep(.085,.12,vSkinBind.z);
+              roughnessFactor -= faceFront*(.17*exp(-dot(nose,nose)) + .19*exp(-dot(lip,lip)));
+            `);
+          shader.fragmentShader = shader.fragmentShader.replace("#include <lights_fragment_end>", `
+            #include <lights_fragment_end>
+            #if NUM_DIR_LIGHTS > 0
+              float incidence = dot(normal, directionalLights[0].direction);
+              float scatter = smoothstep(-0.55, 0.18, incidence) * (1.0 - smoothstep(0.18, 0.82, incidence));
+              float ear = smoothstep(.073,.094,abs(vSkinBind.x)) *
+                          (1. - smoothstep(.023,.054,abs(vSkinBind.y-1.644)));
+              vec2 noseTip = (vSkinBind.xy-vec2(0.,1.631))/vec2(.021,.016);
+              float thickness = .34 + .66*max(ear, exp(-dot(noseTip,noseTip))*smoothstep(.12,.16,vSkinBind.z));
+              vec3 bounce = vec3(.24,.100,.055)*scatter +
+                            vec3(.15,.045,.018)*thickness*smoothstep(.0,.80,-incidence);
+              reflectedLight.indirectDiffuse += diffuseColor.rgb * bounce * directionalLights[0].color * .52;
+            #endif
+          `);
+        };
+        m.specularIntensity = .33;
         m.normalScale.set(0.1, 0.1);
         m.color.multiplyScalar(1.06);
-        m.sheen = 0.18;
+        m.sheen = .075;
         m.sheenColor.set("#edac96");
         m.sheenRoughness = 0.9;
       }
       if (type === "hair") {
-        m.roughness = 0.72;
+        m.roughness = key === "hair" ? .64 : .81;
+        if (key === "hair") {
+          m.anisotropy = .36;
+          m.anisotropyRotation = Math.PI / 2;
+          m.specularIntensity = .30;
+          m.specularColor.set(color).lerp(new T.Color("#efe3d9"), .08);
+          m.bumpMap = m.map;
+          m.bumpScale = .00048;
+          m.sheen = .045;
+          m.sheenRoughness = .66;
+          m.sheenColor.set(color);
+        }
+        if (key === "brows") m.color.multiplyScalar(.69);
         m.alphaTest = source?.alphaTest || 0.32;
         m.alphaToCoverage = true;
         m.side = T.DoubleSide;
+      }
+      if (key === "hair" || type === "eye") {
+        // The editor defines these pigments in display sRGB. Three decodes
+        // both the base-colour map and the selected tint into linear light.
+        // Compress the *illumination*, before adding the physical highlight.
+        // Running ACES on the resulting RGB again would bleach light pigments.
+        m.toneMapped = false;
+        m.onBeforeCompile = shader => {
+          shader.fragmentShader = shader.fragmentShader.replace("#include <opaque_fragment>", `
+            vec3 luma = vec3(.2126, .7152, .0722);
+            float incident = dot(totalDiffuse, luma) / max(.0001, dot(diffuseColor.rgb, luma));
+            float value = .29 + 1.20 * incident / (.55 + incident);
+            vec3 glint = max(outgoingLight - totalDiffuse, vec3(0.));
+            outgoingLight = diffuseColor.rgb * value + glint / (1. + 6. * glint);
+            #include <opaque_fragment>
+          `);
+        };
       }
       if (type === "silk") {
         m.sheen = 0.8;
@@ -3541,7 +4004,8 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         m.sheen = 0.08;
       }
       m.side = T.DoubleSide;
-      m.envMapIntensity = type === "eye" ? 1.1 : 0.4;
+      if (type === "cornea") m.side = T.FrontSide;
+      m.envMapIntensity = type === "cornea" ? .24 : type === "eye" ? .18 : .4;
       this.mat.set(id, m);
     }
     return this.mat.get(id);
@@ -3566,13 +4030,22 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const T = this.T, id = "tailored-v2:" + key;
     if (!this.geo.has(id)) {
       const positions = [], uvs = [], indices = [], joints = [], weights = [], groups = [];
-      const rows = 12, cols = options.pleats ? 48 : 32;
+      const rows = options.backEase ? 30 : 16, cols = options.backEase || options.pleats ? 72 : 32;
       for (let j = 0; j <= rows; j++) {
         const t = j / rows * (profile.length - 1), k = Math.min(profile.length - 2, Math.floor(t)), f = t - k;
         const row = profile[k].map((v, i) => v + (profile[k + 1][i] - v) * f), [y, width, depth] = row;
-        const gap = options.gap || 0;
+        const fall = j / rows;
+        const openRobe = name === "outfit-robes";
+        const gap = (options.gap || 0) - (openRobe ? .18*Math.sin(Math.PI*fall) : 0);
         for (let i = 0; i <= cols; i++) {
-          const v = i / cols, angle = gap + v * (Math.PI * 2 - gap * 2), fold = 1 + Math.cos(angle * (options.pleats || 12)) * ((options.pleats ? 0.045 : 0.014) * j / rows);
+          const v = i / cols, angle = gap + v * (Math.PI * 2 - gap * 2);
+          // Hanging folds fan away from the shoulder; the ridges weaken at
+          // the waist and swing outward at the hem.
+          const drape = angle*10 + .67*Math.sin(angle*3) + .9*(1-fall)*Math.sin(angle*2);
+          const gathering = Math.exp(-((fall-.34)**2)/.015) * Math.sin(22*fall + 2.1*Math.cos(angle));
+          const fold = options.pleats ? 1 + .045 * fall * Math.cos(angle * options.pleats)
+            : options.backEase ? 1 + (.019+.105*fall)*Math.cos(drape) + .027*fall*Math.cos(2*drape) + .032*gathering
+            : 1 + .014*fall*Math.cos(angle*9);
           let yy = y, ww = width, dd = depth;
           if (options.vneck) {
             yy -= 0.19 * (Math.cos(angle) > 0 ? Math.max(0, 1 - Math.abs(Math.sin(angle)) / 0.78) : 0) * Math.max(0, (y - 1.22) / (profile[0][0] - 1.22));
@@ -3584,7 +4057,20 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
             }
           }
           if (options.backEase) dd += 0.11 * Math.max(0, -Math.cos(angle)) * (profile[0][0] - yy) / (profile[0][0] - profile[profile.length - 1][0]);
-          positions.push(Math.sin(angle) * ww * fold, yy, Math.cos(angle) * dd * fold + (options.z ?? -0.03));
+          const edge = Math.min(v,1-v);
+          const lapel = openRobe ? Math.max(0,1-edge/.095) : 0;
+          // Turn the front facing back on itself between neck and waist.
+          // Its ridge and the wavy hem read in silhouette on a small stage.
+          const roll = .030*Math.sin(Math.PI*lapel)*Math.sin(Math.PI*Math.min(1,fall*1.9));
+          if (openRobe) {
+            // The open panels lift slightly at the front. Keep the back hem
+            // level so its lowest point covers the full width of both boots.
+            yy += fall**3*Math.max(0,Math.cos(angle))*(.016+.013*Math.cos(drape));
+          }
+          const x = Math.sin(angle)*ww*fold;
+          const z = Math.cos(angle)*dd*fold + (options.z ?? -.03) + roll +
+            (options.neckOffset || 0)*T.MathUtils.smoothstep(yy,1.435,1.52);
+          positions.push(x,yy,z);
           uvs.push(v * 2, j / rows * 2);
           const upper = Math.max(0, Math.min(1, (yy - 1.03) / 0.35));
           joints.push(0, 3, 0, 0);
@@ -3635,7 +4121,10 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         const t = j / rows, x = start.x + sgn * length * t, y = start.y + (end.y - start.y) * t, z = start.z + (end.z - start.z) * t, rad = (wide ? 0.08 + Math.pow(t, 2) * 0.03 : 0.067 - t * 0.03) * (.65 + .35 * Math.min(1, t * 8));
         for (let i = 0; i <= cols; i++) {
           const a = i / cols * Math.PI * 2;
-          pos.push(x, y + Math.cos(a) * rad, z + Math.sin(a) * rad);
+          const elbowCrease = .07*Math.exp(-((t-.51)**2)/.023) * Math.cos(t*31 + 2*Math.sin(a));
+          const fluting = (wide ? .075 : .025)*Math.cos(6*a + .8*t)*t;
+          const cuffRadius = rad*(1 + fluting + elbowCrease);
+          pos.push(x, y + Math.cos(a) * cuffRadius, z + Math.sin(a) * cuffRadius);
           uv.push(t * 2, i / cols);
           const w = Math.max(0, Math.min(1, (Math.abs(x) - Math.abs(elbow.x) + 0.045) / 0.09));
           joint.push(0, 1, 0, 0);
@@ -3652,6 +4141,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       g.setAttribute("skinIndex", new T.Uint16BufferAttribute(joint, 4));
       g.setAttribute("skinWeight", new T.Float32BufferAttribute(weight, 4));
       g.setIndex(ix);
+      const cuff = (rows - 1) * cols * 6;
+      g.addGroup(0, cuff, 0);
+      g.addGroup(cuff, ix.length - cuff, 1);
       g.computeVertexNormals();
       g.computeBoundingBox();
       g.computeBoundingSphere();
@@ -3683,18 +4175,29 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     });
     const house = HOUSES[c.school === "Hogwarts" ? c.house : null] || HOUSES.Gryffindor;
     const robeColor = outfitColor(c);
-    const cloth = this.humanMaterial("tailoring-" + c.outfit, robeColor, null, c.outfit === "gown" ? "silk" : c.outfit === "dress" ? "velvet" : "cloth"), lining = this.humanMaterial("lining", house.color, null, "silk"), trim = this.humanMaterial("trim", c.trim || house.trim, null);
+    const cloth = this.humanMaterial("tailoring-" + c.outfit + (c.pattern === "plain" ? "" : c.pattern + c.trim), robeColor, null, c.outfit === "gown" ? "silk" : c.outfit === "dress" ? "velvet" : "cloth"), lining = this.humanMaterial("lining", house.color, null, "silk"), trim = this.humanMaterial("trim", c.trim || house.trim, null);
+    if (["stars","moons"].includes(c.pattern)) {
+      cloth.emissiveMap = this.embroideredCloth(c.pattern, c.trim);
+      cloth.emissive.set("#ffffff");
+      cloth.emissiveIntensity = .55;
+    }
     cloth.side = T.DoubleSide;
     const rest = Object.fromEntries(Object.entries(bones).map(([name, b]) => [name, b.quaternion.clone()]));
-    const gloves = [];
+    const gloves = [], blinkMeshes = [], eyeSurfaces = [];
     rig.traverse((o) => {
       if (!o.isSkinnedMesh) return;
       o.castShadow = true;
       o.receiveShadow = true;
       o.frustumCulled = false;
+      if (o.morphTargetDictionary?.Blink !== undefined) blinkMeshes.push(o);
+      if (o.name === "student-eyes" || o.name === "student-corneas") eyeSurfaces.push(o);
       const n = o.material.name.toLowerCase();
-      if (n.includes("hair")) o.material = this.humanMaterial(o.name === "student-lashes" ? "lashes" : "brows", o.name === "student-lashes" && !male ? "#241811" : c.hairColor, o.material, "hair");
-      else if (n.includes("eye")) o.material = this.humanMaterial("eyes", c.eyes, o.material, "eye");
+      if (n.includes("hair")) o.material = this.humanMaterial(o.name === "student-lashes" ? "lashes" : "brows", o.name === "student-lashes" ? (male ? "#45352e" : "#392a24") : c.hairColor, o.material, "hair");
+      else if (o.name === "student-corneas") {
+        o.material = this.humanMaterial("tear-film", "#ffffff", null, "cornea");
+        o.castShadow = false;
+        o.receiveShadow = false;
+      } else if (n.includes("eye")) o.material = this.humanMaterial("eyes", c.eyes, o.material, "eye");
       else {
         if (c.outfit === "quidditch") {
           const glove = o.clone();
@@ -3707,7 +4210,32 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         o.geometry = this.maskedGeometry(o.geometry, sex + "-skin-" + c.outfit, (x, y) => y > 1.51 || y > 1.485 && Math.abs(x) < 0.065 || c.outfit !== "quidditch" && Math.abs(x) > (["muggle", "gown"].includes(c.outfit) ? 0.32 : 0.655));
         if (o.morphTargetDictionary?.Smile !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Smile] = c.expression === "calm" ? 0 : 0.42;
         if (o.morphTargetDictionary?.Blink !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Blink] = 0;
-        o.material = this.humanMaterial("skin", c.skin, o.material, "skin");
+        const atlas = o.material.userData.faceAtlas || [1,1,0,0];
+        if (!o.geometry.hasAttribute("color")) {
+          // Modulate the neutral tint at the lips, cheeks and ears in bind
+          // space. The pigment stays on the skin throughout facial animation.
+          const p = o.geometry.attributes.position, uv = o.geometry.attributes.uv;
+          const rgb = new Float32Array(p.count * 3);
+          for (let i=0; i<p.count; i++) {
+            const x=Math.abs(p.getX(i)), y=p.getY(i), z=p.getZ(i);
+            const cheek=z>.08 ? Math.exp(-(((x-.051)/.029)**2 + ((y-1.634)/.018)**2)) : 0;
+            const lip=z>.10 && y>1.57 && y<1.63 ? Math.exp(-(
+              (((uv.getX(i)-atlas[2])/atlas[0]-.916)/.011)**2 +
+              (((uv.getY(i)-atlas[3])/atlas[1]-.517)/.022)**2)) : 0;
+            const ear=x>.075 && y>1.60 && y<1.68 && z<.068 ? .16 : 0;
+            const nose = z>.12 ? Math.exp(-((x/.016)**2+((y-1.631)/.010)**2)) : 0;
+            const lowerLid = z>.10 ? Math.exp(-(((x-.035)/.018)**2+((y-1.654)/.004)**2)) : 0;
+            const arch = Math.max(0,1-((x-.037)/.018)**2);
+            const lidFold = z>.10 ? Math.exp(-(((x-.037)/.018)**4 +
+              ((y-1.6715-.0063*arch)/.0023)**2)) : 0;
+            const warmth=.12*cheek+.21*lip+ear+.10*nose+.12*lowerLid;
+            rgb.set([1+.14*warmth-.12*lidFold,1-warmth-.19*lidFold,1-.74*warmth-.18*lidFold],i*3);
+          }
+          o.geometry.setAttribute("color",new T.BufferAttribute(rgb,3));
+        }
+        const skinMap = this.complexion(o.material.map, sex, c.face, atlas);
+        o.material = this.humanMaterial("skin-" + c.face, c.skin, o.material, "skin");
+        o.material.map = skinMap;
         o.name = "human-skin";
       }
     });
@@ -3764,20 +4292,21 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       return group;
     };
     const ny = male ? 1.51 : 1.50, waist = male ? 0.15 : 0.14;
-    const torso = [[ny, 0.065, 0.074], [ny - 0.065, male ? 0.205 : 0.185, 0.125], [1.34, male ? 0.185 : 0.17, 0.125], [1.17, waist, 0.115], [1.015, waist + 5e-3, 0.12]];
+    const neckOffset = male ? .075 : .055;
+    const torso = [[ny+.028,.049,.039],[ny+.025,.064,.059],[ny+.003,.088,.083],[ny-.018,.117,.102], [ny - 0.065, male ? 0.205 : 0.185, 0.125], [1.34, male ? 0.185 : 0.17, 0.125], [1.17, waist, 0.115], [1.015, waist + 5e-3, 0.12]];
     const white = this.humanMaterial("shirt-white", "#f3f5f7", null), grey = this.humanMaterial("school-knit", "#505b6b", null);
     if (c.outfit === "robes") {
-      this.tailoredSurface(rig, bones, sex + ":white-shirt", "white-collared-shirt", torso, white);
+      this.tailoredSurface(rig, bones, sex + ":white-shirt", "white-collared-shirt", torso, white, { neckOffset });
       this.tailoredSurface(rig, bones, sex + ":vneck", "grey-v-neck-jumper", torso.map(([y, w, d], i) => [y - (i === 0 ? 0.025 : 0), w + 7e-3, d + 0.014]), grey, { vneck: ny - 0.015 });
       if (!male) this.tailoredSurface(rig, bones, "female:pleated-skirt", "pleated-grey-skirt", [[1.04, 0.155, 0.13], [0.92, 0.185, 0.15], [0.63, 0.24, 0.18]], grey, { pleats: 24 });
     } else {
-      this.tailoredSurface(rig, bones, sex + ":bodice:" + c.outfit, "tailored-bodice", torso, c.outfit === "cloak" ? this.humanMaterial("cloak-underlayer", "#3f6575", null) : cloth);
+      this.tailoredSurface(rig, bones, sex + ":bodice:" + c.outfit, "tailored-bodice", torso, c.outfit === "cloak" ? this.humanMaterial("cloak-underlayer", "#3f6575", null) : cloth, { neckOffset });
     }
     const outer = this.clothSurface(rig, bones, sex, c.outfit, ["robes", "cloak"].includes(c.outfit) ? [cloth, lining] : cloth);
     if (!outer) rig.getObjectByName("tailored-bodice").name = "outfit-" + c.outfit;
     for (const side of ["l", "r"]) {
       const short = ["gown", "muggle"].includes(c.outfit);
-      this.tailoredSleeve(rig, bones, sex, side, "sleeve-" + side, c.outfit === "cloak" ? this.humanMaterial("cloak-underlayer", "#3f6575", null) : cloth, { wide: c.outfit === "robes", short });
+      this.tailoredSleeve(rig, bones, sex, side, "sleeve-" + side, [c.outfit === "cloak" ? this.humanMaterial("cloak-underlayer", "#3f6575", null) : cloth, trim], { wide: c.outfit === "robes", short });
     }
     if (["robes", "cloak"].includes(c.outfit)) this.tailoredSurface(rig, bones, sex + ":hood", "lined-hood", [[ny, 0.09, 0.09], [ny - 0.07, 0.17, 0.15], [ny - 0.21, 0.12, 0.15], [ny - 0.28, 0.025, 0.045]], [cloth, lining], { gap: 1.4, z: -0.15, lining: true, hood: true });
     const detail = new T.Group();
@@ -3796,10 +4325,10 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     if (c.outfit === "robes") {
       const front = (x, y, offset = 9e-3) => {
         const k = Math.max(0, torso.findIndex((p, i) => i < torso.length - 1 && y <= p[0] && y >= torso[i + 1][0])), a2 = torso[k], b = torso[k + 1], t = Math.max(0, Math.min(1, (a2[0] - y) / (a2[0] - b[0]))), w = a2[1] + (b[1] - a2[1]) * t, d = a2[2] + (b[2] - a2[2]) * t;
-        return [x, y, -0.03 + d * Math.sqrt(Math.max(0.05, 1 - (x / w) ** 2)) + offset];
+        return [x, y, -0.03 + neckOffset*T.MathUtils.smoothstep(y,1.435,1.52) + d * Math.sqrt(Math.max(0.05, 1 - (x / w) ** 2)) + offset];
       };
       for (const side of [-1, 1]) {
-        const p = [[side * 0.012, ny - 2e-3], [side * 0.075, ny - 0.032], [side * 0.048, ny - 0.098], [side * 0.023, ny - 0.039]].map(([x, y]) => front(x, y, 0.016));
+        const p = [[side * 0.014, ny + .008], [side * 0.075, ny - 0.032], [side * 0.048, ny - 0.098], [side * 0.023, ny - 0.039]].map(([x, y]) => front(x, y, 0.016));
         patch("shirt-collar", [p[0], p[1], p[2], p[0], p[2], p[3]], "#ffffff");
         this.line(detail, [p[1], p[2], p[3]], "#c8cfd8", 12e-4);
         this.line(detail, [[side * 0.12, ny - 0.035, 0.072], [side * 0.078, ny - 0.11, 0.119], [0, ny - 0.215, 0.142]], house.color, 4e-3);
@@ -3850,7 +4379,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       this.glyph(detail, "✦", "#f8db55", [0, 1.33, 0.13], 0.16);
       this.line(detail, [[-0.09, 1.16, 0.095], [0, 1.14, 0.108], [0.09, 1.16, 0.095]], "#c1e8ec", 5e-3);
     }
-    if (c.pattern !== "plain" && c.outfit !== "robes") for (let i = 0; i < 6; i++) this.glyph(detail, c.pattern === "stars" ? "✦" : "☾", c.trim, [(i % 3 - 1) * 0.08, 1.08 + Math.floor(i / 3) * 0.11, 0.132], 0.022);
+
     attach(bones.spine_03, detail);
     const headY = 1.81, head = new T.Group();
     head.name = "head-accessories";
@@ -3858,7 +4387,13 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     hair.name = "hair-" + c.hair;
     head.add(hair);
     const original = this.assets[sex + "-hair"].scene.getObjectByName(sex + "-" + c.hair) || this.assets[sex + "-hair"].scene.getObjectByName(sex + "-long");
-    const mesh = new T.Mesh(original.geometry, this.humanMaterial("hair", c.hairColor, original.material, "hair"));
+    const mesh = new T.Mesh(this.hairGeometry(original, c, sex), this.humanMaterial("hair", c.hairColor, original.material, "hair"));
+    if (!portrait) {
+      mesh.userData.near = mesh.geometry;
+      // A previously installed PWA may still serve the preceding groom while
+      // its new cache installs. That mesh can be rendered at either distance.
+      mesh.userData.far = original.userData.cardRows ? this.distantHair(mesh.geometry,original.userData.cardRows) : mesh.geometry;
+    }
     mesh.castShadow = true;
     hair.add(mesh);
     // Saved beards remain opt-in magic costume pieces; young students never
@@ -3872,78 +4407,83 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       }
       this.mergeParts(beard); head.add(beard);
     }
-    const eyeY = male ? 1.668 : 1.667, eyeZ = male ? 0.165 : 0.160;
-    if (c.glasses !== "none") {
-      const color = c.glasses === "gold" ? "#ac8c46" : "#2b2723";
-      for (const side of [-1, 1]) {
-        if (c.glasses === "square") this.line(head, [[side * 0.033 - 0.026, eyeY + 0.02, eyeZ], [side * 0.033 + 0.026, eyeY + 0.02, eyeZ], [side * 0.033 + 0.026, eyeY - 0.018, eyeZ], [side * 0.033 - 0.026, eyeY - 0.018, eyeZ], [side * 0.033 - 0.026, eyeY + 0.02, eyeZ]], color, 25e-4);
-        else {
-          const ring = this.mesh(head, "torus", color, [side * 0.034, eyeY, eyeZ], [0.025, 0.025, 0.025]);
-          if (c.glasses === "heart") ring.scale.y = 0.02;
-        }
-        this.line(head, [[side * 0.06, eyeY, eyeZ], [side * 0.078, eyeY, -0.015]], color, 22e-4);
-      }
-      this.line(head, [[-9e-3, eyeY + 5e-3, eyeZ], [0, eyeY + 9e-3, eyeZ + 4e-3], [9e-3, eyeY + 5e-3, eyeZ]], color, 2e-3);
-    }
-    if (c.face === "freckles") for (const side of [-1, 1]) for (let i = 0; i < 5; i++) this.mesh(head, "sphere", "#815440", [side * (0.028 + i * 6e-3), eyeY - 0.028 + i % 2 * 5e-3, eyeZ + 5e-3 - i * 15e-4], [15e-4, 15e-4, 7e-4]);
-    if (c.face === "rosy") for (const side of [-1, 1]) {
-      const cheek = this.mesh(head, "sphere", "#a95b54", [side * 0.05, eyeY - 0.035, eyeZ - 6e-3], [0.013, 8e-3, 1e-3]);
-      cheek.material = new T.MeshBasicMaterial({ color: "#a4493f", transparent: true, opacity: 0.18, depthWrite: false });
-      cheek.userData.ownedMat = true;
-    }
+    this.fittedGlasses(head, sex, c.glasses);
     const hat = new T.Group();
     hat.name = "fitted-hat";
     head.add(hat);
     const hatType = !portrait && (S.sorting || S.sortResult) ? "sorting" : !portrait && S.screen === "editor" && S.tab === "hair" ? "none" : c.hat;
-    hat.position.y = headY - 0.045;
-    hat.position.z = .035;
+    hat.position.y = headY - .065;
+    hat.position.z = male ? .072 : .047;
+    hat.scale.set(["buns","curls"].includes(c.hair) ? 1.16 : 1, 1, 1.10);
     if (["pointed", "crooked", "sorting"].includes(hatType)) {
-      const color = hatType === "sorting" ? "#544435" : robeColor;
-      this.mesh(hat, "cylinder", color, [0, 0, 0], [hatType === "pointed" ? 0.15 : 0.205, 0.012, 0.19]);
-      const pts = [];
-      for (let i = 0; i <= 12; i++) {
-        const t = i / 12;
-        pts.push(new T.Vector2(0.13 * Math.pow(1 - t, 0.8), t * 0.27));
+      const color = hatType === "sorting" ? "#69503d" : robeColor;
+      const pointed = hatType === "pointed";
+      const shapeKey = "felt-" + hatType;
+      const felt = this.humanMaterial("felt", color, null);
+      const crownRadius = t => .143 * Math.pow(1-t,.83);
+      if (!this.geo.has(shapeKey)) {
+        // Profile starts at the rolled outer edge and turns up into the crown.
+        const edge = pointed ? .18 : .212;
+        const profile = [[edge-.004,-.005],[edge,0],[edge-.008,.003],[.158,.002],[.143,.008]];
+        for (let i=1; i<=22; i++) profile.push([crownRadius(i/22), .008 + i/22*.267]);
+        const g = new T.LatheGeometry(profile.map(([r,y]) => new T.Vector2(r,y)),40);
+        const pos = g.attributes.position;
+        for (let i=0; i<pos.count; i++) {
+          const x=pos.getX(i), z=pos.getZ(i), y=pos.getY(i), angle=Math.atan2(x,z);
+          const t=Math.max(0,(y-.008)/.267), flare=Math.max(0,(Math.hypot(x,z)-.143)/(edge-.143));
+          const wrinkle = 1 + .035*Math.sin(angle*4 + t*6)*Math.sin(Math.PI*t);
+          pos.setXYZ(i, x*wrinkle - (pointed ? .032 : .118)*t**2.35,
+            y + flare*(.013*Math.sin(2*angle+.6) + .007*Math.cos(3*angle)) - (pointed ? 0 : .028)*t**5,
+            z*wrinkle + .022*t*t);
+        }
+        g.computeVertexNormals();
+        this.geo.set(shapeKey,g);
+        const ribbon = new T.LatheGeometry([.046,.11,.126].map(t => new T.Vector2(crownRadius(t)+.0025, .008+t*.267)),40);
+        this.geo.set(shapeKey+"-ribbon",ribbon);
       }
-      const geo = new T.LatheGeometry(pts, 32);
-      const pos = geo.attributes.position;
-      for (let i = 0; i < pos.count; i++) {
-        const y = pos.getY(i);
-        pos.setX(i, pos.getX(i) + (hatType === "pointed" ? 0 : -0.12 * Math.pow(y / 0.27, 3)));
-        pos.setZ(i, pos.getZ(i) + 6e-3 * Math.sin(pos.getX(i) * 35 + y * 30));
-      }
-      geo.computeVertexNormals();
-      const crown = new T.Mesh(geo, this.humanMaterial("hat", color, null));
-      crown.userData.ownedGeo = true;
+      const crown = new T.Mesh(this.geo.get(shapeKey),felt);
       crown.castShadow = true;
       hat.add(crown);
-      this.mesh(hat, "cylinder", c.trim, [0, 0.045, 0], [0.12, 0.025, 0.122]);
+      const ribbon = new T.Mesh(this.geo.get(shapeKey+"-ribbon"),this.humanMaterial("hat-ribbon",c.trim,null,"velvet"));
+      hat.add(ribbon);
       if (hatType === "sorting") {
         this.line(hat, [[-0.08, 0.13, 0.11], [-0.035, 0.11, 0.117], [-0.01, 0.13, 0.12]], "#241a12", 8e-3);
         this.line(hat, [[0.01, 0.13, 0.12], [0.04, 0.11, 0.115], [0.08, 0.13, 0.105]], "#241a12", 8e-3);
         this.line(hat, [[-0.04, 0.075, 0.13], [0, 0.085, 0.135], [0.04, 0.07, 0.13]], "#241a12", 6e-3);
       }
     } else if (hatType === "beanie") {
-      this.mesh(hat, "sphere", house.color, [0, -0.025, 0], [0.105, 0.075, 0.11]);
-      this.mesh(hat, "cylinder", house.trim, [0, -0.045, 0], [0.108, 0.035, 0.11]);
+      this.mesh(hat, "sphere", house.color, [0, .014, 0], [.135, .092, .138]);
+      this.mesh(hat, "cylinder", house.trim, [0, .004, 0], [.136, .018, .139]);
     } else if (hatType === "top") {
-      this.mesh(hat, "cylinder", robeColor, [0, 0.09, 0], [0.105, 0.21, 0.11]);
+      this.mesh(hat, "cylinder", robeColor, [0, 0.09, 0], [.138, .21, .145]);
       this.mesh(hat, "cylinder", robeColor, [0, -0.01, 0], [0.18, 0.012, 0.15]);
-      this.mesh(hat, "cylinder", c.trim, [0, 0.02, 0], [0.108, 0.025, 0.113]);
+      this.mesh(hat, "cylinder", c.trim, [0, 0.02, 0], [.14, .021, .147]);
     } else if (hatType === "tiara") {
-      this.mesh(hat, "torus", "#ba934d", [0, -0.012, 0], [0.105, 0.105, 0.105]).rotation.x = Math.PI / 2;
-      for (let i = 0; i < 5; i++) this.mesh(hat, "gem", c.trim, [(i - 2) * 0.034, 0.018 + 0.03 * (1 - Math.abs(i - 2) / 2), 0.09], [0.012, 0.024, 0.012]);
+      this.mesh(hat, "torus", "#ba934d", [0, -.007, 0], [.12, .14, .066]).rotation.x = Math.PI / 2;
+      for (let i = -2; i <= 2; i++) {
+        const angle = i * .35;
+        this.mesh(hat, "gem", c.trim, [.12*Math.sin(angle), .004+.009*(2-Math.abs(i)), .14*Math.cos(angle)], [.011, .016+.004*(2-Math.abs(i)), .009]);
+      }
     } else if (hatType === "flowers") for (let i = 0; i < 12; i++) {
       const t = i / 12 * Math.PI * 2;
-      this.flower(hat, [Math.sin(t) * 0.115, -0.014, Math.cos(t) * 0.11], i % 2 ? "#d6b3a0" : "#c4ac70", 0.025);
+      this.flower(hat, [Math.sin(t) * .126, -.006 + .009*Math.cos(t), Math.cos(t) * .144], i % 2 ? "#d6b3a0" : "#c4ac70", 0.025);
     }
     attach(bones.Head, head);
     if (c.scarf) {
       const scarf = new T.Group();
       scarf.name = "house-scarf";
-      this.mesh(scarf, "torus", house.color, [0, 1.51, -0.015], [0.08, 0.08, 0.09]).rotation.x = Math.PI / 2;
-      this.mesh(scarf, "box", house.color, [0.075, 1.35, chestZ + 0.03], [0.055, 0.32, 0.012]);
-      for (let i = 0; i < 5; i++) this.mesh(scarf, "box", house.trim, [0.075, 1.21 + i * 0.056, chestZ + 0.038], [0.056, 0.018, 5e-3]);
+      this.tailoredSurface(rig, bones, sex + ":scarf", "wrapped-scarf",
+        [[ny+.031,.052,.050],[ny+.028,.071,.066],[ny+.011,.089,.085],
+         [ny-.004,.103,.101],[ny-.015,.115,.109]], this.humanMaterial("scarf-wool",house.color,null), { neckOffset });
+      const tail = [[.054,ny+.003,male ? .112 : .095],[.071,ny-.043,.099],
+                    [.061,ny-.156,.117],[.086,ny-.287,.115]];
+      const edge = tail.map(([x,y,z])=>[x+.038,y-.008,z-.010]);
+      for (let i=0;i<3;i++) scarf.add(patch("scarf-tail",[tail[i],tail[i+1],edge[i],edge[i],tail[i+1],edge[i+1]],house.color));
+      for (let i=0;i<3;i++) {
+        const t = .50 + i*.18;
+        const across = (a,b) => a.map((v,j)=>v+(b[j]-v)*t+(j===2?.0015:0));
+        this.line(scarf,[across(tail[2],tail[3]),across(edge[2],edge[3])],house.trim,.0028);
+      }
       attach(bones.spine_03, scarf);
     }
     const mixer = new T.AnimationMixer(rig), idle = mixer.clipAction(this.assets[sex].animations.find((x) => x.name === "Idle_Loop"));
@@ -3963,8 +4503,11 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       const w = c.wand, gr = new T.Group();
       gr.name = "held-wand";
       const len = 0.3 + (Number(w.length) - 8) * 0.015;
-      this.mesh(gr, "cone", w.color, [0, len * 0.5, 0], [6e-3, len, 6e-3]);
-      this.mesh(gr, w.handle === "orb" ? "sphere" : "cylinder", w.color, [0, 0.025, 0], w.handle === "orb" ? [0.014, 0.018, 0.014] : [0.011, 0.07, 0.011]);
+      const radius = {supple:.0052, springy:.006, firm:.0071}[w.flex] || .006;
+      this.mesh(gr, "cone", w.color, [0, len * 0.5, 0], [radius, len, radius]);
+      this.mesh(gr, w.handle === "orb" ? "sphere" : "cylinder", WOODS[w.wood] || w.color, [0, 0.025, 0], w.handle === "orb" ? [0.014, 0.018, 0.014] : [0.011, 0.07, 0.011]);
+      const coreColor = { "phoenix feather": "#d48539", "unicorn hair": "#e6e0f4", "dragon heartstring": "#aa424c" }[w.core];
+      this.mesh(gr, "gem", coreColor || w.color, [0, .045, .009], [.005, .009, .004]);
       if (w.inlay !== "none") for (let i = 0; i < 3; i++) this.mesh(gr, "torus", w.inlay === "silver" ? "#b8bec3" : w.inlay === "rose" ? "#b18073" : "#b99c57", [0, 8e-3 + i * 0.016, 0], [0.011, 0.011, 0.011]).rotation.x = Math.PI / 2;
       if (w.handle === "twisted") this.line(gr, [[0.01, 0, 0], [0, 0.025, 0.01], [-0.01, 0.05, 0], [0, 0.07, -0.01]], c.trim, 3e-3);
       wandTip = this.group(gr, [0, len, 0]);
@@ -3995,7 +4538,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     const student = c.ageBuild !== "older", heightScale = student ? 1.38 : 1.56;
     rig.scale.set(heightScale * build * (student ? 1 : 1.05), heightScale, heightScale);
     bones.Head.scale.setScalar(student ? 1 : .94);
-    a.userData = { rig, bones, mixer, idle, clips: this.assets[sex].animations, head: bones.Head, hair, hat, body: bones.spine_03, wandTip, broom, sex, build, student, heightScale, rest, portrait, characterKey: c.id + ":" + S.screen };
+    // Body builds change shoulder and waist width more than skull width.
+    bones.Head.scale.x /= Math.pow(build, .72);
+    a.userData = { rig, bones, mixer, idle, clips: this.assets[sex].animations, head: bones.Head, hair, hat, body: bones.spine_03, wandTip, broom, sex, build, student, heightScale, rest, portrait, blinkMeshes, eyeSurfaces, expression: c.expression, characterKey: c.id + ":" + S.screen };
     this.relaxHands(a.userData);
     a.updateMatrixWorld(true);
     return a;
@@ -4060,6 +4605,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     if (!u?.mixer) return;
     const delta = this.lastFrameTime ? Math.min(0.05, (t - this.lastFrameTime) / 1e3) : 0.016;
     this.lastFrameTime = t;
+    // A shader compile or a suspended tab can skip many wall-clock frames.
+    // Advance the wand aim and its light on the same clock as the arm clip.
+    this.animationTime += delta;
     if (u.pose) for (const [name, q] of Object.entries(u.pose)) u.bones[name].quaternion.copy(q);
     u.mixer.update(reduced ? 0 : delta);
     u.pose ||= Object.fromEntries(Object.entries(u.bones).map(([name, b]) => [name, b.quaternion.clone()]));
@@ -4072,13 +4620,17 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       const breath = 1 + Math.sin(sec * 1.5) * .004;
       u.bones.spine_02.scale.set(breath, breath, breath);
     }
-    const gesture = this.humanGesture, age = gesture ? (t - gesture.start) / 1e3 : 99;
+    const gesture = this.humanGesture, age = gesture ? this.animationTime - gesture.start : 99;
     if (gesture?.type === "cast" && !reduced) this.aimWand(u, Math.min(1, age / .4, Math.max(0, (2.2 - age) / .7)));
+    const happy = ["cheer","dance","wave"].includes(gesture?.type) && age < 2.2 ? Math.sin(Math.PI * Math.max(0,age) / 2.2) : 0;
+    const skin = u.skin ||= u.rig.getObjectByName("human-skin");
+    if (skin?.morphTargetDictionary?.Smile !== undefined) {
+      const warmth = u.expression === "calm" ? 0 : .42 + (reduced ? 0 : .035 * Math.sin(sec * 1.1));
+      skin.morphTargetInfluences[skin.morphTargetDictionary.Smile] = warmth + .24 * happy;
+    }
     const blink = reduced ? 0 : Math.max(0, 1 - Math.abs((sec % 4.3) - 3.8) / .095);
-    u.rig.traverse(o => {
-      if (o.morphTargetDictionary?.Blink !== undefined) o.morphTargetInfluences[o.morphTargetDictionary.Blink] = blink;
-      if (o.name === "student-eyes" || o.name === "student-lashes") o.visible = blink < .6;
-    });
+    for (const mesh of u.blinkMeshes) mesh.morphTargetInfluences[mesh.morphTargetDictionary.Blink] = blink;
+    for (const mesh of u.eyeSurfaces) mesh.visible = blink < .6;
     if (u.activeAction && age > u.activeAction.getClip().duration - .3 && !u.recovering) {
       u.idle.enabled = true; u.idle.setEffectiveWeight(1).play();
       u.activeAction.crossFadeTo(u.idle, .3, false); u.recovering = true;
@@ -4123,7 +4675,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       if (previous !== action) action.crossFadeFrom(previous, .22, false);
       u.activeAction = action; u.recovering = false;
     }
-    this.humanGesture = { type, start: performance.now() };
+    this.humanGesture = { type, start: this.animationTime };
   },
   portraitKey(c) {
     return JSON.stringify([c.name, c.kind, c.bodyShape, c.ageBuild, c.expression, c.outfitColors, c.skin, c.hair, c.hairColor, c.eyes, c.face, c.glasses, c.outfit, c.robe, c.trim, c.pattern, c.hat, c.scarf, c.shoes, c.house, c.beard]);
@@ -4142,8 +4694,11 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         scene.environmentIntensity = 0.45;
         scene.add(new T.HemisphereLight("#cbd9e9", "#342318", 1.2));
         const light = new T.DirectionalLight("#ffe2bf", 3.2);
-        light.position.set(-2, 4, 5);
+        light.position.set(-3.4, 4, 4.5);
         scene.add(light);
+        const edge = new T.DirectionalLight("#cbd9ec", 1.45);
+        edge.position.set(2,3,-2);
+        scene.add(edge);
         const actor = this.makeHuman({ ...c, owl: null, pet: null, broom: "none", holdBroom: false }, true);
         scene.add(actor);
         const camera = new T.PerspectiveCamera(28, 1, 0.1, 15);
@@ -4179,13 +4734,14 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       el.innerHTML = `<img src="${this.portraits.get(key)}" alt="${esc(c.name)}" width="320" height="320">`;
     }
   },
-  flower(parent, pos, color, size = 0.2) {
+  flower(parent, pos, color, size = 0.2, shape = size < .03 ? "animal" : "sphere") {
     const f = this.group(parent, pos);
     for (let i = 0; i < 5; i++) {
       const ang = i / 5 * Math.PI * 2;
-      this.mesh(f, "sphere", color, [Math.cos(ang) * size * 0.45, Math.sin(ang) * size * 0.45, 0], [size * 0.38, size * 0.38, size * 0.16]);
+      this.mesh(f, shape, color, [Math.cos(ang) * size * 0.45, Math.sin(ang) * size * 0.45, 0], [size * 0.38, size * 0.38, size * 0.16]);
     }
-    this.mesh(f, "sphere", "#efc46c", [0, 0, 0.03], [size * 0.25, size * 0.25, size * 0.2]);
+    this.mesh(f, shape, "#efc46c", [0, 0, size < .03 ? size*.15 : .03], [size * 0.25, size * 0.25, size * 0.2]);
+    if (size < .03) this.mergeParts(f);
     return f;
   },
   startEffect(effect2, color = "#ffe3a0") {
@@ -4195,8 +4751,9 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     this.keyLight.intensity = effect2 === "night" ? 0.4 : 4.2;
     this.keyLight.color.set("#fff0da");
     if (this.actor) this.actor.rotation.z = 0;
-    this.effect = { type: effect2, start: performance.now(), color };
+    this.effect = { type: effect2, start: this.animationTime, color };
     const g = this.fx;
+    const bead = this.cam.position.distanceTo(this.controls.target)>3.6 ? "animal" : "sphere";
     if (effect2 === "sorting" || effect2 === "wand") {
       const house = HOUSES[Store.current()?.house], tint = effect2 === "sorting" ? house?.color || color : color;
       const light = new this.T.PointLight(tint, effect2 === "wand" ? 12 : 16, 10, 1);
@@ -4270,7 +4827,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       arc.material = this.material("#8de6ff", true);
       this.glow(g, "#77caed", [1.2, 1.4, 0.2], [1.8, 2.5, 1]);
       for (let i = 0; i < 16; i++) {
-        const drop = this.mesh(g, "sphere", "#b4f1ff", [1.65, 0.45, 0.6], [0.035, 0.08, 0.035], true);
+        const drop = this.mesh(g, bead, "#b4f1ff", [1.65, 0.45, 0.6], [0.035, 0.08, 0.035], true);
         drop.userData.i = i;
         add(drop, "splash");
       }
@@ -4366,16 +4923,23 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
         add(this.line(g, pts, col, 0.035), "rainbow");
       });
     }
-    if (effect2 === "flowers") for (let i = 0; i < 13; i++) add(this.flower(g, [Math.sin(i * 7) * 1.35, 0.5 + Math.cos(i * 3) * 0.3, Math.cos(i * 5) * 0.7], i % 2 ? color : "#e8c784", 0.25), "flowers");
+    if (effect2 === "flowers") for (let i = 0; i < 13; i++) add(this.flower(g, [Math.sin(i * 7) * 1.35, 0.5 + Math.cos(i * 3) * 0.3, Math.cos(i * 5) * 0.7], i % 2 ? color : "#e8c784", 0.25, bead), "flowers");
     if (effect2 === "butterflies") for (let i = 0; i < 12; i++) {
       const b = this.group(g, [Math.sin(i * 4) * 1.4, 1.4 + Math.cos(i * 7), 0.6]);
-      for (const side of [-1, 1]) this.mesh(b, "sphere", i % 2 ? color : "#d6bded", [side * 0.08, 0, 0], [0.1, 0.14, 0.025]);
+      for (const side of [-1, 1]) this.mesh(b, bead, i % 2 ? color : "#d6bded", [side * 0.08, 0, 0], [0.1, 0.14, 0.025]);
       b.userData.i = i;
       add(b, "butterfly");
     }
-    const n = ["wand", "sorting"].includes(effect2) ? 64 : effect2 === "light" ? 30 : effect2 === "night" ? 45 : effect2 === "bubbles" ? 24 : effect2 === "fire" ? 35 : effect2 === "water" ? 45 : effect2 === "snow" ? 45 : effect2 === "confetti" ? 60 : 22;
+    if (effect2 === "wand") {
+      const sparks = new this.T.InstancedMesh(this.geometry("animal"),this.material(color,true),64);
+      sparks.frustumCulled = false;
+      g.add(sparks);
+      add(sparks,"wand-sparks");
+      return;
+    }
+    const n = effect2 === "sorting" ? 64 : effect2 === "light" ? 30 : effect2 === "night" ? 45 : effect2 === "bubbles" ? 24 : effect2 === "fire" ? 35 : effect2 === "water" ? 45 : effect2 === "snow" ? 45 : effect2 === "confetti" ? 60 : 22;
     for (let i = 0; i < n; i++) {
-      const m = this.mesh(g, effect2 === "confetti" ? "box" : effect2 === "light" ? "gem" : effect2 === "fire" ? "cone" : effect2 === "bubbles" ? "torus" : "sphere", effect2 === "fire" ? i % 2 ? "#ffce77" : "#e18c5e" : effect2 === "confetti" ? ["#db94b6", "#b1c7aa", "#efd68f", "#a8bcdf"][i % 4] : color, [0, 1, 0], effect2 === "bubbles" ? [0.08, 0.08, 0.08] : effect2 === "confetti" ? [0.035, 0.07, 0.015] : [0.028, 0.04, 0.028], true);
+      const m = this.mesh(g, effect2 === "confetti" ? "box" : effect2 === "light" ? "gem" : effect2 === "fire" ? "cone" : effect2 === "bubbles" ? "torus" : bead, effect2 === "fire" ? i % 2 ? "#ffce77" : "#e18c5e" : effect2 === "confetti" ? ["#db94b6", "#b1c7aa", "#efd68f", "#a8bcdf"][i % 4] : color, [0, 1, 0], effect2 === "bubbles" ? [0.08, 0.08, 0.08] : effect2 === "confetti" ? [0.035, 0.07, 0.015] : [0.028, 0.04, 0.028], true);
       m.userData.i = i;
       add(m, "particle");
       if (effect2 === "sorting") m.material = this.material(i % 2 ? HOUSES[Store.current().house].color : color, true);
@@ -4400,7 +4964,6 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     this.frame = 0;
     if (this.lost || document.hidden || !this.stageVisible || !this.renderer || this.state !== "ready") return;
     this.frame = requestAnimationFrame((x) => this.loop(x));
-    this.frames++;
     const sec = t / 1e3, reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (this.cameraMove) {
       const move = this.cameraMove, progress = Math.min(1, (t - move.start) / 550), ease = progress * progress * (3 - 2 * progress);
@@ -4413,6 +4976,10 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     }
     this.controls.update();
     if (this.actor) {
+      const hair = this.actor.userData.hair.children[0], levels = hair.userData;
+      const distance = this.cam.position.distanceTo(this.controls.target);
+      if (distance > 3.6) hair.geometry = levels.far;
+      else if (distance < 3.2) hair.geometry = levels.near;
       this.actor.position.y = (this.place === "grounds" ? 0.12 : 0.04);
       this.animateHuman(t, reduced);
     }
@@ -4451,7 +5018,7 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     }
     this.wings.forEach((w, i) => w.rotation.z = Math.sin(sec * 1.5) * 0.04 * w.userData.side);
     if (this.effect) {
-      const age = (t - this.effect.start) / 1e3, e = this.effect.type;
+      const age = this.animationTime - this.effect.start, e = this.effect.type;
       if (age > 4.5) {
         this.clear(this.fx);
         this.effect = null;
@@ -4461,12 +5028,19 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
       } else {
         this.effectObjects.forEach((o, j) => {
           const i = o.userData.i || j, k = o.userData.kind;
-          if (k === "particle") {
-            if (e === "wand") {
-              const a = i * 2.4, speed = 0.3 + i % 7 * 0.16, progress = (age + i * 0.018) % 2;
-              o.position.set(0.8 + Math.cos(a) * progress * speed, 1.6 + Math.sin(a) * progress * speed, 0.5 + Math.sin(i * 5) * progress * 0.7);
-              o.scale.setScalar(0.028 + (1 - progress / 2) * 0.018);
-            } else if (e === "fire") {
+          if (k === "wand-sparks") {
+            const spark = this.motionDummy;
+            spark.rotation.set(0,0,0);
+            for (let n=0;n<o.count;n++) {
+              const angle=n*2.4, speed=.3+n%7*.16, progress=(age+n*.018)%2;
+              spark.position.set(.8+Math.cos(angle)*progress*speed,1.6+Math.sin(angle)*progress*speed,.5+Math.sin(n*5)*progress*.7);
+              spark.scale.setScalar(.028+(1-progress/2)*.018);
+              spark.updateMatrix();
+              o.setMatrixAt(n,spark.matrix);
+            }
+            o.instanceMatrix.needsUpdate = true;
+          } else if (k === "particle") {
+            if (e === "fire") {
               o.position.set(0.8 + Math.sin(i * 7 + age * 2) * 0.22, 0.35 + (age * 0.8 + i * 0.073) % 1.6, 0.6);
               o.scale.y = 0.11;
             } else if (e === "water") {
@@ -4525,12 +5099,20 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     }
     try {
       this.renderer.render(this.scene, this.cam);
+      this.frames++;
+      this.renderedActor = this.actor;
     } catch (e) {
-      this.lost = true;
+      if (this.renderer.getContext().isContextLost()) return;
+      this.lastFailure = {step:"rendering frame", message:String(e?.message || e)};
+      this.state = "fallback";
+      this.dispose();
       $("#stage").classList.remove("is3d");
+      updateStageHelp();
+      showDrawnPortraits();
     }
   },
   releaseScene() {
+    this.renderedActor = null;
     this.clear(this.actor);
     if (this.surfaceTextures) {
       for (const t of this.surfaceTextures.values()) t.dispose();
@@ -4565,7 +5147,12 @@ gl_Position=projectionMatrix*modelViewMatrix*p;}`,
     this.resizeObserver?.disconnect();
     this.controls?.dispose();
     this.releaseScene();
-    this.renderer?.dispose();
+    const old = this.renderer;
+    this.renderer = this.actor = this.cam = this.controls = this.scene = this.world = this.fx = null;
+    this.lost = false;
+    old?.dispose();
+    old?.forceContextLoss();
+    old?.domElement.remove();
   }
 };
 function scenePlace() {
@@ -4626,10 +5213,35 @@ function sceneSVG() {
       bg += '<path d="M27 286v-67m-21 0h42" stroke="#b18d63" stroke-width="6"/>';
     }
   }
-  return `<svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><linearGradient id="storybook-sky" x2="0%" y2="100%"><stop stop-color="#111c3d"/><stop offset="1" stop-color="#253946"/></linearGradient><radialGradient id="storybook-glow"><stop stop-color="#ffdc86" stop-opacity=".65"/><stop offset="1" stop-color="#ffdc86" stop-opacity="0"/></radialGradient></defs><rect width="400" height="320" fill="url(#storybook-sky)"/>${stars}<path d="M0 216h400v104H0z" fill="#49483e"/>${bg}<g transform="translate(100 22)"><g class="storybook-actor">${charSVG(c, true).replace(/<svg[^>]*>|<\/svg>/g, "")}</g></g></svg>`;
+  return `<svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><linearGradient id="storybook-sky" x2="0%" y2="100%"><stop stop-color="#111c3d"/><stop offset="1" stop-color="#253946"/></linearGradient><radialGradient id="storybook-glow"><stop stop-color="#ffdc86" stop-opacity=".65"/><stop offset="1" stop-color="#ffdc86" stop-opacity="0"/></radialGradient></defs><rect width="400" height="320" fill="url(#storybook-sky)"/>${stars}<path d="M0 216h400v104H0z" fill="#49483e"/>${bg}<g transform="${S.screen === "editor" && ["you","face","hair","hats"].includes(S.tab) ? `translate(-50 ${c.ageBuild === "older" ? 10 : -21}) scale(2.5)` : "translate(100 22)"}"><g class="storybook-actor">${charSVG(c, true).replace(/<svg[^>]*>|<\/svg>/g, "")}</g></g></svg>`;
+}
+function showDrawnPortraits() {
+  for (const el of $$("[data-portrait]")) {
+    const c = Store.data.characters.find(c => c.id === el.dataset.portrait);
+    if (c) el.innerHTML = charSVG(c);
+  }
+}
+function applyView() {
+  if (location.hash.includes("no3d") || Store.data.settings.view === "2d") {
+    R.loadTicket++;
+    R.state = "fallback";
+    if (R.renderer) R.dispose();
+    $("#model-loading").hidden = true;
+    $("#stage").classList.remove("is3d");
+    showDrawnPortraits();
+  } else if (R.state !== "ready" && R.state !== "lost") {
+    R.state = "loading";
+    R.init();
+  }
+  updateStageHelp();
 }
 function updateStageHelp() {
-  $("#stage-help").textContent = R.state === "ready" ? "Drag to turn · pinch to zoom" : "A little storybook magic";
+  const button = $("#view-switch");
+  button.hidden = location.hash.includes("no3d");
+  button.textContent = ["loading", "ready", "lost"].includes(R.state) ? "2D" : "3D";
+  button.setAttribute("aria-label", "Switch to " + button.textContent);
+  const unavailable = R.state === "fallback" && Store.data.settings.view !== "2d" && !button.hidden;
+  $("#stage-help").textContent = R.state === "ready" ? "Drag to turn · pinch to zoom" : unavailable ? "Playing in 2D · tap 3D to try again" : "A little storybook magic";
 }
 function refreshActor() {
   const c = Store.current() || DEMO;
@@ -4654,7 +5266,12 @@ function choices(key, values, current, scope = "set") {
   }).join("")}</div>`;
 }
 function swatches(key, colors, current, scope = "set") {
-  return `<div class="choices swatches" style="--swatch-columns:${colors.length > 6 ? 4 : colors.length === 6 ? 3 : colors.length}">${colors.map((c, i) => `<button class="choice" data-${scope}="${key}" data-value="${c}" aria-pressed="${current === c}" aria-label="${key} colour ${i + 1}" title="${key} colour ${i + 1}"><span class="dot" style="--swatch:${c}"></span></button>`).join("")}</div>`;
+  const columns = colors.length % 3 === 0 ? 3 : Math.min(4, colors.length);
+  const buttons = colors.map((c, i) => {
+    const label = key === "hairColor" ? HAIR_NAMES[c] : `${key} colour ${i + 1}`;
+    return `<button class="choice" data-${scope}="${key}" data-value="${c}" aria-pressed="${current === c}" aria-label="${label}" title="${label}"><span class="dot" style="--swatch:${c}"></span>${key === "hairColor" ? label : ""}</button>`;
+  });
+  return `<div class="choices swatches" style="--swatch-columns:${columns}">${buttons.join("")}</div>`;
 }
 const field = (label, inside) => `<div class="field"><div class="field-label">${label}</div>${inside}</div>`;
 function home() {
@@ -4665,7 +5282,7 @@ function home() {
   s += `<div class="section-head"><h2>Your magical friends</h2><small>${chars.length} ${chars.length === 1 ? "friend" : "friends"}</small></div>`;
   s += chars.length ? `<div class="cards">${chars.map((c) => `<article class="character-card"><button class="card-visit" data-open="${esc(c.id)}" aria-label="Visit ${esc(c.name)}"><div class="portrait" data-portrait="${esc(c.id)}">${charSVG(c)}</div></button><div class="card-name"><h3><button data-rename="${esc(c.id)}" aria-label="Change name for ${esc(c.name)}">${esc(c.name)}</button></h3><button class="card-pencil" data-rename="${esc(c.id)}" aria-label="Change name for ${esc(c.name)}">✎</button></div><small>${esc(c.school === "Hogwarts" ? c.house || c.school : c.school)}</small><button class="card-menu" data-menu="${esc(c.id)}" aria-label="Options for ${esc(c.name)}">⋯</button></article>`).join("")}</div>` : `<div class="empty"><h2>Who will you make first?</h2><p>A starry witch with a tiny owl?<br>A dragon-loving wizard? You decide.</p></div>`;
   s += `<div class="divider">${icon("cup")} The House Cup</div><div class="panel"><div class="house-cup">${Object.entries(HOUSES).map(([h, d]) => `<div>${crest(h)}<strong>${Number(Store.data.points[h]) || 0}</strong><small>${h}</small><div class="cup-bar" style="--house:${d.color}"></div></div>`).join("")}</div><p class="fine" style="text-align:center">Cast spells and send letters to win house points!</p></div><p class="fine" style="text-align:center">Made for Havi. Happy spell-casting! ✧</p>`;
-  return s;
+  return s + btn("Grown-ups · Saved game", "saved-game", "wide");
 }
 const EDIT_TABS = [["you", "You", "person"], ["face", "Face", "eye"], ["hair", "Hair", "hair"], ["clothes", "Clothes", "shirt"], ["hats", "Hats", "hat"], ["extras", "Extras", "star"], ["school", "School", "castle"]];
 function editorTabs() {
@@ -5201,7 +5818,68 @@ function setupTrace() {
     draw();
   };
 }
+function downloadSave(raw, filename) {
+  const url = URL.createObjectURL(new Blob([raw], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+function savedGame() {
+  const backups = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith(Store.key + "-before-")) backups.push(key);
+    }
+  } catch { /* The current in-memory game can still be exported. */ }
+  modal("Saved game", `<p>Keep a copy of all your friends, letters and house points.</p>${btn("Export JSON", "export-save", "primary wide")}
+    ${Store.locked ? '<p>The existing save is protected. You can export a copy.</p>' : '<label class="field" for="import-save">Import a Hogwarts JSON file</label><input type="file" accept=".json,application/json" id="import-save">'}
+    <p id="import-status" role="status"></p>
+    ${backups.length ? `<details><summary>Previous saves</summary>${backups.map(key => btn("Export " + (key.includes("before-import") ? "pre-import copy" : "pre-upgrade copy") + " " + (key.match(/-(\d+)$/)?.[1] || "1"), "export-backup", "wide", `data-key="${esc(key)}"`)).join("")}</details>` : ""}`);
+}
+async function previewImport(input) {
+  const file = input.files[0];
+  if (!file) return;
+  try {
+    const raw = await file.text();
+    if (!input.isConnected || !$("#dialog").open || input.files[0] !== file) return;
+    const { original } = readSave(raw);
+    const n = original.characters.length;
+    modal("Restore this game?", `<p>This file has ${n} ${n === 1 ? "friend" : "friends"}${n ? " (" + original.characters.map(c => esc(c.name)).join(", ") + ")" : ""}. Restoring replaces the game on this device and keeps a backup of the previous save.</p>
+      ${btn("Cancel", "close")}<button class="btn primary" id="restore-save">Restore game</button><p id="import-status" role="status"></p>`);
+    $("#restore-save").onclick = () => {
+      try { Store.restore(raw); }
+      catch { $("#import-status").textContent = "Couldn’t save this game. Your existing save is safe."; return; }
+      closeModal();
+      S.id = null;
+      go("home");
+      applyView();
+      Sound.sync();
+      toast("Your saved game is ready.");
+    };
+  } catch {
+    if (input.isConnected) { input.value = ""; $("#import-status").textContent = "Choose a version 1 Hogwarts save. Your friends are safe."; }
+  }
+}
 const actions = {
+  "switch-view": () => {
+    Store.data.settings.view = $("#view-switch").textContent === "2D" ? "2d" : "3d";
+    Store.save();
+    applyView();
+  },
+  "saved-game": savedGame,
+  "export-backup": button => {
+    try {
+      const raw = localStorage.getItem(button.dataset.key);
+      if (raw === null) throw Error("Missing backup");
+      downloadSave(raw, button.dataset.key + ".json");
+    } catch { $("#import-status").textContent = "Couldn’t read that backup on this device."; }
+  },
+  "export-save": () => downloadSave(Store.locked && Store.lastRaw !== null ? Store.lastRaw : JSON.stringify(Store.data, null, 2), "havi-hogwarts.json"),
   new: newCharacter,
   "scroll-tabs": (b) => $("#stage-tools .tabbar")?.scrollBy({ left: Number(b.dataset.dir) * 160, behavior: "smooth" }),
   edit: () => go("editor"),
@@ -5470,6 +6148,7 @@ document.addEventListener("click", (e) => {
   if (b.dataset.letterText) $("#letter-text").value = b.dataset.letterText;
 });
 document.addEventListener("change", (e) => {
+  if (e.target.id === "import-save") return previewImport(e.target);
   if (e.target.id === "spell-picker") {
     S.spell = e.target.value;
     const y = scrollY;
@@ -5524,19 +6203,7 @@ document.addEventListener("visibilitychange", () => {
     Sound.music();
   }
 });
-window.addEventListener("hashchange", () => {
-  if (location.hash.includes("no3d")) {
-    R.dispose();
-    R.renderer?.domElement.remove();
-    R.renderer = null;
-    R.state = "fallback";
-    $("#stage").classList.remove("is3d");
-    refreshWorld();
-  } else if (R.state === "fallback") {
-    R.state = "loading";
-    R.init();
-  }
-});
+window.addEventListener("hashchange", applyView);
 window.addEventListener("pagehide", () => {
   Store.save();
   Sound.ctx?.suspend().catch(() => {
@@ -5549,7 +6216,7 @@ $("#brand-icon").innerHTML = icon("star");
 $(".stage-reset").innerHTML = icon("reset");
 $(".spellbook-pocket").innerHTML = icon("book");
 render();
-R.init();
+applyView();
 if (location.hash.includes("dev")) window.__hw = { Store, store: Store, S, go, R, scene: R, Sound, spells: SPELLS, motions: MOTIONS, cast, version: 1 };
 </script>
 
